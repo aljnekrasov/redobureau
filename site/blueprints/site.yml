@@ -1,0 +1,183 @@
+title: Site
+
+tabs:
+  dashboard:
+    label: Dashboard
+    columns:
+      - width: 2/3
+        sections:
+          work:
+            type: pages
+            headline: Work
+            layout: cards
+            template: project
+            size: small
+            parent: site.find("work")
+            status: all
+            info: "{{ page.modified('d F') }}"
+            image:
+              query: page.files.template('share').first
+      - width: 1/3
+        sections:
+          pages:
+            type: pages
+            headline: Pages
+            status: all
+            image: false
+            info: "{{ page.modified('d F') }}"
+          privacy:
+            type: files
+            template: policy
+  teamTab:
+    label: Team
+    columns:
+      - width: 2/3
+        fields:
+          team:
+            type: structure
+            columns:
+              name:
+              spec:
+            fields:
+              name:
+                label: Name
+                type: text
+                width: 1/2
+              spec:
+                label: Specialization
+                type: text
+                width: 1/2
+              link:
+                label: Link
+                type: url
+                width: 1/1
+              pic:
+                label: Picture
+                type: files
+                multiple: false
+                width: 1/1
+                query: site.files.template('team')
+      - width: 1/3
+        sections:
+          teamimages:
+            headline: Team files
+            type: files
+            template: team
+
+  industriesTab:
+    label: Industries & Types
+    columns:
+      - width: 1/2
+        fields:
+          industries:
+            label: Industries
+            type: structure
+            fields:
+              name:
+                label: Name
+                type: text
+      - width: 1/2
+        fields:
+          worktypes:
+            label: Work types
+            type: structure
+            fields:
+              name:
+                label: Name
+                type: text
+
+  clientsTab:
+    label: Clients
+    columns:
+      - width: 2/3
+        fields:
+          clients:
+            type: structure
+            columns:
+              name:
+                width: 1/1
+            fields:
+              name:
+                label: Name
+                type: text
+                width: 1/2
+              pic:
+                type: files
+                multiple: false
+                width: 1/2
+                query: site.files.template('clients')
+      - width: 1/3
+        sections:
+          clientsimages:
+            headline: Clients files
+            type: files
+            template: clients
+  metaTab: tabs/meta
+  contactsTab:
+    label: Contacts
+    fields:
+      contactEmail:
+        label: Main email
+        type: email
+        width: 1/3
+        required: true
+      contactPhone:
+        label: Contact Phone
+        placeholder: +7 999 989 06 66
+        type: tel
+        width: 1/3
+        required: true
+      contactsAdditional:
+        label: Additional contacts
+        type: structure
+        fields:
+          title:
+            type: text
+            width: 1/3
+            placeholder: Job email
+            required: true
+          mail:
+            type: email
+            width: 1/3
+          phone:
+            type: text
+            placeholder: +7 999 989 09 08
+            width: 1/3
+      linea:
+        type: line
+      contactAdress:
+        label: Address
+        type: text
+        width: 1/2
+        required: true
+      contactAdressUrl:
+        label: Link to map
+        placeholder: https://goo.gl/maps/RRAQ7rnGiZN2
+        type: url
+        width: 1/2
+        required: true
+      contactLat:
+        label: Latitude
+        type: number
+        placeholder: 55,756306
+        width: 1/2
+      contactLong:
+        label: Longitude
+        type: number
+        placeholder: 37,649522
+        width: 1/2
+      lineb:
+        type: line
+      socialLinks:
+        label: Social links
+        type: structure
+        fields:
+          name:
+            type: text
+            width: 1/2
+            placeholder: Facebook
+            required: true
+          url:
+            type: url
+            width: 1/2
+            required: true

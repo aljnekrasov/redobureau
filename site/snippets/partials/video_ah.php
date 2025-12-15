@@ -1,0 +1,1 @@
+<video class="w-full" src="<?= $src ?>" preload="auto" autoplay muted loop playsinline type="video/mp4">

@@ -1,0 +1,18 @@
+title: Work page
+preset: pages
+icon: 🖼
+
+options:
+  url: false
+  status: false
+  delete: false
+
+drafts:
+  headline: Drafts
+  extends: sections/projects
+
+listed:
+  headline: Published
+  extends: sections/projects
+  layout: cards
+  size: medium

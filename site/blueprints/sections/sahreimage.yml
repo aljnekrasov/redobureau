@@ -1,0 +1,6 @@
+type: files
+headline: Share Image
+template: share
+layout: cards
+info: "{{ file.dimensions }}"
+max: 1

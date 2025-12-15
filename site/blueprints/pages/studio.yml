@@ -1,0 +1,53 @@
+title: Studio
+icon: 👨‍👨‍👧‍👦
+
+options:
+  url: false
+  status: false
+  delete: false
+
+sections:
+  cover:
+    type: files
+    headline: Cover
+    layout: cards
+    info: "{{ file.dimensions }}"
+    template: cover
+    max: 1
+  content:
+    type: fields
+    fields:
+      text:
+        label: Main text
+        type: textarea
+        width: 2/3
+        size: medium
+      friends:
+        label: Publications
+        type: structure
+        width: 2/3
+        fields:
+          name:
+            type: text
+            width: 1/2
+          url:
+            type: url
+            width: 1/2
+      team:
+        label: Team
+        type: multiselect
+        options: query
+        width: 2/3
+        query:
+          fetch: site.team.toStructure
+          text: "{{ structureItem.name }}"
+          value: "{{ structureItem.name }}"
+      directions:
+        label: Directions
+        type: structure
+        width: 2/3
+        fields:
+          title:
+            type: text
+          text:
+            type: textarea

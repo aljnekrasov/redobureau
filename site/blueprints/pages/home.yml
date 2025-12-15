@@ -1,0 +1,52 @@
+title: Home
+icon: 🏠
+
+options:
+  url: false
+  status: false
+  delete: false
+
+fields:
+  text_first:
+    type: text
+    label: Текст о нас слева
+    width: 1/2
+  text_second:
+    label: Текст о нас справа
+    type: text
+    width: 1/2
+  projects:
+    label: false
+    type: builder
+    fieldsets:
+      row:
+        label: Projects list
+        fields:
+          row:
+            type: builder
+            columns: 2
+            max: 4
+            fieldsets:
+              project:
+                label: Project
+                fields:
+                  page:
+                    label: Page
+                    type: pages
+                    layout: cards
+                    query: site.children.template('work').children.published
+                    min: 1
+                    max: 1
+                    required: true
+                    image:
+                      query: page.files.template('previewCover').first
+                  size:
+                    label: Size
+                    type: radio
+                    columns: 3
+                    default: auto
+                    options:
+                      hide: false
+                      big: Big
+                      small: Small
+                      auto: Auto

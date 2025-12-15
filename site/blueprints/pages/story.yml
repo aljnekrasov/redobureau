@@ -1,0 +1,105 @@
+title: Story
+icon: 🗒
+
+status:
+  draft:
+    label: Draft
+    text: This page is still in draft mode. It can only be seen by editors with Panel access.
+  listed:
+    label: Published
+    text: This page is available for viewing.
+
+columns:
+  - width: 3/4
+    sections:
+      meta:
+        type: fields
+        fields:
+          industry:
+            label: Industries
+            type: multiselect
+            width: 1/2
+            options: query
+            query:
+              fetch: site.industries.toStructure
+              text: "{{ structureItem.name }}"
+              value: "{{ structureItem.name }}"
+          types:
+            label: Work types
+            type: multiselect
+            width: 1/2
+            options: query
+            query:
+              fetch: site.worktypes.toStructure
+              text: "{{ structureItem.name }}"
+              value: "{{ structureItem.name }}"
+          team:
+            label: Autors
+            type: multiselect
+            options: query
+            query:
+              fetch: site.team.toStructure
+              text: "{{ structureItem.name }}"
+              value: "{{ structureItem.name }}"
+      content:
+        type: fields
+        fields:
+          content:
+            label: Content
+            type: builder
+            fieldsets:
+              block-text:
+                label: Text
+                fields:
+                  text:
+                    label: false
+                    type: textarea
+                    size: medium
+              block-pictures:
+                label: Images
+                fields:
+                  pictures:
+                    label: 
+                    type: files
+                    layout: cards
+                    text: 
+                    info: 
+                    image:
+                      cover: false
+                      ratio: 1/1
+                      back: black
+      related:
+        type: fields
+        fields:
+          related:
+            type: pages
+            layout: cards
+            query: site.children.template('work').children.published
+            min: 2
+            max: 3
+                    
+        
+  - width: 1/4
+    sections:
+      cover:
+        type: files
+        headline: Cover
+        layout: cards
+        info: "{{ file.dimensions }}"
+        info: false
+        template: cover
+        min: 1
+        max: 1
+      previewCover:
+        type: files
+        headline: Preview cover
+        template: image
+        layout: cards
+        info: "{{ file.dimensions }}"
+        min: 1
+        max: 1
+      files:
+        type: files
+        headline: Files
+        info: "{{ file.dimensions }}"
+

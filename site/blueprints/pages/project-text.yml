@@ -1,0 +1,15 @@
+title: Text block
+icon: title
+
+status:
+  draft:
+    label: Darft
+    text: This block is still in draft mode. It can only be seen by editors with Panel access.
+  listed:
+    label: Active
+    text: This block is available for viewing on page.
+
+fields:
+  content:
+    type: textarea
+    required: true

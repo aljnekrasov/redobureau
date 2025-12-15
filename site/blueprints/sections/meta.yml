@@ -1,0 +1,26 @@
+info:
+  type: fields
+  fields:
+    main_title:
+      label: Title
+      type: text
+      width: 1/2
+    og_title:
+      label: Open Graph Title
+      type: text
+      width: 1/2
+    sharetext:
+      label: Share text
+      type: textarea
+      size: medium
+      buttons: false
+      help: >
+        Text for Facebook Open Graph share card. <a target="_blank" href="https://developers.facebook.com/docs/sharing/webmasters/">More details</a>
+shareimg:
+  label: Share Picture
+  type: files
+  template: share
+  layout: cards
+  max: 1
+  help: >
+    Best size for share image 1200×630px

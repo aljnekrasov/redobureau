@@ -1,0 +1,19 @@
+{
+    "name": "sylvainjule/imageboxes",
+    "description": "Add illustrations to Kirby's checkboxes",
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sylvain Julé",
+            "email": "contact@sylvain-jule.fr"
+        }
+    ],
+    "require": {
+        "getkirby/composer-installer": "^1.1"
+    },
+    "extra": {
+        "installer-name": "imageboxes"
+    },
+    "minimum-stability": "beta"
+}

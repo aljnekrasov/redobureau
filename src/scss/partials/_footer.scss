@@ -1,0 +1,33 @@
+.footer {
+  background-color: black;
+  color: white;
+  padding: 100px 0 5px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  .links {
+    * {
+      transition: color .5s ease(out-expo), opacity .5s ease(out-expo);
+
+      @include hover {
+        color: #5a4fcf;
+      }
+
+      font-size: 38px;
+      line-height: 40px;
+      display: table;
+
+      @include from(md) {
+        font-size: 60px;
+        line-height: 60px;
+      }
+
+      @include from(lg) {
+        font-size: 80px;
+        line-height: 80px;
+      }
+    }
+  }
+}

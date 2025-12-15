@@ -1,0 +1,22 @@
+title: Presentation
+icon: 🖼
+headline: Slides
+
+status:
+  draft:
+    label: Draft
+    text: This page is still in draft mode. It can only be seen by editors with Panel access.
+  listed:
+    label: Published
+    text: This page is available for viewing.
+
+sections:
+  information:
+    type: fields
+    fields:
+      heading:
+        type: text
+        label: Заголовок
+  files:
+    type: files
+    layout: cards

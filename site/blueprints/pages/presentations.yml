@@ -1,0 +1,19 @@
+title: Presentations
+preset: pages
+icon: 🗃
+
+options:
+  url: false
+  status: false
+  delete: false
+
+drafts:
+  headline: Drafts
+  extends: sections/presentations
+
+listed:
+  headline: Published
+  extends: sections/presentations
+  layout: cards
+  size: medium
+  

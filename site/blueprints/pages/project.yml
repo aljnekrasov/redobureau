@@ -1,0 +1,161 @@
+title: Project
+icon: 🖼
+
+status:
+  draft:
+    label: Draft
+    text: This page is still in draft mode. It can only be seen by editors with Panel access.
+  listed:
+    label: Published
+    text: This page is available for viewing.
+
+tabs:
+  common:
+    label: Page
+    columns:
+      - width: 3/4
+        sections:
+          info:
+            type: fields
+            fields:
+              main_title:
+                label: Title
+                type: text
+                width: 1/2
+              og_title:
+                label: Open Graph Title
+                type: text
+                width: 1/2
+              sharetext:
+                label: Share text
+                type: textarea
+                size: medium
+                buttons: false
+                help: >
+                  Text for Facebook Open Graph share card. <a target="_blank" href="https://developers.facebook.com/docs/sharing/webmasters/">More details</a>
+          shareimg:
+            headline: Share Picture
+            type: files
+            template: share
+            layout: cards
+            max: 1
+            help: >
+              Best size for share image 1200×630px
+          meta:
+            type: fields
+            fields:
+              info:
+                label: Preview info
+                type: text
+                placeholder: Identity
+              industry:
+                label: Industries
+                type: multiselect
+                width: 1/2
+                options: query
+                query:
+                  fetch: site.industries.toStructure
+                  text: "{{ structureItem.name }}"
+                  value: "{{ structureItem.name }}"
+              types:
+                label: Work types
+                type: multiselect
+                width: 1/2
+                options: query
+                query:
+                  fetch: site.worktypes.toStructure
+                  text: "{{ structureItem.name }}"
+                  value: "{{ structureItem.name }}"
+              team:
+                label: Team
+                type: multiselect
+                options: query
+                width: 1/2
+                query:
+                  fetch: site.team.toStructure
+                  text: "{{ structureItem.name }}"
+                  value: "{{ structureItem.name }}"
+              link:
+                label: Link
+                type: url
+                placeholder: otso.city
+                width: 1/2
+          desc:
+            type: fields
+            fields:
+              desc:
+                label: Description
+                type: textarea
+                size: medium
+          builder:
+            type: fields
+            fields:
+              builder:
+                label: Content
+                type: builder
+                fieldsets:
+                  project.text:
+                    label: Text
+                    fields:
+                      text:
+                        label: false
+                        type: textarea
+                        size: medium
+                  project.video:
+                    label: Video
+                    fields:
+                      videoID:
+                        label: Vimeo video ID
+                        type: text
+                        placeholder: 3432886
+                  project.images:
+                    label: Media
+                    fields:
+                      pictures:
+                        label: 
+                        type: files
+                        layout: cards
+                        text: 
+                        info: 
+                        image:
+                          cover: false
+                          ratio: 3/2
+                          back: black
+                      auto_height:
+                        label:
+                        type: toggle
+                        text: Auto height items in this block
+          related:
+            type: fields
+            fields:
+              related:
+                type: pages
+                layout: cards
+                query: site.children.template('work').children.published
+                min: 2
+                max: 3
+            
+      - width: 1/4
+        sections:
+          cover:
+            type: files
+            headline: Cover
+            layout: cards
+            text: false
+            info: false
+            template: heroCover
+            min: 1
+            max: 1
+            sortable: false
+          previewCover:
+            type: files
+            headline: Preview cover
+            template: previewCover
+            layout: cards
+            info: "{{ file.dimensions }}"
+            sortable: false
+            max: 1
+          files:
+            type: files
+            headline: Media
+            info: "{{ file.dimensions }}"

@@ -1,0 +1,5 @@
+template: presentation
+image:
+  query: page.files.first
+  ratio: 3/2
+  cover: true

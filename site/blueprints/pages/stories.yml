@@ -1,0 +1,21 @@
+title: Stories
+preset: pages
+icon: 🗒
+
+status:
+  draft: Hidden
+  unlisted: Active
+
+options:
+  url: false
+  delete: false
+
+drafts:
+  headline: Drafts
+  extends: sections/stories
+
+listed:
+  headline: Published
+  extends: sections/stories
+  layout: cards
+  size: medium

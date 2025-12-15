@@ -1,0 +1,12 @@
+.filters {
+  padding: 0 0 30px;
+
+  &-row { display: flex; }
+
+  &-item {
+    @include hover {
+      opacity: 0.5;
+      color: black;
+    }
+  }
+}

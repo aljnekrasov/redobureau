@@ -1,0 +1,9 @@
+type: files
+headline: Share Picture
+max: 1
+layout: cards
+info: "{{ file.dimensions }}"
+sortable: false
+image:
+  back: white
+  ratio: 16/9

@@ -1,0 +1,16 @@
+title: Images block
+icon: image
+
+status:
+  draft:
+    label: Darft
+    text: This block is still in draft mode. It can only be seen by editors with Panel access.
+  listed:
+    label: Active
+    text: This block is available for viewing on page.
+
+sections:
+  images:
+    type: files
+    layout: cards
+    min: 1

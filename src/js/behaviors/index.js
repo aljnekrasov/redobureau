@@ -1,0 +1,8 @@
+export { default as contactForm } from './behavior/contactForm'
+export { default as contactMap } from './behavior/contactMap'
+export { default as footer } from './behavior/footer'
+export { default as headerBg } from './behavior/headerBg'
+export { default as hero } from './behavior/hero'
+export { default as marquee } from './behavior/marquee'
+export { default as redo } from './behavior/redo'
+export { default as slideshow } from './behavior/slideshow'

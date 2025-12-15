@@ -1,0 +1,40 @@
+body.home .header {
+  color: white;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99;
+  pointer-events: none;
+  a {
+    pointer-events: all;
+  }
+
+  .background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.25s ease(out-quart);
+    z-index: -1;
+
+    &.is-hidden {
+      transform: translate3d(0, -100%, 0);
+    }
+  }
+
+  .body {
+    line-height: 30px;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,1153 @@
+/* Breakpoints
+---------------------------------------------------------------------------- */
+$breakpoints: (
+  xs: 420px,
+  sm: 800px,
+  md: 1200px,
+  lg: 1440px
+);
+
+/* Easing
+---------------------------------------------------------------------------- */
+$ease: (
+  in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53),
+  in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19),
+  in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22),
+  in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06),
+  in-sine: cubic-bezier(0.47, 0, 0.745, 0.715),
+  in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035),
+  in-circ: cubic-bezier(0.6, 0.04, 0.98, 0.335),
+  in-back: cubic-bezier(0.6, -0.28, 0.735, 0.045),
+  out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94),
+  out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1),
+  out-quart: cubic-bezier(0.165, 0.84, 0.44, 1),
+  out-quint: cubic-bezier(0.23, 1, 0.32, 1),
+  out-sine: cubic-bezier(0.39, 0.575, 0.565, 1),
+  out-expo: cubic-bezier(0.19, 1, 0.22, 1),
+  out-circ: cubic-bezier(0.075, 0.82, 0.165, 1),
+  out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275),
+  in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955),
+  in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1),
+  in-out-quart: cubic-bezier(0.77, 0, 0.175, 1),
+  in-out-quint: cubic-bezier(0.86, 0, 0.07, 1),
+  in-out-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95),
+  in-out-expo: cubic-bezier(1, 0, 0, 1),
+  in-out-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86),
+  in-out-back: cubic-bezier(0.68, -0.55, 0.265, 1.55)
+);
+
+@function ease($key) {
+  @if map-has-key($ease, $key) {
+    @return map-get($ease, $key);
+  }
+
+  @warn "Unkown '#{$key}' in $ease.";
+  @return null;
+}
+
+/* Hover for touch and no-touch deveices
+---------------------------------------------------------------------------- */
+$touch-class: "touch";
+$no-touch-class: "no-touch";
+
+@mixin hover {
+  .#{$touch-class} &:active,
+  .#{$no-touch-class} &:hover {
+    @content;
+  }
+}
+
+/* from() & to() responsive mixins
+---------------------------------------------------------------------------- */
+@mixin from($breakpoint) {
+  @if variable-exists(breakpoints) {
+    @if map-has-key($breakpoints, $breakpoint) {
+      $width: map-get($breakpoints, $breakpoint);
+
+      @media only screen and (min-width: #{$width}) {
+        @content;
+      }
+    } @else {
+      @warn "Unkown '#{$breakpoint}' in $breakpoints.";
+    }
+  } @else {
+    @warn "Undefined breakpoints";
+  }
+}
+
+@mixin to($breakpoint) {
+  @if variable-exists(breakpoints) {
+    @if map-has-key($breakpoints, $breakpoint) {
+      $width: map-get($breakpoints, $breakpoint);
+
+      @media only screen and (max-width: #{$width + 1}) {
+        @content;
+      }
+    } @else {
+      @warn "Unkown '#{$breakpoint}' in $breakpoints.";
+    }
+  } @else {
+    @warn "Undefined breakpoints";
+  }
+}
+
+/* Margins
+---------------------------------------------------------------------------- */
+
+/* Function for remove units */
+@function _strip-unit($number) {
+  @if type-of($number) == "number" and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+$margin-size: 5px !default;
+$margin-steps: 20 !default;
+
+@for $i from 1 through $margin-steps {
+  .m-auto {
+    margin: auto;
+  }
+
+  .mx-0 {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .my-0 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .mx-#{$i * _strip-unit($margin-size)} {
+    margin-left: $margin-size * $i;
+    margin-right: $margin-size * $i;
+  }
+  .my-#{$i * _strip-unit($margin-size)} {
+    margin-top: $margin-size * $i;
+    margin-bottom: $margin-size * $i;
+  }
+
+  .mb-0 {
+    margin-bottom: 0;
+  }
+  .mt-0 {
+    margin-top: 0;
+  }
+  .mr-0 {
+    margin-right: 0;
+  }
+  .ml-0 {
+    margin-left: 0;
+  }
+
+  .mb-auto {
+    margin-bottom: auto;
+  }
+  .mt-auto {
+    margin-top: auto;
+  }
+  .mr-auto {
+    margin-right: auto;
+  }
+  .ml-auto {
+    margin-left: auto;
+  }
+
+  .mb-#{$i * _strip-unit($margin-size)} {
+    margin-bottom: $margin-size * $i;
+  }
+  .mt-#{$i * _strip-unit($margin-size)} {
+    margin-top: $margin-size * $i;
+  }
+  .mr-#{$i * _strip-unit($margin-size)} {
+    margin-right: $margin-size * $i;
+  }
+  .ml-#{$i * _strip-unit($margin-size)} {
+    margin-left: $margin-size * $i;
+  }
+
+  @each $name, $size in $breakpoints {
+    @include from($name) {
+      .#{$name}\:m-auto {
+        margin: auto;
+      }
+      .#{$name}\:mx-0 {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .#{$name}\:my-0 {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      .#{$name}\:mx-#{$i * _strip-unit($margin-size)} {
+        margin-left: $margin-size * $i;
+        margin-right: $margin-size * $i;
+      }
+      .#{$name}\:my-#{$i * _strip-unit($margin-size)} {
+        margin-top: $margin-size * $i;
+        margin-bottom: $margin-size * $i;
+      }
+
+      .#{$name}\:mb-0 {
+        margin-bottom: 0;
+      }
+      .#{$name}\:mt-0 {
+        margin-top: 0;
+      }
+      .#{$name}\:ml-0 {
+        margin-right: 0;
+      }
+      .#{$name}\:mr-0 {
+        margin-left: 0;
+      }
+
+      .#{$name}\:mb-auto {
+        margin-bottom: auto;
+      }
+      .#{$name}\:mt-auto {
+        margin-top: auto;
+      }
+      .#{$name}\:mr-auto {
+        margin-right: auto;
+      }
+      .#{$name}\:ml-auto {
+        margin-left: auto;
+      }
+
+      .#{$name}\:mb-#{$i * _strip-unit($margin-size)} {
+        margin-bottom: $margin-size * $i;
+      }
+      .#{$name}\:mt-#{$i * _strip-unit($margin-size)} {
+        margin-top: $margin-size * $i;
+      }
+      .#{$name}\:mr-#{$i * _strip-unit($margin-size)} {
+        margin-right: $margin-size * $i;
+      }
+      .#{$name}\:ml-#{$i * _strip-unit($margin-size)} {
+        margin-left: $margin-size * $i;
+      }
+    }
+  }
+}
+
+/* Padding
+---------------------------------------------------------------------------- */
+$padding-size: 5px !default;
+$padding-steps: 20 !default;
+
+@for $i from 1 through $padding-steps {
+  .px-none {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .py-none {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .px-#{$i * _strip-unit($padding-size)} {
+    padding-left: $padding-size * $i;
+    padding-right: $padding-size * $i;
+  }
+  .py-#{$i * _strip-unit($padding-size)} {
+    padding-top: $padding-size * $i;
+    padding-bottom: $padding-size * $i;
+  }
+  .pb-#{$i * _strip-unit($padding-size)} {
+    padding-bottom: $padding-size * $i;
+  }
+  .pt-#{$i * _strip-unit($padding-size)} {
+    padding-top: $padding-size * $i;
+  }
+  .pr-#{$i * _strip-unit($padding-size)} {
+    padding-right: $padding-size * $i;
+  }
+  .pl-#{$i * _strip-unit($padding-size)} {
+    padding-left: $padding-size * $i;
+  }
+
+  @each $name, $size in $breakpoints {
+    @include from($name) {
+      .#{$name}\:px-none {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .#{$name}\:py-none {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .#{$name}\:px-#{$i * _strip-unit($padding-size)} {
+        padding-left: $padding-size * $i;
+        padding-right: $padding-size * $i;
+      }
+      .#{$name}\:py-#{$i * _strip-unit($padding-size)} {
+        padding-top: $padding-size * $i;
+        padding-bottom: $padding-size * $i;
+      }
+
+      .#{$name}\:pb-none {
+        padding-bottom: 0;
+      }
+      .#{$name}\:pb-#{$i * _strip-unit($padding-size)} {
+        padding-bottom: $padding-size * $i;
+      }
+
+      .#{$name}\:pt-none {
+        padding-top: 0;
+      }
+      .#{$name}\:pt-#{$i * _strip-unit($padding-size)} {
+        padding-top: $padding-size * $i;
+      }
+
+      .#{$name}\:pl-none {
+        padding-right: 0;
+      }
+      .#{$name}\:pr-#{$i * _strip-unit($padding-size)} {
+        padding-right: $padding-size * $i;
+      }
+
+      .#{$name}\:pr-none {
+        padding-left: 0;
+      }
+      .#{$name}\:pl-#{$i * _strip-unit($padding-size)} {
+        padding-left: $padding-size * $i;
+      }
+    }
+  }
+}
+
+/* Grid
+---------------------------------------------------------------------------- */
+$grid-columns: 12 !default;
+$grid-gutter: (
+  min: 10px,
+  sm: 20px
+);
+
+// $_grid-gutter-half:    $grid-gutter * .5;
+// $_gutter-compensation: $grid-gutter * .5 * -1;
+
+.row {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  $gutter: map-get($grid-gutter, min);
+
+  margin-left: $gutter * 0.5 * -1;
+  margin-right: $gutter * 0.5 * -1;
+
+  @each $name, $size in $grid-gutter {
+    @if map-has-key($breakpoints, $name) {
+      $gutter: map-get($grid-gutter, $name);
+
+      @include from($name) {
+        margin-left: $gutter * 0.5 * -1;
+        margin-right: $gutter * 0.5 * -1;
+      }
+    }
+  }
+}
+
+@mixin col-common {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+
+  $gutter: map-get($grid-gutter, min);
+
+  padding-left: $gutter * 0.5;
+  padding-right: $gutter * 0.5;
+
+  @each $name, $size in $grid-gutter {
+    @if map-has-key($breakpoints, $name) {
+      $gutter: map-get($grid-gutter, $name);
+
+      @include from($name) {
+        padding-left: $gutter * 0.5;
+        padding-right: $gutter * 0.5;
+      }
+    }
+  }
+}
+
+.col {
+  @include col-common;
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: 100%;
+}
+@for $i from 1 through $grid-columns {
+  .col-#{$i} {
+    @include col-common;
+    flex-basis: 100% / $grid-columns * $i;
+    max-width: 100% / $grid-columns * $i;
+  }
+}
+@for $i from 0 through $grid-columns {
+  .offset-#{$i} {
+    @include col-common;
+    @if $i == 0 {
+      margin-left: 0;
+    } @else {
+      margin-left: 100% / $grid-columns * $i;
+    }
+  }
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:col {
+      @include col-common;
+      flex-grow: 1;
+      flex-basis: 0;
+      max-width: 100%;
+    }
+
+    @for $i from 1 through $grid-columns {
+      .#{$name}\:col-#{$i} {
+        @include col-common;
+        flex-basis: 100% / $grid-columns * $i;
+        max-width: 100% / $grid-columns * $i;
+      }
+    }
+
+    @for $i from 0 through $grid-columns {
+      .#{$name}\:offset-#{$i} {
+        @if $i == 0 {
+          margin-left: 0;
+        } @else {
+          margin-left: 100% / $grid-columns * $i;
+        }
+      }
+    }
+  }
+}
+
+/* Dispaly util
+---------------------------------------------------------------------------- */
+.hidden {
+  display: none;
+}
+.block {
+  display: block;
+}
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+}
+.inline-flex {
+  display: inline-flex;
+}
+.flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.table {
+  display: table;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:hidden {
+      display: none;
+    }
+    .#{$name}\:block {
+      display: block;
+    }
+    .#{$name}\:inline {
+      display: inline;
+    }
+    .#{$name}\:inline-block {
+      display: inline-block;
+    }
+    .#{$name}\:inline-flex {
+      display: inline-flex;
+    }
+    .#{$name}\:flex {
+      display: flex;
+    }
+    .#{$name}\:flex-column {
+      flex-direction: column;
+    }
+    .#{$name}\:table {
+      display: table;
+    }
+  }
+}
+
+/* Overflow util
+---------------------------------------------------------------------------- */
+.overflow-auto {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:overflow-auto {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .#{$name}\:overflow-hidden {
+      overflow: hidden;
+    }
+    .#{$name}\:overflow-x-hidden {
+      overflow-x: hidden;
+    }
+    .#{$name}\:overflow-x-auto {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .#{$name}\:overflow-y-hidden {
+      overflow-y: hidden;
+    }
+    .#{$name}\:overflow-y-auto {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+/* Position util
+---------------------------------------------------------------------------- */
+.static {
+  position: static;
+}
+.fixed {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.sticky {
+  position: sticky;
+}
+.pin-t {
+  top: 0;
+}
+.pin-r {
+  right: 0;
+}
+.pin-b {
+  bottom: 0;
+}
+.pin-l {
+  left: 0;
+}
+.pin-y {
+  top: 0;
+  bottom: 0;
+}
+.pin-x {
+  right: 0;
+  left: 0;
+}
+.pin {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.pin-none {
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:static {
+      position: static;
+    }
+    .#{$name}\:fixed {
+      position: fixed;
+    }
+    .#{$name}\:absolute {
+      position: absolute;
+    }
+    .#{$name}\:relative {
+      position: relative;
+    }
+    .#{$name}\:sticky {
+      position: sticky;
+    }
+    .#{$name}\:pin-t {
+      top: 0;
+    }
+    .#{$name}\:pin-r {
+      right: 0;
+    }
+    .#{$name}\:pin-b {
+      bottom: 0;
+    }
+    .#{$name}\:pin-l {
+      left: 0;
+    }
+    .#{$name}\:pin-y {
+      top: 0;
+      bottom: 0;
+    }
+    .#{$name}\:pin-x {
+      right: 0;
+      left: 0;
+    }
+    .#{$name}\:pin {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .#{$name}\:pin-none {
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+    }
+  }
+}
+
+/* Z-index util
+---------------------------------------------------------------------------- */
+.z-0 {
+  z-index: 0;
+}
+.z-10 {
+  z-index: 10;
+}
+.z-20 {
+  z-index: 20;
+}
+.z-30 {
+  z-index: 30;
+}
+.z-40 {
+  z-index: 40;
+}
+.z-50 {
+  z-index: 50;
+}
+.z-max {
+  z-index: 9999;
+}
+.z-auto {
+  z-index: auto;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:z-0 {
+      z-index: 0;
+    }
+    .#{$name}\:z-10 {
+      z-index: 10;
+    }
+    .#{$name}\:z-20 {
+      z-index: 20;
+    }
+    .#{$name}\:z-30 {
+      z-index: 30;
+    }
+    .#{$name}\:z-40 {
+      z-index: 40;
+    }
+    .#{$name}\:z-50 {
+      z-index: 50;
+    }
+    .#{$name}\:z-max {
+      z-index: 9999;
+    }
+    .#{$name}\:z-auto {
+      z-index: auto;
+    }
+  }
+}
+
+/* Flex
+---------------------------------------------------------------------------- */
+.flex-no-wrap {
+  flex-wrap: nowrap;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.content-start {
+  align-content: flex-start;
+}
+.content-center {
+  align-content: center;
+}
+.content-end {
+  align-content: flex-end;
+}
+.content-between {
+  align-content: space-between;
+}
+.content-around {
+  align-content: space-around;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+.items-baseline {
+  align-items: baseline;
+}
+
+.self-auto {
+  align-self: auto;
+}
+.self-start {
+  align-self: flex-start;
+}
+.self-center {
+  align-self: center;
+}
+.self-end {
+  align-self: flex-end;
+}
+.self-stretch {
+  align-self: stretch;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:flex-no-wrap {
+      flex-wrap: nowrap;
+    }
+    .#{$name}\:flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .#{$name}\:content-start {
+      align-content: flex-start;
+    }
+    .#{$name}\:content-center {
+      align-content: center;
+    }
+    .#{$name}\:content-end {
+      align-content: flex-end;
+    }
+    .#{$name}\:content-between {
+      align-content: space-between;
+    }
+    .#{$name}\:content-around {
+      align-content: space-around;
+    }
+
+    .#{$name}\:justify-start {
+      justify-content: flex-start;
+    }
+    .#{$name}\:justify-center {
+      justify-content: center;
+    }
+    .#{$name}\:justify-end {
+      justify-content: flex-end;
+    }
+    .#{$name}\:justify-between {
+      justify-content: space-between;
+    }
+    .#{$name}\:justify-around {
+      justify-content: space-around;
+    }
+
+    .#{$name}\:items-stretch {
+      align-items: stretch;
+    }
+    .#{$name}\:items-start {
+      align-items: flex-start;
+    }
+    .#{$name}\:items-center {
+      align-items: center;
+    }
+    .#{$name}\:items-end {
+      align-items: flex-end;
+    }
+    .#{$name}\:items-baseline {
+      align-items: baseline;
+    }
+
+    .#{$name}\:self-auto {
+      align-self: auto;
+    }
+    .#{$name}\:self-start {
+      align-self: flex-start;
+    }
+    .#{$name}\:self-center {
+      align-self: center;
+    }
+    .#{$name}\:self-end {
+      align-self: flex-end;
+    }
+    .#{$name}\:self-stretch {
+      align-self: stretch;
+    }
+  }
+}
+
+/* Width util
+---------------------------------------------------------------------------- */
+.w-full {
+  width: 100%;
+}
+.w-screen {
+  width: 100vw;
+}
+.w-1\/2 {
+  width: 50%;
+}
+.max-w-full {
+  max-width: 100%;
+}
+.max-w-screen {
+  max-width: 100vw;
+}
+.min-w-full {
+  min-width: 100%;
+}
+.min-w-screen {
+  min-width: 100vw;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:w-full {
+      width: 100%;
+    }
+    .#{$name}\:w-screen {
+      width: 100vw;
+    }
+    .#{$name}\:w-1\/2 {
+      width: 50%;
+    }
+    .#{$name}\:max-w-full {
+      max-width: 100%;
+    }
+    .#{$name}\:max-w-screen {
+      max-width: 100vw;
+    }
+    .#{$name}\:min-w-full {
+      min-width: 100%;
+    }
+    .#{$name}\:min-w-screen {
+      min-width: 100vw;
+    }
+  }
+}
+
+/* Height util
+---------------------------------------------------------------------------- */
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100vh;
+}
+.max-h-full {
+  max-height: 100%;
+}
+.max-h-screen {
+  max-height: 100vh;
+}
+.min-h-full {
+  min-height: 100%;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:h-full {
+      height: 100%;
+    }
+    .#{$name}\:h-screen {
+      height: 100vh;
+    }
+    .#{$name}\:max-h-full {
+      max-height: 100%;
+    }
+    .#{$name}\:max-h-screen {
+      max-height: 100vh;
+    }
+    .#{$name}\:min-h-full {
+      min-height: 100%;
+    }
+    .#{$name}\:min-h-screen {
+      min-height: 100vh;
+    }
+  }
+}
+
+/* Pointer
+---------------------------------------------------------------------------- */
+.events-none {
+  pointer-events: none;
+}
+.events-auto {
+  pointer-events: auto;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:events-none {
+      pointer-events: none;
+    }
+    .#{$name}\:events-auto {
+      pointer-events: auto;
+    }
+  }
+}
+
+/* Select
+---------------------------------------------------------------------------- */
+.select-none {
+  user-select: none;
+}
+.select-text {
+  user-select: text;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:select-none {
+      user-select: none;
+    }
+    .#{$name}\:select-text {
+      user-select: text;
+    }
+  }
+}
+
+/* Text
+---------------------------------------------------------------------------- */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-justify {
+  text-align: justify;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:text-left {
+      text-align: left;
+    }
+    .#{$name}\:text-center {
+      text-align: center;
+    }
+    .#{$name}\:text-right {
+      text-align: right;
+    }
+    .#{$name}\:text-justify {
+      text-align: justify;
+    }
+  }
+}
+
+/* Whitespace
+---------------------------------------------------------------------------- */
+.wspace-normal {
+  white-space: normal;
+}
+.wspace-no-wrap {
+  white-space: nowrap;
+}
+.wspace-pre {
+  white-space: pre;
+}
+.wspace-pre-line {
+  white-space: pre-line;
+}
+.wspace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:wspace-normal {
+      white-space: normal;
+    }
+    .#{$name}\:wspace-no-wrap {
+      white-space: nowrap;
+    }
+    .#{$name}\:wspace-pre {
+      white-space: pre;
+    }
+    .#{$name}\:wspace-pre-line {
+      white-space: pre-line;
+    }
+    .#{$name}\:wspace-pre-wrap {
+      white-space: pre-wrap;
+    }
+  }
+}
+
+/* Truncate
+---------------------------------------------------------------------------- */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Text reset
+---------------------------------------------------------------------------- */
+.text-reset {
+  font: 0/0 a;
+}
+
+/* Text transfomr
+---------------------------------------------------------------------------- */
+.uppercase {
+  text-transform: uppercase;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:uppercase {
+      text-transform: uppercase;
+    }
+    .#{$name}\:lowercase {
+      text-transform: lowercase;
+    }
+  }
+}
+
+/* Letter spacing
+---------------------------------------------------------------------------- */
+.tracking-tight {
+  letter-spacing: -0.005em;
+}
+.tracking-normal {
+  letter-spacing: 0;
+}
+.tracking-wide {
+  letter-spacing: 0.005em;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:tracking-tight {
+      letter-spacing: -0.05em;
+    }
+    .#{$name}\:tracking-normal {
+      letter-spacing: 0;
+    }
+    .#{$name}\:tracking-wide {
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+/* Fonts
+---------------------------------------------------------------------------- */
+.font-bold {
+  font-weight: bold;
+}
+.font-normal {
+  font-weight: normal;
+}
+
+@each $name, $size in $breakpoints {
+  @include from($name) {
+    .#{$name}\:font-bold {
+      font-weight: bold;
+    }
+    .#{$name}\:font-normal {
+      font-weight: normal;
+    }
+  }
+}
+
+/* Breackpoints styles for js mediaQuery 
+---------------------------------------------------------------------------- */
+body:after {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  width: 1px;
+  height: 1px;
+  margin: -1px 0 0 -1px;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+
+  content: "xs";
+
+  @each $name, $size in $breakpoints {
+    @include from($name) {
+      content: "#{$name}";
+    }
+  }
+}
+
+head {
+  font-family: "xs";
+
+  @each $name, $size in $breakpoints {
+    @include from($name) {
+      font-family: "#{$name}";
+    }
+  }
+}

@@ -1,0 +1,11 @@
+title: Inbox
+icon: 📥
+
+options:
+  url: false
+  status: false
+  delete: false
+
+fields:
+
+  
