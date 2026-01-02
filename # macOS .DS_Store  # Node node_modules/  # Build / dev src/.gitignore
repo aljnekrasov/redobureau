@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Build / dev
+src/
+gulpfile.js
+
+# Verification files
+google*.html
+yandex_*.html
+pinterest-*.html
+
+# Locks (optional)
+yarn.lock
+package-lock.json
