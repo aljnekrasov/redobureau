@@ -20,10 +20,11 @@
     "require": {
         "php": ">=7.1.0",
         "getkirby/cms": "^3.0"
- "config": {
-    "optimize-autoloader": true,
-    "allow-plugins": {
-        "getkirby/composer-installer": true
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "getkirby/composer-installer": true
+        }
     }
-}
 }
