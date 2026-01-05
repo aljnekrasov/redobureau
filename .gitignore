@@ -16,3 +16,8 @@ pinterest-*.html
 # Locks (optional)
 yarn.lock
 package-lock.json
+
+
+# Languages (different at .ru/.com) (multi language redirect in config)
+site/languages
+site/config
