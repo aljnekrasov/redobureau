@@ -41,6 +41,6 @@
     </div>
 </div>
 
-<script type="text/javascript" defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCrQRORmEBYrcXOmvLZHjs8uJH6xi1D-WE'></script>
+<script type="text/javascript" defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBUx0gBpOOvUEcjuPsvfksyhgE6aQII6MM'></script>
 
 <?php snippet('footer') ?>
