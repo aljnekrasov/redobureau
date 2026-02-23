@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desde Marketing: продвижение сайта в chatGPT и ии чат-ботах</title>
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#222;--fg:#1a1a1a;--muted:#999;--light:#2a2a2a;--lighter:#2e2e2e;--border:rgba(255,255,255,.1);--accent:#ff6b2b;--accent-hover:#e55a1f;--accent-bg:rgba(255,107,43,.15);--green-bg:rgba(255,255,255,.08);--blue-bg:rgba(255,255,255,.08);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--ease:cubic-bezier(.25,1,.5,1);--max-w:1200px;--gutter:48px;--radius:20px;--radius-sm:14px;--pill:50px}
+html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{background:var(--bg);color:#f0ece6;font-family:var(--font);font-weight:400;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 var(--gutter)}
+
+/* SALE STRIP */
+.sale-strip{background:var(--accent);color:#fff;text-align:center;padding:12px 16px;font-size:.875rem;font-weight:600}
+.sale-strip a{color:#fff;text-decoration:underline;text-underline-offset:3px;margin-left:8px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid rgba(0,0,0,.06);transition:border-color .5s ease}
+nav::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);mask-image:linear-gradient(to bottom,black 50%,transparent);-webkit-mask-image:linear-gradient(to bottom,black 50%,transparent);z-index:-1;transition:background .5s ease}
+nav.nav-dark::before{background:rgba(0,0,0,.35)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 40px}
+.nav-brand{font-weight:900;font-size:1.125rem;letter-spacing:-.03em;padding:8px 0}
+.nav-brand img{transition:filter .5s ease}
+.nav-right{display:flex;align-items:center;gap:24px}
+.nav-link{font-size:.875rem;font-weight:500;color:#777;transition:color .5s ease}
+.nav-link:hover{color:#1a1a1a}
+nav.nav-dark{border-bottom-color:rgba(255,255,255,.08)}
+nav.nav-dark .nav-link{color:rgba(255,255,255,.6)}
+nav.nav-dark .nav-link:hover{color:#fff}
+nav.nav-dark .nav-brand img{filter:brightness(0) invert(1)}
+nav.nav-dark .nav-cta{background:linear-gradient(135deg,#ff6a1e 0%,#ff4500 100%);box-shadow:0 2px 20px rgba(255,69,0,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+.nav-cta{padding:10px 24px;color:#fff;border-radius:var(--pill);font-size:.875rem;font-weight:600;border:none;background:linear-gradient(135deg,#ff6a1e 0%,#ff4500 100%);box-shadow:0 2px 20px rgba(255,69,0,.35),inset 0 1px 0 rgba(255,255,255,.2);transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transition:left .6s ease}
+.nav-cta:hover{background:linear-gradient(135deg,#ff7b3a 0%,#ff5500 100%);box-shadow:0 6px 28px rgba(255,69,0,.45),inset 0 1px 0 rgba(255,255,255,.3);transform:translateY(-1px)}
+.nav-cta:hover::before{left:100%}
+
+/* HERO */
+.hero{padding:130px 0 48px;overflow:hidden;background:#fff}
+.hero-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px}
+#sphereCanvas{display:block;border-radius:50%}
+#sphereCanvasMini{display:block;border-radius:50%}
+.hero-speaker{display:flex;align-items:center;gap:14px}
+.hero-speaker-photo{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #e0e0e0}
+.hero-speaker-info{text-align:left}
+.hero-speaker-name{font-size:1rem;font-weight:700;color:#1a1a1a}
+.hero-speaker-role{font-size:.8125rem;color:#777;font-weight:500}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:var(--pill);background:var(--accent-bg);color:var(--accent);font-size:.8125rem;font-weight:700}
+.hero h1{font-size:clamp(2.25rem,5vw,3.5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;color:#1a1a1a;max-width:600px}
+.hero-sub{font-size:1.0625rem;color:#777;line-height:1.6;max-width:520px}
+.hero-chat{width:100%;max-width:1000px;position:relative;margin-top:4px}
+.hero-chat-input{width:100%;padding:28px 100px 28px 28px;border-radius:var(--pill);border:1px solid #e0e0e0;background:#fff;font-family:var(--font);font-size:3rem;color:#1a1a1a;outline:none;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:border-color .2s,box-shadow .2s;font-weight:700;letter-spacing:-.02em}
+.hero-chat-input:focus{border-color:var(--accent);box-shadow:0 2px 20px rgba(255,107,43,.2)}
+.hero-chat-input::placeholder{color:transparent}
+.hero-chat-placeholder{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:3rem;color:#bbb;pointer-events:none;white-space:nowrap;overflow:hidden;font-weight:700;letter-spacing:-.02em}
+.hero-chat-placeholder span{display:inline-block;opacity:0;transition:opacity .4s}
+.hero-chat-placeholder span.active{opacity:1}
+.hero-chat-sphere{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:80px;height:80px;border-radius:50%;overflow:hidden;cursor:pointer}
+.hero-chat-sphere canvas{display:block;width:80px;height:80px;border-radius:50%}
+.hero-bullets{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;justify-content:center}
+.hero-bullet{display:flex;align-items:center;gap:6px;font-size:.875rem;color:#555}
+.hero-bullet::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.meta-pill{padding:8px 16px;border-radius:var(--pill);font-size:.8125rem;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.mp-green{background:var(--green-bg);color:#1b8c3a}
+.mp-blue{background:var(--blue-bg);color:#007aff}
+
+/* SPHERE SOLO */
+.shader-bg{position:relative;overflow:hidden;border-top:1px solid var(--border)}
+.shader-bg canvas{display:block;width:100%;height:480px}
+.shader-headline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;padding:40px 60px;pointer-events:none}
+.shader-headline p{font-size:clamp(1.5rem,3.5vw,2.5rem);font-weight:800;color:#fff;text-align:center;max-width:750px;line-height:1.25;letter-spacing:-.03em;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.shader-tags{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1}
+.shader-tag{position:absolute;color:rgba(255,255,255,.85);font-size:1.125rem;font-weight:600;white-space:nowrap;opacity:0;transition:opacity 1.2s ease;text-shadow:0 2px 8px rgba(0,40,120,.4)}
+
+@media(max-width:960px){
+  .shader-bg canvas{height:360px}
+  .shader-headline{padding:30px 24px}
+}
+
+/* MARQUEE */
+.marquee{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden}
+.marquee-track{display:flex;gap:10px;width:max-content;animation:mq 30s linear infinite}
+.mq-item{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:var(--pill);background:rgba(0,0,0,.15);font-size:.8125rem;font-weight:600;color:rgba(240,236,230,.7);white-space:nowrap;flex-shrink:0}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.section{padding:72px 0}
+.section-border{border-top:1px solid var(--border)}
+.section-white{background:#fff}
+.section-white .section-h{color:#1a1a1a}
+.section-white .section-label{color:#ff6b2b}
+.section-white .section-sub{color:#777}
+.section-white .stat-num{color:#ff6b2b}
+.section-white .stat-label{color:#777}
+.section-white .stat-box{border-color:#e8e8e8}
+.section-white .stats-inline{border-color:#e8e8e8}
+.section-white .pain-card{background:#f8f8f8;border-color:#e8e8e8}
+.section-white .pain-text{color:#444}
+.section-white .bonus-h{color:#fff}
+.section-white .why-card{background:#f8f8f8;border-color:#e8e8e8}
+.section-white .why-title{color:#1a1a1a}
+.section-white .why-text{color:#666}
+.section-white .section-border{border-color:#e8e8e8}
+.section-label{font-size:.8125rem;font-weight:700;color:#ff6b2b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.section-h{font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-bottom:10px;color:#f0ece6}
+.section-sub{font-size:1.0625rem;color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:36px}
+
+/* STATS */
+.stats-inline{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:48px}
+.stat-box{padding:28px 24px;text-align:center;border-right:1px solid var(--border)}
+.stat-box:last-child{border-right:none}
+.stat-num{font-size:2rem;font-weight:900;letter-spacing:-.03em;margin-bottom:2px;color:#ff6b2b}
+.stat-label{font-size:.8125rem;color:var(--muted);font-weight:500}
+
+/* PAIN */
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pain-card{background:var(--lighter);border:1px solid var(--border);border-radius:var(--radius-sm);padding:24px;display:flex;gap:14px;align-items:flex-start;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s var(--ease)}
+.pain-card.is-visible{opacity:1;transform:translateY(0)}
+.pain-card.span-2{grid-column:span 2}
+.pain-icon{width:40px;height:40px;border-radius:10px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.pain-text{font-size:1rem;line-height:1.5;color:rgba(240,236,230,.8)}
+
+/* PROGRAM */
+.program-list{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.prog-item{border-bottom:1px solid var(--border);background:var(--lighter);opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s var(--ease)}
+.prog-item.is-visible{opacity:1;transform:translateY(0)}
+.prog-item:last-child{border-bottom:none}
+.prog-head{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;cursor:pointer;user-select:none;transition:background .12s}
+.prog-head:hover{background:var(--lighter)}
+.prog-head-left{display:flex;align-items:center;gap:16px}
+.prog-num{width:36px;height:36px;border-radius:50%;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.875rem;font-weight:800}
+.prog-title{font-size:1.0625rem;font-weight:700}
+.prog-badge{padding:3px 10px;border-radius:var(--pill);background:rgba(255,107,43,.15);color:#ff6b2b;font-size:.6875rem;font-weight:700;margin-left:10px}
+.prog-arrow{width:24px;height:24px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+.prog-item.open .prog-arrow{transform:rotate(180deg)}
+.prog-body{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+.prog-item.open .prog-body{max-height:300px}
+.prog-body-inner{padding:0 28px 24px 80px;font-size:.9375rem;color:var(--muted);line-height:1.65}
+.prog-cta{margin-top:32px;text-align:center}
+.btn-accent{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;color:#fff;border-radius:var(--pill);font-family:var(--font);font-size:1rem;font-weight:600;letter-spacing:.04em;border:none;cursor:pointer;background:linear-gradient(135deg,#ff6a1e 0%,#ff4500 100%);box-shadow:0 4px 24px rgba(255,69,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.1);transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+.btn-accent::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .6s ease}
+.btn-accent:hover{background:linear-gradient(135deg,#ff7b3a 0%,#ff5500 100%);box-shadow:0 8px 32px rgba(255,69,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.1);transform:translateY(-2px)}
+.btn-accent:hover::before{left:100%}
+
+/* BONUS */
+.bonus-card{border-radius:var(--radius);overflow:hidden;background:var(--fg);color:#fff;display:grid;grid-template-columns:1fr 1fr;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s var(--ease)}
+.bonus-card.is-visible{opacity:1;transform:translateY(0)}
+.bonus-left,.bonus-right{padding:44px 40px}
+.bonus-right{border-left:1px solid rgba(255,255,255,.1)}
+.bonus-tag{display:inline-block;padding:4px 14px;border-radius:var(--pill);background:rgba(255,199,58,.2);color:#ffc73a;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+.bonus-h{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;line-height:1.2}
+.bonus-desc{font-size:.9375rem;color:rgba(255,255,255,.6);line-height:1.6}
+.bonus-steps{display:flex;flex-direction:column;gap:14px}
+.bonus-step{display:flex;align-items:center;gap:14px;font-size:.9375rem;color:rgba(255,255,255,.85)}
+.bonus-step-num{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem;font-weight:700}
+.bonus-more{font-size:.8125rem;color:rgba(255,255,255,.4);margin-top:12px}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.why-card{background:var(--lighter);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 24px;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s var(--ease)}
+.why-card.is-visible{opacity:1;transform:translateY(0)}
+.why-icon{width:48px;height:48px;border-radius:12px;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:1.375rem;margin-bottom:18px}
+.why-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.why-text{font-size:.875rem;color:var(--muted);line-height:1.55}
+
+/* ABOUT */
+.about-intro{font-size:1.125rem;color:rgba(240,236,230,.8);line-height:1.6;max-width:700px;margin-bottom:40px}
+.about-team{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.about-card{background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:32px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
+.about-card img{width:120px;height:120px;border-radius:50%;object-fit:cover}
+.about-card-name{font-size:1.125rem;font-weight:800;letter-spacing:-.02em;color:#f0ece6}
+.about-card-role{font-size:.8125rem;color:#ff6b2b;font-weight:600;margin-top:-8px}
+.about-card-text{font-size:.9375rem;color:var(--muted);line-height:1.6;text-align:left}
+@media(max-width:960px){.about-team{grid-template-columns:1fr}}
+
+/* FINAL CTA */
+.final{padding:72px 0 80px;text-align:center;background:var(--light);border-top:1px solid var(--border)}
+.final-h{font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:900;letter-spacing:-.03em;margin-bottom:8px;color:#f0ece6}
+.final-sub{font-size:1.0625rem;color:rgba(240,236,230,.6);margin-bottom:28px}
+.final-note{font-size:.8125rem;color:rgba(240,236,230,.5);margin-top:16px}
+
+/* FOOTER */
+footer{padding:28px 0;border-top:1px solid var(--border)}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;color:var(--muted)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:var(--muted);transition:color .15s}
+.footer-links a:hover{color:var(--fg)}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  :root{--gutter:24px}
+  .pain-grid{grid-template-columns:1fr}
+  .pain-card.span-2{grid-column:auto}
+  .stats-inline{grid-template-columns:1fr 1fr}
+  .stat-box:nth-child(2){border-right:none}
+  .stat-box:nth-child(1),.stat-box:nth-child(2){border-bottom:1px solid var(--border)}
+  .why-grid{grid-template-columns:1fr}
+  .bonus-card{grid-template-columns:1fr}
+  .bonus-right{border-left:none;border-top:1px solid rgba(255,255,255,.1)}
+  .nav-right .nav-link{display:none}
+  .prog-body-inner{padding-left:28px}
+  .footer-inner{flex-direction:column;gap:8px;text-align:center}
+  .hero-start{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+
+
+<nav><div class="container nav-inner">
+  <a href="#" class="nav-brand"><img src="desde-logo.svg" alt="Desde Marketing" style="height:48px;display:block"></a>
+  <div class="nav-right">
+    <a href="#program" class="nav-link">Программа</a>
+    <a href="#bonus" class="nav-link">Бонус</a>
+    <a href="#why" class="nav-link">Преимущества</a>
+    <a href="#" class="nav-cta">Записаться на курс</a>
+  </div>
+</div></nav>
+
+<section class="hero"><div class="container"><div class="hero-inner">
+  <div class="hero-speaker">
+    <img src="alex.png" alt="Александр Некрасов" class="hero-speaker-photo">
+    <div class="hero-speaker-info">
+      <div class="hero-speaker-name">Александр Некрасов</div>
+      <div class="hero-speaker-role">Ведущий воркшопа · эксперт по брендингу и маркетингу</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <div class="hero-tag">🔥 Бесплатный воркшоп</div>
+    <div class="hero-tag">⏱ 60 мин</div>
+  </div>
+  <h1>Как попасть в&nbsp;чат ChatGPT и&nbsp;получить клиентов?</h1>
+  <div class="hero-chat">
+    <input class="hero-chat-input" type="text" readonly>
+    <div class="hero-chat-placeholder"><span class="active" id="chatPh"></span></div>
+    <div class="hero-chat-sphere"><canvas id="sphereCanvasMini" width="160" height="160"></canvas></div>
+  </div>
+  <div class="hero-bullets">
+    <div class="hero-bullet">5 методов AEO</div>
+    <div class="hero-bullet">Работает в любой нише</div>
+    <div class="hero-bullet">Нулевая конкуренция</div>
+  </div>
+  <a href="#" class="btn-accent" style="margin-top:8px">Записаться на курс</a>
+</div></div></section>
+
+<div class="shader-bg">
+  <canvas id="shaderBgCanvas" width="1920" height="800"></canvas>
+  <div class="shader-headline">
+    <p>Каждый день всё больше людей ищут товары и&nbsp;услуги через ChatGPT, а&nbsp;классический SEO-подход к&nbsp;продвижению уже не&nbsp;приносит результатов.</p>
+  </div>
+  <div class="shader-tags">
+    <div class="shader-tag" style="top:10%;left:5%">лучшая кофейня рядом</div>
+    <div class="shader-tag" style="top:18%;right:6%">курсы английского онлайн</div>
+    <div class="shader-tag" style="top:75%;left:3%">где купить органический чай</div>
+    <div class="shader-tag" style="top:82%;right:5%">лучший стоматолог в Москве</div>
+    <div class="shader-tag" style="top:30%;left:2%">фитнес-клуб с бассейном</div>
+    <div class="shader-tag" style="top:65%;right:3%">дизайнер интерьеров</div>
+    <div class="shader-tag" style="top:12%;left:40%">доставка цветов сегодня</div>
+    <div class="shader-tag" style="top:85%;left:30%">юрист по недвижимости</div>
+    <div class="shader-tag" style="top:50%;left:2%">ремонт iPhone рядом</div>
+    <div class="shader-tag" style="top:50%;right:2%">репетитор математики</div>
+    <div class="shader-tag" style="top:38%;right:4%">автосервис немецких авто</div>
+    <div class="shader-tag" style="top:70%;left:25%">свадебный фотограф</div>
+  </div>
+</div>
+
+
+<section class="section section-white"><div class="container">
+  <div class="stats-inline">
+    <div class="stat-box"><div class="stat-num">60</div><div class="stat-label">минут тренинга</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">методов AEO</div></div>
+
+    <div class="stat-box"><div class="stat-num">1000+</div><div class="stat-label">маркетологов учатся</div></div>
+  </div>
+  <div class="section-label">Проблема</div>
+  <h2 class="section-h">Почему ваш маркетинг перестаёт работать</h2>
+  <p class="section-sub">Старые каналы теряют эффективность. Вот с чем сталкивается бизнес прямо сейчас:</p>
+  <div class="pain-grid">
+    <div class="pain-card" data-reveal><div class="pain-icon">📉</div><div class="pain-text">Реклама дорожает, а ROI падает — бюджеты растут, клиентов меньше</div></div>
+    <div class="pain-card" data-reveal><div class="pain-icon">⏳</div><div class="pain-text">SEO занимает месяцы и даёт нестабильный результат</div></div>
+    <div class="pain-card" data-reveal><div class="pain-icon">📊</div><div class="pain-text">Трафик из Google и Яндекс сокращается из года в год</div></div>
+    <div class="pain-card" data-reveal><div class="pain-icon">💬</div><div class="pain-text">Пользователи спрашивают у ChatGPT вместо поиска в интернете</div></div>
+    <div class="pain-card span-2" data-reveal><div class="pain-icon">🤷</div><div class="pain-text">Большинство бизнесов даже не знают, что можно продвигаться внутри ответов ChatGPT — и это ваше конкурентное преимущество</div></div>
+  </div>
+</div></section>
+
+<section class="section section-border" id="program"><div class="container">
+  <div class="section-label">Программа тренинга</div>
+  <h2 class="section-h">Что вы узнаете</h2>
+  <p class="section-sub">Тренинг рассчитан на 60 минут. Каждый блок — конкретный навык, который можно применить сразу.</p>
+  <div class="program-list">
+    <div class="prog-item" data-reveal><div class="prog-head" onclick="this.parentElement.classList.toggle('open')"><div class="prog-head-left"><div class="prog-num">1</div><div class="prog-title">Как работает поиск ChatGPT <span class="prog-badge">Основы</span></div></div><svg class="prog-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="prog-body"><div class="prog-body-inner">Почему ChatGPT выбирает одни бренды и игнорирует другие? Разберём 3 фактора ранжирования, о которых не пишут в открытых источниках.</div></div></div>
+    <div class="prog-item" data-reveal><div class="prog-head" onclick="this.parentElement.classList.toggle('open')"><div class="prog-head-left"><div class="prog-num">2</div><div class="prog-title">Как ChatGPT рекомендует ваш продукт</div></div><svg class="prog-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="prog-body"><div class="prog-body-inner">Покажем на живом примере: берём реальный бренд, вводим запрос в ChatGPT — и разбираем, почему он оказался в ответе, а его конкурент — нет.</div></div></div>
+    <div class="prog-item" data-reveal><div class="prog-head" onclick="this.parentElement.classList.toggle('open')"><div class="prog-head-left"><div class="prog-num">3</div><div class="prog-title">5 готовых методов AEO <span class="prog-badge">Практика</span></div></div><svg class="prog-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="prog-body"><div class="prog-body-inner">Пять конкретных приёмов, которые можно внедрить за день. Один из них не требует сайта, а другой работает даже для совсем новых брендов.</div></div></div>
+    <div class="prog-item" data-reveal><div class="prog-head" onclick="this.parentElement.classList.toggle('open')"><div class="prog-head-left"><div class="prog-num">4</div><div class="prog-title">Как попасть в выдачу без сайта</div></div><svg class="prog-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="prog-body"><div class="prog-body-inner">Есть способ появиться в ответах ChatGPT, даже если у вас нет сайта. Расскажем, какие платформы модель считает самыми надёжными источниками.</div></div></div>
+    <div class="prog-item" data-reveal><div class="prog-head" onclick="this.parentElement.classList.toggle('open')"><div class="prog-head-left"><div class="prog-num">5</div><div class="prog-title">Ключевые ошибки в AEO <span class="prog-badge">Разбор</span></div></div><svg class="prog-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="prog-body"><div class="prog-body-inner">5 ошибок, из-за которых ChatGPT никогда не покажет ваш бренд. Большинство маркетологов допускают как минимум три из них прямо сейчас.</div></div></div>
+  </div>
+  <div class="prog-cta"><a href="#" class="btn-accent">Записаться на тренинг → Telegram</a></div>
+</div></section>
+
+<section class="section section-border section-white" id="bonus"><div class="container">
+  <div class="section-label">Бонус</div>
+  <h2 class="section-h">Дарим чек-лист при регистрации</h2>
+  <div style="margin-bottom:24px"></div>
+  <div class="bonus-card" data-reveal-card>
+    <div class="bonus-left">
+      <div class="bonus-tag">🎁 Бесплатный бонус</div>
+      <div class="bonus-h">Чек-лист AEO: «10 шагов, чтобы появиться в ответах ChatGPT»</div>
+      <p class="bonus-desc">Получите бонус сразу после подключения к Telegram-боту. Пошаговый план для любой ниши.</p>
+    </div>
+    <div class="bonus-right">
+      <div class="bonus-steps">
+        <div class="bonus-step"><div class="bonus-step-num">1</div> Анализ присутствия в AI-поиске</div>
+        <div class="bonus-step"><div class="bonus-step-num">2</div> Оптимизация контента под AEO</div>
+        <div class="bonus-step"><div class="bonus-step-num">3</div> Стратегия упоминаний бренда</div>
+        <div class="bonus-step"><div class="bonus-step-num">4</div> Работа с внешними площадками</div>
+      </div>
+      <div class="bonus-more">+ ещё 6 шагов в полном чек-листе</div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section section-border" id="about"><div class="container">
+  <div class="section-label">О нас</div>
+  <h2 class="section-h">Desde Marketing</h2>
+  <p class="about-intro">Мы Desde Marketing — консалтинговое агентство в сфере маркетинга.</p>
+  <div class="about-team">
+    <div class="about-card" data-reveal>
+      <img src="alex.png" alt="Александр Некрасов">
+      <div class="about-card-name">Александр Некрасов</div>
+      <div class="about-card-role">Бренд-директор · AEO & LLM</div>
+      <div class="about-card-text">Специалист по AEO и LLM-позиционированию брендов. Основатель брендингового агентства Redo Bureau. Его сила — сочетание стратегического маркетинга и брендинга. Учился в Университете Хартфордшира по специализации «Коммуникации». Работал со Сбербанком, Яндексом, HBO, Норникелем, группой Самолёт, Русалом.</div>
+    </div>
+    <div class="about-card" data-reveal>
+      <img src="andrew.png" alt="Андрей Жидра">
+      <div class="about-card-name">Андрей Жидра</div>
+      <div class="about-card-role">IT-предприниматель · SEO & AEO</div>
+      <div class="about-card-text">Интернет-маркетолог, специалист по SEO и AEO-продвижению. Основатель AR-стартапа Stories AR. Специалист по запуску IT-проектов на международные рынки на платформах Etsy, App Store, Google Play.</div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section section-border section-white" id="why"><div class="container">
+  <div class="section-label">Преимущества</div>
+  <h2 class="section-h">Почему стоит учиться у нас</h2>
+  <div style="margin-bottom:24px"></div>
+  <div class="why-grid">
+    <div class="why-card" data-reveal><div class="why-icon">🚀</div><div class="why-title">Практический опыт</div><div class="why-text">Продвижение VPN-приложений, мультиязычных AI-систем, SEO на 92 языках</div></div>
+    <div class="why-card" data-reveal><div class="why-icon">⚡</div><div class="why-title">Живые проекты</div><div class="why-text">Реальная AEO-оптимизация для действующих продуктов, а не теория</div></div>
+    <div class="why-card" data-reveal><div class="why-icon">💬</div><div class="why-title">Реальные кейсы</div><div class="why-text">Примеры, как ChatGPT начинает рекомендовать бренды после оптимизации</div></div>
+  </div>
+</div></section>
+
+<section class="final"><div class="container">
+  <div class="final-h">Готовы попасть в ответы ChatGPT?</div>
+  <div class="final-sub">Получите доступ к тренингу и бонусный чек-лист прямо сейчас</div>
+  <a href="#" class="btn-accent">Записаться на курс</a>
+  <div class="final-note">Присоединяйтесь к 1000+ маркетологам, уже изучающим AEO</div>
+</div></section>
+
+<footer><div class="container footer-inner">
+  <span>© 2025 AEO Strategy</span>
+  <div class="footer-links"><a href="#">Конфиденциальность</a><a href="#">Условия</a></div>
+</div></footer>
+
+<script>
+// Nav color switching on scroll over dark/light sections
+(function(){
+  var nav = document.querySelector('nav');
+  if (!nav) return;
+  var darkSections = [];
+  document.querySelectorAll('.shader-bg, .section:not(.section-white), .final').forEach(function(el){
+    darkSections.push(el);
+  });
+  function checkNav() {
+    var navBottom = nav.getBoundingClientRect().bottom;
+    var navMid = nav.getBoundingClientRect().top + nav.getBoundingClientRect().height * 0.5;
+    var isDark = false;
+    for (var i = 0; i < darkSections.length; i++) {
+      var rect = darkSections[i].getBoundingClientRect();
+      if (rect.top < navMid && rect.bottom > navMid) {
+        isDark = true;
+        break;
+      }
+    }
+    if (isDark) nav.classList.add('nav-dark');
+    else nav.classList.remove('nav-dark');
+  }
+  window.addEventListener('scroll', checkNav, {passive:true});
+  checkNav();
+})();
+
+// Chat placeholder typing animation
+(function(){
+  var phrases = [
+    'Лучшие кофейни в Новосибирске?',
+    'Где купить лучшее зерно в Краснодаре?',
+    'Студии в скандинавском стиле'
+  ];
+  var el = document.getElementById('chatPh');
+  if (!el) return;
+  var pi = 0, ci = 0, deleting = false, pause = 0;
+
+  function tick() {
+    var phrase = phrases[pi];
+    if (pause > 0) { pause--; requestAnimationFrame(tick); return; }
+
+    if (!deleting) {
+      ci++;
+      el.textContent = phrase.slice(0, ci);
+      if (ci >= phrase.length) { deleting = true; pause = 120; }
+    } else {
+      ci--;
+      el.textContent = phrase.slice(0, ci);
+      if (ci <= 0) { deleting = false; pi = (pi + 1) % phrases.length; pause = 20; }
+    }
+    setTimeout(tick, deleting ? 25 : 55);
+  }
+  tick();
+})();
+</script>
+
+<script>
+// Shader tags fade cycle
+(function(){
+  var tags = document.querySelectorAll('.shader-tag');
+  if (!tags.length) return;
+  var visible = [];
+
+  function showRandom() {
+    var idx;
+    do { idx = Math.floor(Math.random() * tags.length); } while (visible.indexOf(idx) !== -1 && visible.length < tags.length);
+
+    tags[idx].style.opacity = '1';
+    visible.push(idx);
+
+    setTimeout(function() {
+      tags[idx].style.opacity = '0';
+      visible.splice(visible.indexOf(idx), 1);
+    }, 2000 + Math.random() * 1500);
+  }
+
+  setInterval(showRandom, 800);
+  showRandom();
+})();
+</script>
+
+<script>
+// Scroll reveal
+document.querySelectorAll('[data-reveal],[data-reveal-card]').forEach(function(el, i) {
+  new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) el.classList.add('is-visible');
+  }, {threshold: 0.08}).observe(el);
+  el.style.transitionDelay = (i % 6) * 60 + 'ms';
+});
+</script>
+
+<script>
+// === APPLE-STYLE HEATMAP SPHERE (WebGL) ===
+function initSphere(id, timeOffset) {
+  var canvas = document.getElementById(id);
+  if (!canvas) return;
+
+  var gl = canvas.getContext('webgl', { antialias: true, alpha: true });
+  if (!gl) return;
+
+  var W = canvas.width, H = canvas.height;
+  var mouse = { x: 0.5, y: 0.5, active: false };
+
+  canvas.addEventListener('pointermove', function(e) {
+    var r = canvas.getBoundingClientRect();
+    mouse.x = (e.clientX - r.left) / r.width;
+    mouse.y = (e.clientY - r.top) / r.height;
+    mouse.active = true;
+  });
+  canvas.addEventListener('pointerleave', function() { mouse.active = false; });
+
+  var vsrc = 'attribute vec2 a_pos;varying vec2 vUv;void main(){vUv=a_pos*0.5+0.5;gl_Position=vec4(a_pos,0,1);}';
+  var fsrc = [
+    'precision highp float;',
+    'varying vec2 vUv;',
+    'uniform float u_time;',
+    'uniform vec2 u_mouse;',
+    'uniform float u_hover;',
+    '',
+    'vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}',
+    'vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}',
+    'vec4 perm(vec4 x){return mod289(((x*34.)+1.)*x);}',
+    '',
+    'float noise(vec3 p){',
+    '  vec3 a=floor(p);vec3 d=p-a;d=d*d*(3.-2.*d);',
+    '  vec4 b=a.xxyy+vec4(0,1,0,1);',
+    '  vec4 k1=perm(b.xyxy);vec4 k2=perm(k1.xyxy+b.zzww);',
+    '  vec4 c=k2+a.zzzz;vec4 k3=perm(c);vec4 k4=perm(c+1.);',
+    '  vec4 o1=fract(k3*(1./41.));vec4 o2=fract(k4*(1./41.));',
+    '  vec4 o3=o2*d.z+o1*(1.-d.z);vec2 o4=o3.yw*d.x+o3.xz*(1.-d.x);',
+    '  return o4.y*d.y+o4.x*(1.-d.y);',
+    '}',
+    '',
+    'vec3 gradient(float t){',
+    '  vec3 c1=vec3(0);',
+    '  vec3 c2=vec3(.03,.24,1);',
+    '  vec3 c3=vec3(.33,.84,1);',
+    '  vec3 c4=vec3(1,.99,.87);',
+    '  vec3 c5=vec3(1,.55,.15);',
+    '  vec3 c6=vec3(.85,.35,.05);',
+    '  vec3 c=c1;',
+    '  c=mix(c,c2,smoothstep(.0,.25,t));',
+    '  c=mix(c,c3,smoothstep(.2,.45,t));',
+    '  c=mix(c,c4,smoothstep(.4,.65,t));',
+    '  c=mix(c,c5,smoothstep(.6,.8,t));',
+    '  c=mix(c,c6,smoothstep(.75,1.,t));',
+    '  return c;',
+    '}',
+    '',
+    'void main(){',
+    '  vec2 uv=vUv-0.5;',
+    '  float dist=length(uv)*2.;',
+    '  float mask=smoothstep(1.,.96,dist);',
+    '  if(mask<.001){gl_FragColor=vec4(0,0,0,0);return;}',
+    '',
+    '  float t=u_time*.25;',
+    '  vec3 p=vec3(uv*3.,t);',
+    '',
+    '  float n1=noise(p);',
+    '  float n2=noise(p+vec3(5.2,1.3,t*.7));',
+    '  float n3=noise(p+vec3(n1,n2,0)*1.5+vec3(1.7,9.2,t*.5));',
+    '',
+    '  float warp=noise(p+vec3(n3*.8,n1*.6,n2*.4)*2.+vec3(t*.3));',
+    '',
+    '  float md=distance(vUv,u_mouse);',
+    '  float heat=smoothstep(.35,.0,md)*u_hover*.6;',
+    '  warp+=heat;',
+    '',
+    '  float val=pow(warp,.9)*1.3;',
+    '  val*=smoothstep(1.,.3,dist);',
+    '  val=clamp(val,0.,1.);',
+    '',
+    '  vec3 col=gradient(val);',
+    '  col=pow(col,vec3(.9));',
+    '',
+    '  float rim=smoothstep(.85,.98,dist);',
+    '  col+=rim*vec3(.5,.4,.1)*(0.5+0.5*sin(u_time));',
+    '',
+    '  float fade=smoothstep(1.,.92,dist);',
+    '  col*=fade;',
+    '',
+    '  gl_FragColor=vec4(col*mask,mask);',
+    '}'
+  ].join('\n');
+
+  function mkShader(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vsrc));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fsrc));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  var aPos = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  var uTime = gl.getUniformLocation(prog, 'u_time');
+  var uMouse = gl.getUniformLocation(prog, 'u_mouse');
+  var uHover = gl.getUniformLocation(prog, 'u_hover');
+
+  gl.viewport(0, 0, W, H);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  var hover = 0;
+  var start = performance.now();
+
+  function render() {
+    var t = (performance.now() - start) * 0.001 + (timeOffset || 0);
+    hover += ((mouse.active ? 1 : 0) - hover) * 0.05;
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(uTime, t);
+    gl.uniform2f(uMouse, mouse.x, 1.0 - mouse.y);
+    gl.uniform1f(uHover, hover);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+initSphere('sphereCanvasMini', 0);
+
+// === SHADER BACKGROUND (no circle mask) ===
+(function() {
+  var canvas = document.getElementById('shaderBgCanvas');
+  if (!canvas) return;
+
+  var gl = canvas.getContext('webgl', { antialias: true, alpha: false });
+  if (!gl) return;
+
+  var W = canvas.width, H = canvas.height;
+  var mouse = { x: 0.5, y: 0.5, active: false };
+
+  canvas.addEventListener('pointermove', function(e) {
+    var r = canvas.getBoundingClientRect();
+    mouse.x = (e.clientX - r.left) / r.width;
+    mouse.y = (e.clientY - r.top) / r.height;
+    mouse.active = true;
+  });
+  canvas.addEventListener('pointerleave', function() { mouse.active = false; });
+
+  var vsrc = 'attribute vec2 a_pos;varying vec2 vUv;void main(){vUv=a_pos*0.5+0.5;gl_Position=vec4(a_pos,0,1);}';
+  var fsrc = [
+    'precision highp float;',
+    'varying vec2 vUv;',
+    'uniform float u_time;',
+    'uniform vec2 u_mouse;',
+    'uniform float u_hover;',
+    'uniform vec2 u_res;',
+    '',
+    'vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}',
+    'vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}',
+    'vec4 perm(vec4 x){return mod289(((x*34.)+1.)*x);}',
+    '',
+    'float noise(vec3 p){',
+    '  vec3 a=floor(p);vec3 d=p-a;d=d*d*(3.-2.*d);',
+    '  vec4 b=a.xxyy+vec4(0,1,0,1);',
+    '  vec4 k1=perm(b.xyxy);vec4 k2=perm(k1.xyxy+b.zzww);',
+    '  vec4 c=k2+a.zzzz;vec4 k3=perm(c);vec4 k4=perm(c+1.);',
+    '  vec4 o1=fract(k3*(1./41.));vec4 o2=fract(k4*(1./41.));',
+    '  vec4 o3=o2*d.z+o1*(1.-d.z);vec2 o4=o3.yw*d.x+o3.xz*(1.-d.x);',
+    '  return o4.y*d.y+o4.x*(1.-d.y);',
+    '}',
+    '',
+    'vec3 gradient(float t){',
+    '  vec3 c1=vec3(.01,.01,.04);',
+    '  vec3 c2=vec3(.02,.08,.25);',
+    '  vec3 c3=vec3(.04,.18,.55);',
+    '  vec3 c4=vec3(.1,.35,.8);',
+    '  vec3 c5=vec3(.2,.5,.95);',
+    '  vec3 c6=vec3(.4,.7,1);',
+    '  vec3 c=c1;',
+    '  c=mix(c,c2,smoothstep(.0,.2,t));',
+    '  c=mix(c,c3,smoothstep(.15,.4,t));',
+    '  c=mix(c,c4,smoothstep(.35,.6,t));',
+    '  c=mix(c,c5,smoothstep(.55,.8,t));',
+    '  c=mix(c,c6,smoothstep(.75,1.,t));',
+    '  return c;',
+    '}',
+    '',
+    'void main(){',
+    '  float aspect=u_res.x/u_res.y;',
+    '  vec2 uv=vUv;',
+    '  vec2 p2=vec2(uv.x*aspect,uv.y);',
+    '',
+    '  float t=u_time*.2;',
+    '  vec3 p=vec3(p2*2.,t);',
+    '',
+    '  float n1=noise(p);',
+    '  float n2=noise(p+vec3(5.2,1.3,t*.7));',
+    '  float n3=noise(p+vec3(n1,n2,0)*1.5+vec3(1.7,9.2,t*.5));',
+    '  float warp=noise(p+vec3(n3*.8,n1*.6,n2*.4)*2.+vec3(t*.3));',
+    '',
+    '',
+    '  float val=pow(warp,.85)*1.4;',
+    '  val=clamp(val,0.,1.);',
+    '',
+    '  vec3 col=gradient(val);',
+    '',
+    '  gl_FragColor=vec4(col,1.);',
+    '}'
+  ].join('\n');
+
+  function mkShader(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vsrc));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fsrc));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  var aPos = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  var uTime = gl.getUniformLocation(prog, 'u_time');
+  var uMouse = gl.getUniformLocation(prog, 'u_mouse');
+  var uHover = gl.getUniformLocation(prog, 'u_hover');
+  var uRes = gl.getUniformLocation(prog, 'u_res');
+
+  gl.viewport(0, 0, W, H);
+
+  var hover = 0;
+  var start = performance.now();
+
+  function render() {
+    var rect = canvas.getBoundingClientRect();
+    gl.uniform2f(uRes, rect.width, rect.height);
+
+    var t = (performance.now() - start) * 0.001 + 50;
+    hover += ((mouse.active ? 1 : 0) - hover) * 0.05;
+
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(uTime, t);
+    gl.uniform2f(uMouse, mouse.x, 1.0 - mouse.y);
+    gl.uniform1f(uHover, hover);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>
