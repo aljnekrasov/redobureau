@@ -69,7 +69,6 @@
     </div>
 
     <?= js([
-    'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CMutationObserver',
     'https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js',
     'assets/js/presentation.min.js'
   ]) ?>
