@@ -1,0 +1,32 @@
+# Files NOT to ship to either prod server via rsync.
+# Used by .github/workflows/deploy.yml (passed to rsync --exclude-from).
+# rsync's default behavior on --delete is to also NOT delete these on the
+# receiver side, so server-local content/media/accounts/etc stay intact.
+
+# Git / CI metadata
+.git/
+.github/
+.gitignore
+.deployignore
+
+# Local dev / build inputs
+node_modules/
+src/
+gulpfile.js
+package.json
+yarn.lock
+package-lock.json
+
+# Kirby runtime — lives only on each server
+content/
+media/
+site/cache/
+site/sessions/
+site/accounts/
+
+# OS junk and editor litter
+.DS_Store
+*.log
+*.swp
+.vscode/
+.idea/

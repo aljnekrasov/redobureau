@@ -21,5 +21,6 @@ package-lock.json
 site/cache/
 site/sessions/
 site/accounts/
+site/logs/
 content/
 media/
