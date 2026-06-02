@@ -77,6 +77,15 @@
     <!-- Canonical link -->
     <link rel="canonical" href="<?= $page->url() ?>">
 
+    <!-- hreflang: tell search engines about every language version this page
+         has on the current host. On .ru only `ru` is here; on .com all three
+         (en, es, ru) — the RU url is reachable even when the switcher UI
+         hides it for non-russophones. -->
+    <?php foreach ($kirby->languages() as $_lang) : ?>
+    <link rel="alternate" hreflang="<?= $_lang->code() ?>" href="<?= $page->url($_lang->code()) ?>">
+    <?php endforeach ?>
+    <link rel="alternate" hreflang="x-default" href="<?= $page->url($kirby->defaultLanguage()->code()) ?>">
+
     <!-- Remove auto-formatting for telephone numbers -->
     <meta name="format-detection" content="telephone=no">
 
@@ -115,6 +124,33 @@
     <!-- /Yandex.Metrika counter -->
     <?php endif ?>
 
+    <!-- Language switcher: optional buttons (RU on .com) hidden by default.
+         The inline script below adds .ru-eligible to <html> when the visitor
+         is likely a russophone (browser language or saved preference); CSS
+         then shows the RU button. Page cache stays cache-friendly — one HTML
+         per (host, language, page); the per-visitor reveal is purely CSS. -->
+    <style>
+        .lang-switcher [data-optional] { display: none; }
+        html.ru-eligible .lang-switcher [data-optional] { display: inline; }
+    </style>
+    <script>
+    (function () {
+        var d = document;
+        var navLangs = ((navigator.languages || [navigator.language || '']).join(',') || '').toLowerCase();
+        var hasRuLang = /\b(ru|be|kk|ky|hy|uz|tg|az)\b/.test(navLangs);
+        var hasRuCookie = d.cookie.indexOf('langPref=ru') !== -1;
+        if (hasRuLang || hasRuCookie) {
+            d.documentElement.classList.add('ru-eligible');
+        }
+        // Persist explicit choice on switcher click for next visits.
+        d.addEventListener('click', function (e) {
+            var t = e.target && e.target.closest && e.target.closest('[data-lang]');
+            if (!t) return;
+            d.cookie = 'langPref=' + t.dataset.lang + ';path=/;max-age=31536000;samesite=lax';
+        });
+    })();
+    </script>
+
 </head>
 
 <body class="<?= $page->template() ?>">
@@ -144,8 +180,7 @@
                             <?= $pages->template('studio')->first()->title() ?>
                         </a>
                         <a href="<?= $kirby->language()->url() . '' . '/contacts' ?>"><?= t('contacts') ?></a>
-
-
+                        <?php snippet('language-switcher') ?>
                     </div>
                 </div>
             </div>

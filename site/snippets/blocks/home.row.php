@@ -106,5 +106,6 @@ $length = count($entries);
     </div>
     <?php endif ?>
     <?php endif ?>
+    <?php endif ?>
     <?php endforeach ?>
 </div>
