@@ -129,21 +129,12 @@
         <div class="container">
             <div class="body">
                 <div class="row">
-                    <?php if ($kirby->language()->code() == 'ru') : ?>
                     <div class="col-3 sm:col logotype">
-                        <a href="<?= url($pages->template('home')->first()->url()) ?>">        
-                            <span class="sm:hidden">Редо</span>
-                            <span class="hidden sm:inline">Студия Редо</span>
+                        <a href="<?= url($pages->template('home')->first()->url()) ?>">
+                            <span class="sm:hidden"><?= t('brand_short') ?></span>
+                            <span class="hidden sm:inline"><?= t('brand_long') ?></span>
                         </a>
                     </div>
-                    <?php else : ?>
-                        <div class="col-3 sm:col logotype">
-                        <a href="<?= url($pages->template('home')->first()->url()) ?>">        
-                            <span class="sm:hidden">Rb</span>
-                            <span class="hidden sm:inline">Redo Bureau</span>
-                        </a>
-                    </div>
-                    <?php endif ?>
                     <div class="col-9 sm:col nav">
                         <a href="<?= url(page('work')->url()) ?>">
                             <?= page('work')->title() ?>

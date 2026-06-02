@@ -17,7 +17,9 @@ pinterest-*.html
 yarn.lock
 package-lock.json
 
-
-# Languages (different at .ru/.com) (multi language redirect in config)
-site/languages
-site/config
+# Kirby runtime (per-server, must not be in git)
+site/cache/
+site/sessions/
+site/accounts/
+content/
+media/

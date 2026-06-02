@@ -22,14 +22,10 @@
         <div class="col-12 sm:col-6 mb-25 md:mb-0">
           <?= $page->desc()->kt() ?>
           <?php if ($page->link()->isNotEmpty()) : ?>
-            <?php if ($kirby->language()->code() == 'en') : ?>
-              <a class="mt-10 block" href="<?= $page->link() ?>">Visit website
-                <span class="main__icon">
-                  <?= svg('assets/icons/arrow.svg') ?>
-                </span></a>
-            <?php else : ?>
-              <a class="mt-10 block" href="<?= $page->link() ?>">Посетить сайт <span class="main__icon"><?= svg('assets/icons/arrow.svg') ?></span></a>
-            <?php endif ?>
+            <a class="mt-10 block" href="<?= $page->link() ?>"><?= t('visit_website') ?>
+              <span class="main__icon">
+                <?= svg('assets/icons/arrow.svg') ?>
+              </span></a>
           <?php endif ?>
         </div>
         <div class="col sm:col-2 sm:offset-1">
