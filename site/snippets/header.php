@@ -91,8 +91,8 @@
     <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="<?= url('assets/icons/icon-192.png') ?>">
     <!-- 2 -->
 
+    <?php if (option('site.useYandex', false)) : ?>
     <!-- Yandex.Metrika counter -->
-
     <script type="text/javascript" async>
         (function(m, e, t, r, i, k, a) {
             m[i] = m[i] || function() {
@@ -113,6 +113,7 @@
     </script>
     <noscript><img src="https://mc.yandex.ru/watch/45804984" style="position:absolute; left:-9999px;" alt="" /></noscript>
     <!-- /Yandex.Metrika counter -->
+    <?php endif ?>
 
 </head>
 
