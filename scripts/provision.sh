@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+# Provision a fresh Ubuntu 22.04 / 24.04 VPS for redobureau.com or .ru.
+#
+# Usage:
+#   sudo bash provision.sh com       # for redobureau.com (international)
+#   sudo bash provision.sh ru        # for redobureau.ru   (Russian)
+#
+# What this script does:
+#   1. apt update + install: nginx, php-fpm + extensions, git, rsync, certbot, ufw
+#   2. Create user `deploy` with SSH access (you paste the public key)
+#   3. Clone the redobureau repo into /var/www/<domain>
+#   4. Create runtime directories (content/, media/, site/cache/, etc.)
+#      with the right ownership and permissions
+#   5. Write an nginx vhost (HTTP only — TLS done separately, see below)
+#   6. Reload nginx and enable on boot
+#   7. Open firewall ports 22, 80, 443 via ufw
+#
+# What this script does NOT do:
+#   - DNS (you point the A record at this server's IP yourself)
+#   - TLS (run `certbot --nginx -d redobureau.com -d www.redobureau.com`
+#     after DNS resolves here. For redobureau.com behind Cloudflare,
+#     enable Full Strict + still install LE on origin)
+#   - Panel admin user (open https://<host>/panel/installation after
+#     deploy and create one. Only on the .com server — .ru has panel
+#     disabled by config)
+#   - Content migration (separate step from the OLD hosting; on .com
+#     copy content/ across; on .ru, content arrives via the in-panel
+#     Sync button later)
+#
+# Re-running this script is mostly safe (idempotent-ish), but it WILL
+# overwrite the nginx vhost file. Back up your config first if you've
+# edited it.
+
+set -euo pipefail
+
+if [ "$EUID" -ne 0 ]; then
+    echo "This script must run as root (use sudo)."
+    exit 1
+fi
+
+TARGET="${1:-}"
+case "$TARGET" in
+    com) DOMAIN="redobureau.com"; ALIAS="www.redobureau.com" ;;
+    ru)  DOMAIN="redobureau.ru";  ALIAS="www.redobureau.ru"  ;;
+    *)
+        echo "Usage: sudo bash provision.sh [com|ru]"
+        exit 2
+        ;;
+esac
+
+ROOT="/var/www/$DOMAIN"
+REPO_URL="${REPO_URL:-https://github.com/aljnekrasov/redobureau.git}"
+DEPLOY_USER="deploy"
+
+say() { printf "\n\033[1;36m==>\033[0m %s\n" "$*"; }
+
+# ----------------------------------------------------------------------
+# 1. Packages
+# ----------------------------------------------------------------------
+say "Updating apt and installing packages…"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y \
+    nginx \
+    php-fpm php-cli php-gd php-mbstring php-xml php-curl php-intl php-zip \
+    git rsync curl ufw certbot python3-certbot-nginx
+
+# Detect the installed PHP version (Kirby works on any 8.1+).
+PHP_V=$(ls /etc/php/ 2>/dev/null | grep -E '^[0-9]+\.[0-9]+$' | sort -V | tail -1)
+FPM_SOCK="/run/php/php${PHP_V}-fpm.sock"
+say "Using PHP ${PHP_V} (socket: ${FPM_SOCK})"
+
+# ----------------------------------------------------------------------
+# 2. Deploy user + SSH key
+# ----------------------------------------------------------------------
+if ! id "$DEPLOY_USER" >/dev/null 2>&1; then
+    say "Creating user $DEPLOY_USER…"
+    adduser --disabled-password --gecos "" "$DEPLOY_USER"
+    usermod -aG www-data "$DEPLOY_USER"
+else
+    say "User $DEPLOY_USER already exists, skipping creation."
+fi
+
+mkdir -p "/home/$DEPLOY_USER/.ssh"
+chmod 700 "/home/$DEPLOY_USER/.ssh"
+AUTH_KEYS="/home/$DEPLOY_USER/.ssh/authorized_keys"
+touch "$AUTH_KEYS"
+chmod 600 "$AUTH_KEYS"
+
+if [ -z "${DEPLOY_PUBKEY:-}" ]; then
+    echo
+    echo "Paste the deploy SSH public key (ssh-ed25519 / ssh-rsa …) on a single line,"
+    echo "then press Enter:"
+    read -r DEPLOY_PUBKEY
+fi
+
+if [ -n "${DEPLOY_PUBKEY:-}" ] && ! grep -qF "$DEPLOY_PUBKEY" "$AUTH_KEYS"; then
+    echo "$DEPLOY_PUBKEY" >> "$AUTH_KEYS"
+    say "Added public key to authorized_keys."
+fi
+
+chown -R "$DEPLOY_USER":"$DEPLOY_USER" "/home/$DEPLOY_USER/.ssh"
+
+# ----------------------------------------------------------------------
+# 3. Clone repo into webroot
+# ----------------------------------------------------------------------
+if [ ! -d "$ROOT/.git" ]; then
+    say "Cloning repo into $ROOT…"
+    mkdir -p "$ROOT"
+    chown "$DEPLOY_USER":www-data "$ROOT"
+    sudo -u "$DEPLOY_USER" git clone "$REPO_URL" "$ROOT"
+else
+    say "Repo already at $ROOT, pulling latest main…"
+    sudo -u "$DEPLOY_USER" git -C "$ROOT" pull origin main
+fi
+
+# ----------------------------------------------------------------------
+# 4. Runtime directories
+# ----------------------------------------------------------------------
+say "Creating runtime directories with proper permissions…"
+for d in content media site/cache site/sessions site/accounts site/logs; do
+    mkdir -p "$ROOT/$d"
+    chown www-data:www-data "$ROOT/$d"
+    chmod 775 "$ROOT/$d"
+done
+
+# ----------------------------------------------------------------------
+# 5. nginx vhost
+# ----------------------------------------------------------------------
+say "Writing nginx vhost for $DOMAIN…"
+VHOST="/etc/nginx/sites-available/$DOMAIN"
+cat > "$VHOST" <<EOF
+# Auto-generated by scripts/provision.sh for $DOMAIN
+# After DNS points here, run:
+#   certbot --nginx -d $DOMAIN -d $ALIAS
+# certbot will edit this file to add the 443 server block.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN $ALIAS;
+
+    root $ROOT;
+    index index.php;
+
+    client_max_body_size 64M;
+
+    # Kirby front controller.
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # PHP handler.
+    location ~ \.php\$ {
+        try_files \$uri =404;
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:$FPM_SOCK;
+        fastcgi_param SERVER_NAME \$host;
+    }
+
+    # Block direct access to Kirby internals.
+    location ~ ^/(site|kirby|content|vendor)/ {
+        deny all;
+        return 404;
+    }
+
+    # Block dotfiles (.git, .env, etc).
+    location ~ /\\. {
+        deny all;
+        return 404;
+    }
+
+    # Long cache for hashed assets.
+    location ~* \.(css|js|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|mp4|webm)\$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+}
+EOF
+
+ln -sf "$VHOST" "/etc/nginx/sites-enabled/$DOMAIN"
+
+# Remove the default vhost if it's enabled (it would otherwise grab the
+# server_name _ catch-all).
+rm -f /etc/nginx/sites-enabled/default
+
+say "Testing nginx config and reloading…"
+nginx -t
+systemctl reload nginx
+systemctl enable nginx "php${PHP_V}-fpm" >/dev/null
+
+# ----------------------------------------------------------------------
+# 6. Firewall
+# ----------------------------------------------------------------------
+say "Configuring ufw…"
+ufw allow OpenSSH    >/dev/null
+ufw allow 'Nginx Full' >/dev/null
+yes | ufw enable     >/dev/null || true
+ufw status
+
+# ----------------------------------------------------------------------
+# Done
+# ----------------------------------------------------------------------
+cat <<EOF
+
+==================================================
+  Provisioning complete for $DOMAIN
+==================================================
+
+  Webroot:      $ROOT
+  Deploy user:  $DEPLOY_USER  (clone/pull/rsync as this user)
+  PHP-FPM:      php${PHP_V}-fpm  ($FPM_SOCK)
+  Nginx vhost:  $VHOST
+
+Next steps (in order):
+
+  1. Point DNS for $DOMAIN at this server's public IP.
+     For $DOMAIN (com) behind Cloudflare: set the proxied (orange-cloud)
+     A record. Cloudflare's CF-IPCountry header will then flow through.
+
+  2. Wait for DNS to propagate (dig +short $DOMAIN should show this IP).
+
+  3. Install TLS:
+       sudo certbot --nginx -d $DOMAIN -d $ALIAS
+     For Cloudflare-fronted setup, choose Full (Strict) mode in the
+     CF dashboard once LE is on the origin.
+
+  4. (com only) Migrate content/ from the old hosting:
+       # On the OLD host:
+       cd /path/to/old/redobureau
+       tar czf /tmp/content.tgz content/
+       scp /tmp/content.tgz deploy@<this-ip>:/tmp/
+       # On this server:
+       sudo -u deploy tar xzf /tmp/content.tgz -C $ROOT/
+
+  5. (com only) Create panel admin:
+       Open https://$DOMAIN/panel/installation and follow the flow.
+
+  6. Smoke test (from anywhere):
+       ./scripts/smoke-test.sh com   # or ru, depending
+
+EOF
