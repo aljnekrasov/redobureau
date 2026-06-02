@@ -1,6 +1,8 @@
 <?php
 return function($page, $site) {
-  $published = $page->children()->published();
+  // Restrict to projects allowed for the current host's audience first,
+  // so any downstream filter / count operates on the visible set only.
+  $published = $page->children()->published()->filter(fn($p) => $p->audienceAllows());
   $projects = $published;
   $type = 'Type';
   $industry = 'Industry';
