@@ -48,6 +48,19 @@ tabs:
                 label: Preview info
                 type: text
                 placeholder: Identity
+              audience:
+                label: Audience
+                type: checkboxes
+                columns: 2
+                options:
+                  intl: International (redobureau.com)
+                  ru: Russia (redobureau.ru)
+                default: [intl, ru]
+                required: true
+                help: >
+                  Which sites this project should appear on. Leave both
+                  checked for projects shared across markets. Untick one to
+                  make the project visible only on the other site.
               industry:
                 label: Industries
                 type: multiselect

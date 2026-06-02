@@ -1,10 +1,25 @@
+<?php
+// Pre-filter: drop projects not allowed for the current host's audience,
+// drop entries with no resolvable page. If the row ends up empty,
+// skip rendering it entirely (no empty <div class="row"> in markup).
+$entries = [];
+foreach ($data->row()->toStructure() as $project) {
+    $_page = $project->page()->toPage();
+    if (!$_page) continue;
+    if (!$_page->audienceAllows()) continue;
+    $entries[] = ['project' => $project, 'page' => $_page];
+}
+
+if (empty($entries)) return;
+
+$length = count($entries);
+?>
 <div class="row">
-    <?php foreach ($data->row()->toStructure() as $project) : ?>
-    <?php if ($_page = $project->page()->toPage()) : ?>
-    <?php
-      $cover = $_page->files()->template('previewCover')->first();
-      $length = $data->row()->toStructure()->count()
-      ?>
+    <?php foreach ($entries as $entry) :
+        $project = $entry['project'];
+        $_page   = $entry['page'];
+        $cover   = $_page->files()->template('previewCover')->first();
+    ?>
     <?php if ($length >= 3) : ?>
     <div class="col-12 sm:col mb-20">
         <a href="<?= url($_page->url()) ?>" class="block link">
@@ -89,8 +104,6 @@
             <?php endif ?>
         </a>
     </div>
-    <?php endif ?>
-    <?php endif ?>
     <?php endif ?>
     <?php endif ?>
     <?php endforeach ?>
