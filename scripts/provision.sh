@@ -150,9 +150,9 @@ server {
         try_files \$uri \$uri/ /index.php?\$query_string;
     }
 
-    # PHP handler.
+    # PHP handler. (snippets/fastcgi-php.conf already sets try_files +
+    # fastcgi_split_path_info + SCRIPT_FILENAME, so we don't repeat them.)
     location ~ \.php\$ {
-        try_files \$uri =404;
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:$FPM_SOCK;
         fastcgi_param SERVER_NAME \$host;
