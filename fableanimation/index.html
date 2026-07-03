@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Fable Animation</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+    }
+    @media (prefers-color-scheme: dark) {
+      html, body { background: black; }
+    }
+    #three_root {
+      position: fixed;
+      inset: 0;
+      line-height: 0;
+      touch-action: none;
+    }
+    #three_root canvas { display: block; }
+    .intro {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px 16px;
+      color: white;
+      pointer-events: none;
+      font-family: "Helvetica Neue LT W07_55 Roman", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="three_root"></div>
+  <div class="intro">
+    <span>Redo Bureau</span>
+    <span>Fable Animation — Liquid 001</span>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -11,7 +11,7 @@ return [
   'languages' => [
     'detect' => true,
   ],
-  'thumbs'    => ['driver' => 'gd'],
+  'thumbs'    => ['driver' => 'gd', 'quality' => 80],
 
   // NOTE: site.activeLanguages / site.optionalLanguages are defined ONLY in
   // the per-host configs, never here. Kirby merges configs with

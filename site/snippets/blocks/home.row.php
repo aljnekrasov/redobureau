@@ -27,7 +27,10 @@ $length = count($entries);
                 <?php if ($cover->type() == 'video') : ?>
                 <video data-lazy data-src="<?= $cover->url() ?>" preload="none" loop muted playsinline></video>
                 <?php else : ?>
-                <img src="<?= $cover->resize(1920)->url() ?>" alt="<?= $project->title() ?>" loading="lazy">
+                <img src="<?= $cover->resize(1200)->url() ?>"
+                     srcset="<?= $cover->resize(800)->url() ?> 800w, <?= $cover->resize(1200)->url() ?> 1200w, <?= $cover->resize(1920)->url() ?> 1920w"
+                     sizes="(min-width: 640px) 50vw, 100vw"
+                     alt="<?= $project->title() ?>" loading="lazy">
                 <?php endif ?>
             </div>
             <div class="mt-10"><?= $_page->title() ?></div>
@@ -46,7 +49,10 @@ $length = count($entries);
                 <?php if ($cover->type() == 'video') : ?>
                 <video data-lazy data-src="<?= $cover->url() ?>" preload="none" loop muted playsinline></video>
                 <?php else : ?>
-                <img src="<?= $cover->resize(1920)->url() ?>" alt="<?= $project->title() ?>" loading="lazy">
+                <img src="<?= $cover->resize(1920)->url() ?>"
+                     srcset="<?= $cover->resize(1200)->url() ?> 1200w, <?= $cover->resize(1920)->url() ?> 1920w"
+                     sizes="100vw"
+                     alt="<?= $project->title() ?>" loading="lazy">
                 <?php endif ?>
             </div>
             <div class="mt-10"><?= $_page->title() ?></div>
@@ -62,7 +68,10 @@ $length = count($entries);
                 <?php if ($cover->type() == 'video') : ?>
                 <video data-lazy data-src="<?= $cover->url() ?>" preload="none" loop muted playsinline></video>
                 <?php else : ?>
-                <img src="<?= $cover->resize(1920)->url() ?>" alt="<?= $project->title() ?>" loading="lazy">
+                <img src="<?= $cover->resize(1200)->url() ?>"
+                     srcset="<?= $cover->resize(800)->url() ?> 800w, <?= $cover->resize(1200)->url() ?> 1200w, <?= $cover->resize(1920)->url() ?> 1920w"
+                     sizes="(min-width: 640px) 50vw, 100vw"
+                     alt="<?= $project->title() ?>" loading="lazy">
                 <?php endif ?>
             </div>
             <div class="mt-10"><?= $_page->title() ?></div>
@@ -79,7 +88,10 @@ $length = count($entries);
                 <?php if ($cover->type() == 'video') : ?>
                 <video data-lazy data-src="<?= $cover->url() ?>" preload="none" loop muted playsinline></video>
                 <?php else : ?>
-                <img src="<?= $cover->resize(1000)->url() ?>" alt="<?= $project->title() ?>" loading="lazy">
+                <img src="<?= $cover->resize(800)->url() ?>"
+                     srcset="<?= $cover->resize(500)->url() ?> 500w, <?= $cover->resize(800)->url() ?> 800w, <?= $cover->resize(1000)->url() ?> 1000w"
+                     sizes="(min-width: 768px) 25vw, 100vw"
+                     alt="<?= $project->title() ?>" loading="lazy">
                 <?php endif ?>
             </div>
             <div class="mt-10"><?= $_page->title() ?></div>
@@ -95,7 +107,10 @@ $length = count($entries);
                 <?php if ($cover->type() == 'video') : ?>
                 <video data-lazy data-src="<?= $cover->url() ?>" preload="none" loop muted playsinline></video>
                 <?php else : ?>
-                <img src="<?= $cover->resize(1600)->url() ?>" alt="<?= $project->title() ?>" loading="lazy">
+                <img src="<?= $cover->resize(1200)->url() ?>"
+                     srcset="<?= $cover->resize(800)->url() ?> 800w, <?= $cover->resize(1200)->url() ?> 1200w, <?= $cover->resize(1600)->url() ?> 1600w"
+                     sizes="(min-width: 768px) 75vw, 100vw"
+                     alt="<?= $project->title() ?>" loading="lazy">
                 <?php endif ?>
             </div>
             <div class="mt-10"><?= $_page->title() ?></div>
