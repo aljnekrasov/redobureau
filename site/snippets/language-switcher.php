@@ -32,13 +32,16 @@ if (count($primary) + count($optional) < 2) {
 }
 ?>
 <div class="lang-switcher">
+    <?php /* crossLangUrl: local languages keep the current origin, languages
+             hosted on the other domain (site.externalLanguages) get an
+             absolute cross-domain URL to the same page path. */ ?>
     <?php foreach ($primary as $lang) : ?>
-        <a href="<?= $page->url($lang->code()) ?>"
+        <a href="<?= $page->crossLangUrl($lang->code()) ?>"
            data-lang="<?= $lang->code() ?>"
            class="<?= $lang->code() === $current ? 'is-current' : '' ?>"><?= strtoupper($lang->code()) ?></a>
     <?php endforeach ?>
     <?php foreach ($optional as $lang) : ?>
-        <a href="<?= $page->url($lang->code()) ?>"
+        <a href="<?= $page->crossLangUrl($lang->code()) ?>"
            data-lang="<?= $lang->code() ?>"
            data-optional
            class="<?= $lang->code() === $current ? 'is-current' : '' ?>"><?= strtoupper($lang->code()) ?></a>

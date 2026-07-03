@@ -14,6 +14,12 @@ return [
   // neither option are not rendered at all.
   'site.optionalLanguages' => ['ru'],
 
+  // Hard domain separation: RU lives on redobureau.ru only. The switcher's
+  // RU button and hreflang tags point cross-domain (see plugins/lang-hosts).
+  'site.externalLanguages' => [
+    'ru' => 'https://redobureau.ru',
+  ],
+
   // No Yandex Metrika here — Russian leakage on international.
   // (Hook up Google Analytics / Plausible later via a separate option.)
   'site.useYandex' => false,
@@ -36,9 +42,27 @@ return [
     'prefix' => 'com',
   ],
 
-  // No route blocks on .com:
-  //   /ru/* stays accessible — ru-eligible visitors (phase 4) follow direct
-  //   links and bookmarks. The switcher just hides the RU button by default.
+  'routes' => [
+    // Hard domain separation: the Russian version is served by
+    // redobureau.ru only. Any /ru URL on .com (bookmarks, old index)
+    // permanently moves to the same path on the Russian domain.
+    [
+      'pattern' => 'ru/(:all?)',
+      'action'  => fn($path = null) => go('https://redobureau.ru/ru' . ($path ? '/' . $path : ''), 301),
+    ],
+
+    // Root: detect only among languages served on THIS host (en/es).
+    // Kirby's built-in detect would also match ru and instantly bounce
+    // russophone browsers to the .ru domain — instead they land on /en
+    // and see the revealed RU button, leaving the choice to them.
+    [
+      'pattern' => '/',
+      'action'  => function () {
+        $al = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+        return go(preg_match('/\bes\b/i', $al) ? '/es' : '/en', 302);
+      },
+    ],
+  ],
 
   // sync-to-ru (phase 6): admin button to push content/ from this server
   // to redobureau.ru via rsync over SSH. Disabled by default — flip

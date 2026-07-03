@@ -52,8 +52,8 @@ test_com() {
     assert "GET /en/ returns 200" \
         "[ \$(fetch_status '$COM_HOST/en/') = 200 ]"
 
-    assert "GET /ru/ returns 200 (RU URL reachable for russophones)" \
-        "[ \$(fetch_status '$COM_HOST/ru/') = 200 ]"
+    assert "GET /ru/ 301s to redobureau.ru (hard domain separation)" \
+        "fetch_redirect '$COM_HOST/ru/' | grep -q 'redobureau\\.ru'"
 
     assert "GET /es/ returns 200" \
         "[ \$(fetch_status '$COM_HOST/es/') = 200 ]"
@@ -61,8 +61,8 @@ test_com() {
     assert "HTML on .com does NOT load Yandex Metrika" \
         "! fetch_body '$COM_HOST/en/' | grep -q 'mc\\.yandex\\.ru'"
 
-    assert "HTML on .com declares hreflang for ru" \
-        "fetch_body '$COM_HOST/en/' | grep -q 'hreflang=\"ru\"'"
+    assert "hreflang ru on .com points cross-domain to redobureau.ru" \
+        "fetch_body '$COM_HOST/en/' | grep 'hreflang=\"ru\"' | grep -q 'https://redobureau\\.ru'"
 
     assert "HTML on .com declares hreflang for es" \
         "fetch_body '$COM_HOST/en/' | grep -q 'hreflang=\"es\"'"
@@ -81,11 +81,11 @@ test_ru() {
     assert "GET /ru/ returns 200" \
         "[ \$(fetch_status '$RU_HOST/ru/') = 200 ]"
 
-    assert "GET /en/ returns 3xx (redirects to /ru)" \
-        "code=\$(fetch_status '$RU_HOST/en/'); [ \$code -ge 300 ] && [ \$code -lt 400 ]"
+    assert "GET /en/ 301s cross-domain to redobureau.com" \
+        "fetch_redirect '$RU_HOST/en/' | grep -q 'redobureau\\.com'"
 
-    assert "GET /es/work redirects to /ru" \
-        "code=\$(fetch_status '$RU_HOST/es/work'); [ \$code -ge 300 ] && [ \$code -lt 400 ]"
+    assert "GET /es/work 301s cross-domain to redobureau.com" \
+        "fetch_redirect '$RU_HOST/es/work' | grep -q 'redobureau\\.com'"
 
     # Panel is disabled via 'panel' => false: Kirby's own panel route
     # returns null, the request falls through and ends in a redirect home.

@@ -4,8 +4,12 @@
 
 | Сайт | Аудитория | Языки | Аналитика | Панель |
 |---|---|---|---|---|
-| **redobureau.com** | международная | EN (default), ES; RU — скрыт, показывается только русскоязычным | без Яндекса (GA/Plausible — по желанию, пока нет) | ✅ здесь редактируется контент |
-| **redobureau.ru** | российская | только RU | Яндекс.Метрика | ❌ отключена, контент приезжает синком с .com |
+| **redobureau.com** | международная | EN (default), ES. Русского на этом домене НЕТ: `/ru/*` → 301 на redobureau.ru | без Яндекса (GA/Plausible — по желанию, пока нет) | ✅ здесь редактируется контент |
+| **redobureau.ru** | российская | только RU; `/en/*`, `/es/*` → 301 на redobureau.com | Яндекс.Метрика | ❌ отключена, контент приезжает синком с .com |
+
+**Жёсткое разделение доменов:** каждый язык живёт ровно на одном домене.
+Русскоязычному посетителю .com показывается скрытая кнопка RU, но ведёт она
+кросс-доменно — на `redobureau.ru` (на ту же страницу).
 
 Ключевой принцип: **деплоится один и тот же код на оба сервера**. Всё различие
 между сайтами определяется в рантайме по `SERVER_NAME` — Kirby сам подхватывает
@@ -74,18 +78,25 @@ site/config/
 ### config.redobureau.com.php
 - `site.activeLanguages => ['en','es']` — видимые языки свитчера
 - `site.optionalLanguages => ['ru']` — рендерится скрытой кнопкой (см. §5)
+- `site.externalLanguages => ['ru' => 'https://redobureau.ru']` — RU живёт
+  на другом домене; свитчер и hreflang строят кросс-доменные ссылки
 - `site.useYandex => false` — Метрика не рендерится
 - `panel => ['install' => true]` — панель живёт здесь
 - `cache.pages` c `prefix: 'com'`
+- `routes`: `ru/(:all?)` → 301 `https://redobureau.ru/ru/<path>` (русский
+  на этом домене не открывается); `/` → детект **только среди en/es** —
+  встроенный детект Kirby отправил бы русскоязычный браузер прямиком на
+  .ru-домен, а мы оставляем его на `/en` с видимой кнопкой RU (выбор за ним)
 - опции плагина `rb.sync-to-ru` (кнопка синка, по умолчанию выключена)
 
 ### config.redobureau.ru.php
 - `site.activeLanguages => ['ru']`
+- `site.externalLanguages => ['en' => ..., 'es' => ...]` → redobureau.com
 - `site.useYandex => true`
 - `panel => false` — панель отключена целиком
 - `cache.pages` c `prefix: 'ru'`
-- `routes`: `/` → 302 `/ru`; `en/(:all?)` и `es/(:all?)` → 301 `/ru`
-  (закладки и SEO-хвосты не показывают нерусские версии)
+- `routes`: `/` → 302 `/ru`; `en/(:all?)` и `es/(:all?)` → 301
+  `https://redobureau.com/<lang>/<path>` (зеркально к .com)
 
 ### ⚠️ Три граблины Kirby 3.3.4, на которые мы наступили
 
@@ -140,6 +151,11 @@ audience:
    - языки из `site.optionalLanguages` — с атрибутом `data-optional`;
    - остальные не рендерятся. Если кнопка одна — свитчер не рендерится
      (на .ru его нет вообще).
+   URL кнопок строит `$page->crossLangUrl($code)` (плагин
+   `site/plugins/lang-hosts/`): локальные языки — текущий origin (работает
+   на IP/стейджинге), языки из `site.externalLanguages` — абсолютная ссылка
+   на канонический домен, на ту же страницу. Кнопка RU на .com ведёт на
+   `https://redobureau.ru/ru/<путь>`.
 2. Inline `<style>` в `header.php`: `[data-optional] { display:none }`,
    `html.ru-eligible [data-optional] { display:inline }`.
 3. Inline `<script>` там же (до paint, без FOUC): смотрит
@@ -156,7 +172,9 @@ audience:
 (хост, язык, страницу). Персонализация — чисто CSS-классом на клиенте.
 
 SEO: `header.php` отдаёт `<link rel="alternate" hreflang="...">` на все языки
-и `x-default` — поисковики знают про RU-версию на .com, даже когда кнопка скрыта.
+и `x-default`, **кросс-доменно**: hreflang="ru" на .com указывает на
+redobureau.ru, hreflang="en/es" на .ru — на redobureau.com. Поисковики
+воспринимают два домена как языковые версии одной сущности, а не дубли.
 
 ## 6. Инфраструктура
 

@@ -26,19 +26,27 @@ return [
     'prefix' => 'ru',
   ],
 
+  // Hard domain separation: en/es live on redobureau.com. hreflang and any
+  // (currently unrendered) switcher links point cross-domain.
+  'site.externalLanguages' => [
+    'en' => 'https://redobureau.com',
+    'es' => 'https://redobureau.com',
+  ],
+
   // Plain routes, NO 'language' key. In Kirby 3.3 a route with
   // 'language' => '*' is matched AFTER the language prefix is consumed
   // (pattern '/' would match /en/, /ru/ — never the bare root), which
   // silently disabled all three routes in the first version of this file.
   'routes' => [
-    // Bookmarks / SEO leftovers in en/es get a permanent redirect home.
+    // en/es URLs permanently move to the same path on the international
+    // domain — mirror of the ru/(:all?) route on .com.
     [
       'pattern' => 'en/(:all?)',
-      'action'  => fn() => go('/ru', 301),
+      'action'  => fn($path = null) => go('https://redobureau.com/en' . ($path ? '/' . $path : ''), 301),
     ],
     [
       'pattern' => 'es/(:all?)',
-      'action'  => fn() => go('/ru', 301),
+      'action'  => fn($path = null) => go('https://redobureau.com/es' . ($path ? '/' . $path : ''), 301),
     ],
 
     // Root URL redirects to /ru — ru is the only language here, but the URL

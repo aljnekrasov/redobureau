@@ -77,14 +77,14 @@
     <!-- Canonical link -->
     <link rel="canonical" href="<?= $page->url() ?>">
 
-    <!-- hreflang: tell search engines about every language version this page
-         has on the current host. On .ru only `ru` is here; on .com all three
-         (en, es, ru) — the RU url is reachable even when the switcher UI
-         hides it for non-russophones. -->
+    <!-- hreflang: cross-domain — every language version points to its
+         canonical domain (RU lives on redobureau.ru, EN/ES on .com), so
+         search engines treat the two sites as language variants of one
+         entity instead of duplicate content. -->
     <?php foreach ($kirby->languages() as $_lang) : ?>
-    <link rel="alternate" hreflang="<?= $_lang->code() ?>" href="<?= $page->url($_lang->code()) ?>">
+    <link rel="alternate" hreflang="<?= $_lang->code() ?>" href="<?= $page->crossLangUrl($_lang->code()) ?>">
     <?php endforeach ?>
-    <link rel="alternate" hreflang="x-default" href="<?= $page->url($kirby->defaultLanguage()->code()) ?>">
+    <link rel="alternate" hreflang="x-default" href="<?= $page->crossLangUrl($kirby->defaultLanguage()->code()) ?>">
 
     <!-- Remove auto-formatting for telephone numbers -->
     <meta name="format-detection" content="telephone=no">
