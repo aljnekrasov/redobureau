@@ -35,3 +35,7 @@ site/accounts/
 *.swp
 .vscode/
 .idea/
+
+# Domain verification files live only on the servers (uploaded manually) —
+# never delete them on rsync deploys
+/*.html
