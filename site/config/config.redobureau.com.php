@@ -65,14 +65,15 @@ return [
   ],
 
   // sync-to-ru (phase 6): admin button to push content/ from this server
-  // to redobureau.ru via rsync over SSH. Disabled by default — flip
-  // 'enabled' to true and fill in 'sshKey' once the .ru server is live
-  // and the SSH key pair is provisioned.
+  // to redobureau.ru via rsync over SSH. Key pair: /var/www/.ssh/sync_ed25519
+  // on this server (owned by www-data), public half authorized for
+  // deploy@213.171.15.113 (deploy is in the www-data group, content dir
+  // is group-writable).
   'rb.sync-to-ru' => [
-    'enabled' => false,
-    'host'    => '201.51.2.132',
+    'enabled' => true,
+    'host'    => '213.171.15.113',
     'user'    => 'deploy',
     'path'    => '/var/www/redobureau.ru/content/',
-    'sshKey'  => null, // e.g. '/var/www/.ssh/id_ed25519_sync'
+    'sshKey'  => '/var/www/.ssh/sync_ed25519',
   ],
 ];
