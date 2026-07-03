@@ -43,6 +43,15 @@ return [
   'site.navJournal' => false,
   'site.navShop'    => false,
 
+  // Stripe secret key — NEVER commit it (public repo). Lives on the
+  // server: `echo 'sk_live_…' > /var/www/.stripe-secret` (root:www-data,
+  // chmod 640), or the STRIPE_SECRET_KEY env var in the FPM pool.
+  // Absent key = shop buttons fall back to mail-order.
+  'site.stripeSecret' => $_SERVER['STRIPE_SECRET_KEY']
+      ?? (is_readable('/var/www/.stripe-secret')
+          ? trim((string) file_get_contents('/var/www/.stripe-secret'))
+          : null),
+
   // Contact form — addresses for $kirby->email() inside controllers/contacts.php.
   // SMTP itself is intentionally not configured anywhere yet (user request).
   // When SMTP gets enabled, the credentials live here, not in code.

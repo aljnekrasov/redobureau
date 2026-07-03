@@ -173,7 +173,7 @@ ym(<?= $metrika ?>, "init", {
     // Template-level view events — retargeting signals.
     // body class is exactly the template name (see header.php).
     var tpl = d.body ? d.body.className : '';
-    if (tpl === 'project' || tpl === 'story') {
+    if (tpl === 'project' || tpl === 'story' || tpl === 'product') {
         var h1 = d.querySelector('h1');
         rbTrack(tpl + '_view', { title: h1 ? h1.textContent.trim() : location.pathname });
     }

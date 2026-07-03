@@ -199,6 +199,9 @@
                         <?php if (option('site.navJournal', false) && ($journal = page('journal'))) : ?>
                         <a href="<?= url($journal->url()) ?>"><?= $journal->title() ?></a>
                         <?php endif ?>
+                        <?php if (option('site.navShop', false) && ($shop = page('shop'))) : ?>
+                        <a href="<?= url($shop->url()) ?>"><?= $shop->title() ?></a>
+                        <?php endif ?>
                         <a href="<?= $kirby->language()->url() . '' . '/contacts' ?>"><?= t('contacts') ?></a>
                         <?php snippet('language-switcher') ?>
                         <?php if ($globalLink = option('site.globalLink')) : ?>

@@ -1,0 +1,30 @@
+title: Shop
+preset: pages
+icon: 🛍
+
+status:
+  draft: Hidden
+  unlisted: Active
+
+options:
+  url: false
+  delete: false
+
+drafts:
+  headline: Drafts
+  template: product
+  image:
+    query: page.files.template("previewCover").first
+    ratio: 1/1
+    cover: true
+
+listed:
+  headline: For sale
+  template: product
+  layout: cards
+  size: medium
+  image:
+    query: page.files.template("previewCover").first
+    ratio: 1/1
+    cover: true
+  info: "{{ page.price }} {{ page.currency }}"

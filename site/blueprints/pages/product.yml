@@ -1,0 +1,86 @@
+title: Product
+icon: 🛍
+
+status:
+  draft:
+    label: Draft
+    text: Only visible in the panel.
+  listed:
+    label: For sale
+    text: Visible in the shop.
+
+columns:
+  - width: 3/4
+    sections:
+      info:
+        type: fields
+        fields:
+          price:
+            label: Price (international)
+            type: number
+            step: 0.01
+            width: 1/4
+            help: In the currency selected on the right
+          currency:
+            label: Currency
+            type: select
+            width: 1/4
+            default: usd
+            options:
+              usd: USD
+              eur: EUR
+          price_rub:
+            label: Price ₽ (for .ru, later)
+            type: number
+            width: 1/4
+            help: Not charged yet — .ru shows a mail-order button until ЮKassa lands
+          stock:
+            label: Stock
+            type: select
+            width: 1/4
+            default: available
+            options:
+              available: Available
+              preorder: Pre-order
+              soldout: Sold out
+          desc:
+            label: Description
+            type: textarea
+            size: medium
+      gallery:
+        type: files
+        headline: Gallery
+        layout: cards
+        info: "{{ file.dimensions }}"
+      share:
+        type: fields
+        fields:
+          og_title:
+            label: Open Graph Title
+            type: text
+          sharetext:
+            label: Share text
+            type: textarea
+            size: small
+            buttons: false
+
+  - width: 1/4
+    sections:
+      audienceBox:
+        type: fields
+        fields:
+          audience:
+            label: Audience
+            type: checkboxes
+            options:
+              intl: International (redobureau.com)
+              ru: Russia (redobureau.ru)
+            default: [intl, ru]
+            required: true
+      previewCover:
+        type: files
+        headline: Preview cover
+        template: previewCover
+        layout: cards
+        info: "{{ file.dimensions }}"
+        max: 1
