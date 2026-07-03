@@ -86,9 +86,10 @@ site/config/
 - `routes`: `ru/(:all?)` → 301 `https://redobureau.ru/ru/<path>` (русский
   на этом домене не открывается); `/` → языковой диспетчер:
   1. кука `langPref` (явный выбор в свитчере) всегда побеждает;
-  2. иначе — **основной** язык браузера по q-весам Accept-Language:
-     ru → 302 на `https://redobureau.ru/ru`, es → `/es`, en → `/en`;
-  3. ничего не распознано (боты, curl) → `/en`.
+  2. русский **в любом месте** Accept-Language (даже вторым языком) →
+     302 на `https://redobureau.ru/ru`;
+  3. иначе основной язык по q-весам: es → `/es`, en → `/en`;
+  4. ничего не распознано (боты, curl) → `/en`.
   SEO-безопасно по гайду Google для locale-adaptive страниц: только корень,
   только 302, hreflang+x-default на месте, явный выбор уважается. Googlebot
   краулит без русского Accept-Language → редиректа на .ru не видит.

@@ -57,9 +57,9 @@ return [
     // and an explicit prior choice (langPref cookie, set by any switcher
     // click) always wins over Accept-Language.
     //
-    // Dispatch by the browser's PRIMARY language (highest q-weight that we
-    // recognize), not by mere presence: "en, ru;q=0.8" stays on /en,
-    // "ru, en;q=0.8" goes to the Russian domain.
+    // Dispatch: ANY Russian in the browser's language list (even as a
+    // secondary language) sends the visitor to the Russian domain.
+    // Non-russophones get their primary language among es/en.
     [
       'pattern' => '/',
       'action'  => function () {
@@ -68,9 +68,15 @@ return [
         if ($pref === 'ru') return go('https://redobureau.ru/ru', 302);
         if (in_array($pref, ['en', 'es'], true)) return go('/' . $pref, 302);
 
-        // 2. Parse Accept-Language into lang => max(q), pick best known.
+        // 2. Russian present anywhere in Accept-Language → Russian site.
+        $al = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
+        if (preg_match('/\bru\b/', $al)) {
+          return go('https://redobureau.ru/ru', 302);
+        }
+
+        // 3. Otherwise pick the highest-weighted language we serve here.
         $prefs = [];
-        foreach (explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
+        foreach (explode(',', $al) as $part) {
           $bits = explode(';', trim($part));
           $code = substr(trim($bits[0]), 0, 2);
           if ($code === '' || $code === '*') continue;
@@ -83,12 +89,11 @@ return [
         arsort($prefs);
 
         foreach (array_keys($prefs) as $code) {
-          if ($code === 'ru') return go('https://redobureau.ru/ru', 302);
           if ($code === 'es') return go('/es', 302);
           if ($code === 'en') return go('/en', 302);
         }
 
-        // 3. Nothing recognized (bots, curl, exotic locales) → default EN.
+        // 4. Nothing recognized (bots, curl, exotic locales) → default EN.
         return go('/en', 302);
       },
     ],
