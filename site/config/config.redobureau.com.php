@@ -37,6 +37,12 @@ return [
   // (GA4 runs in Consent Mode v2 with defaults=denied until then).
   'site.consentBanner' => 'gdpr',
 
+  // Hidden-section switches: flip to true to reveal the nav link, drop
+  // the noindex meta and let the section into the sitemap. One line +
+  // git pull = launch.
+  'site.navJournal' => false,
+  'site.navShop'    => false,
+
   // Contact form — addresses for $kirby->email() inside controllers/contacts.php.
   // SMTP itself is intentionally not configured anywhere yet (user request).
   // When SMTP gets enabled, the credentials live here, not in code.

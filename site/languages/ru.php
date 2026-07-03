@@ -24,6 +24,7 @@ return array(
     'work_type'        => 'Направления',
     'team'             => 'Команда',
     'next_project'     => 'Следующий проект',
+    'next_story'       => 'Следующая статья',
     'brand_short'      => 'Редо',
     'brand_long'       => 'Студия Редо',
     'cookie_text'      => 'Мы используем cookie для аналитики и рекламы.',

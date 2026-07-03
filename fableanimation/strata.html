@@ -3,25 +3,53 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Redo — Fable Animation</title>
+  <title>Redo × RAF AVIA — Šķidrie slāņi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background: white;
+      background: #1E2B7B;
+      color: #F4F2E9;
+      font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
-    @media (prefers-color-scheme: dark) {
-      html, body { background: black; }
-    }
-    #three_root {
+    #grid_root {
       position: fixed;
       inset: 0;
-      line-height: 0;
+      display: block;
       touch-action: none;
     }
-    #three_root canvas { display: block; }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      padding-top: 26px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .logo {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      opacity: 0.65;
+    }
+    h1 {
+      margin: 10px 0 4px;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    .en {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      margin: 0;
+    }
     .intro {
       position: fixed;
       left: 0;
@@ -32,12 +60,20 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 20px 16px;
-      color: white;
       pointer-events: none;
-      font-family: "Helvetica Neue LT W07_55 Roman", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 13px;
-      letter-spacing: 0.02em;
+      font-size: 12px;
+      letter-spacing: 0.06em;
     }
+    .intro a {
+      color: inherit;
+      opacity: 0.55;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+    .intro a:hover { opacity: 1; }
     .sky-switch {
       display: flex;
       align-items: center;
@@ -56,7 +92,7 @@
       width: 36px;
       height: 20px;
       padding: 0;
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(244, 242, 233, 0.7);
       border-radius: 10px;
       background: transparent;
       cursor: pointer;
@@ -70,17 +106,10 @@
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: white;
+      background: #F4F2E9;
       transition: transform 0.25s;
     }
     .sky-switch.velvet .pill .knob { transform: translateX(16px); }
-    .intro a {
-      color: inherit;
-      opacity: 0.55;
-      text-decoration: none;
-      pointer-events: auto;
-    }
-    .intro a:hover { opacity: 1; }
   </style>
   <script type="importmap">
     {
@@ -92,9 +121,14 @@
   </script>
 </head>
 <body>
-  <div id="three_root"></div>
+  <canvas id="grid_root"></canvas>
+  <header>
+    <div class="logo">REDO BUREAU × RAF AVIA</div>
+    <h1>Šķidrie slāņi</h1>
+    <p class="en">Liquid Strata · 3D → caurspīdība / opacity</p>
+  </header>
   <div class="intro">
-    <span>Redo Bureau</span>
+    <a href="index.html">← Liquid 001</a>
     <div class="sky-switch" id="sky_switch">
       <span class="sky-label active" data-sky="waves">Waves</span>
       <button class="pill" type="button" aria-label="Switch sky texture">
@@ -102,8 +136,8 @@
       </button>
       <span class="sky-label" data-sky="velvet">Velvet</span>
     </div>
-    <span>Fable Animation — Liquid 001 · <a href="strata.html">Strata 002 →</a></span>
+    <span>Fable Animation — Strata 002</span>
   </div>
-  <script type="module" src="main.js"></script>
+  <script type="module" src="strata.js"></script>
 </body>
 </html>

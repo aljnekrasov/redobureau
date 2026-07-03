@@ -79,9 +79,9 @@
         <meta name="twitter:image" content="<?= $shareimg ?>">
     <?php endif ?>
 
-    <!-- Robots -->
-    <!-- all = follow, index -->
-    <meta name="robots" content="all">
+    <!-- Robots: templates of hidden sections (journal/shop before launch)
+         pass noindex via snippet('header', ['noindex' => true]) -->
+    <meta name="robots" content="<?= ($noindex ?? false) ? 'noindex, nofollow' : 'all' ?>">
 
     <!-- Canonical link — always the real domain, never the IP. -->
     <link rel="canonical" href="<?= $page->canonicalUrl() ?>">
@@ -193,6 +193,9 @@
                         <a href="<?= url($pages->template('studio')->first()->url()) ?>">
                             <?= $pages->template('studio')->first()->title() ?>
                         </a>
+                        <?php if (option('site.navJournal', false) && ($journal = page('journal'))) : ?>
+                        <a href="<?= url($journal->url()) ?>"><?= $journal->title() ?></a>
+                        <?php endif ?>
                         <a href="<?= $kirby->language()->url() . '' . '/contacts' ?>"><?= t('contacts') ?></a>
                         <?php snippet('language-switcher') ?>
                         <?php if ($globalLink = option('site.globalLink')) : ?>

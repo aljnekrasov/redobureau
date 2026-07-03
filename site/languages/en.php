@@ -24,6 +24,7 @@ return array(
     'work_type'        => 'Type of work',
     'team'             => 'Team',
     'next_project'     => 'Next Project',
+    'next_story'       => 'Next Story',
     'brand_short'      => 'Rb',
     'brand_long'       => 'Redo Bureau',
     'cookie_text'      => 'We use cookies for analytics and advertising.',

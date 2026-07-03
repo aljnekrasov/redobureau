@@ -170,10 +170,12 @@ ym(<?= $metrika ?>, "init", {
         } catch (e) {}
     };
 
-    // project_view — the core retargeting signal ("viewed portfolio work")
-    if (d.body && d.body.className.indexOf('project') !== -1) {
+    // Template-level view events — retargeting signals.
+    // body class is exactly the template name (see header.php).
+    var tpl = d.body ? d.body.className : '';
+    if (tpl === 'project' || tpl === 'story') {
         var h1 = d.querySelector('h1');
-        rbTrack('project_view', { project: h1 ? h1.textContent.trim() : location.pathname });
+        rbTrack(tpl + '_view', { title: h1 ? h1.textContent.trim() : location.pathname });
     }
     // language switches and the escape hatches between domains
     d.addEventListener('click', function (e) {

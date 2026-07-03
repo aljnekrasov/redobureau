@@ -1,6 +1,8 @@
 title: Story
 icon: 🗒
 
+num: '{{ page.date.toDate("Ymd") }}'
+
 status:
   draft:
     label: Draft
@@ -12,20 +14,34 @@ status:
 columns:
   - width: 3/4
     sections:
-      meta:
+      info:
         type: fields
         fields:
-          industry:
-            label: Industries
+          date:
+            label: Publish date
+            type: date
+            required: true
+            default: today
+            width: 1/2
+          authors:
+            label: Authors
             type: multiselect
             width: 1/2
             options: query
             query:
-              fetch: site.industries.toStructure
+              fetch: site.team.toStructure
               text: "{{ structureItem.name }}"
               value: "{{ structureItem.name }}"
+          intro:
+            label: Intro
+            type: textarea
+            size: small
+            buttons: false
+            help: >
+              1-2 sentences, 200-300 chars. Shows on the listing card and
+              becomes the meta description of the article.
           types:
-            label: Work types
+            label: Topics
             type: multiselect
             width: 1/2
             options: query
@@ -33,18 +49,10 @@ columns:
               fetch: site.worktypes.toStructure
               text: "{{ structureItem.name }}"
               value: "{{ structureItem.name }}"
-          team:
-            label: Autors
-            type: multiselect
-            options: query
-            query:
-              fetch: site.team.toStructure
-              text: "{{ structureItem.name }}"
-              value: "{{ structureItem.name }}"
       content:
         type: fields
         fields:
-          content:
+          body:
             label: Content
             type: builder
             fieldsets:
@@ -59,47 +67,83 @@ columns:
                 label: Images
                 fields:
                   pictures:
-                    label: 
+                    label:
                     type: files
                     layout: cards
-                    text: 
-                    info: 
+                    text:
+                    info:
                     image:
                       cover: false
                       ratio: 1/1
                       back: black
+              block-quote:
+                label: Quote
+                fields:
+                  text:
+                    label: Quote
+                    type: textarea
+                    size: small
+                    buttons: false
+                  cite:
+                    label: Source
+                    type: text
+              block-video:
+                label: Video
+                fields:
+                  videoID:
+                    label: Vimeo video ID
+                    type: text
+                    placeholder: 3432886
       related:
         type: fields
         fields:
           related:
+            label: Related projects
             type: pages
             layout: cards
             query: site.children.template('work').children.published
-            min: 2
             max: 3
-                    
-        
+
   - width: 1/4
     sections:
+      audienceBox:
+        type: fields
+        fields:
+          audience:
+            label: Audience
+            type: checkboxes
+            options:
+              intl: International (redobureau.com)
+              ru: Russia (redobureau.ru)
+            default: [intl, ru]
+            required: true
+            help: Which sites this article appears on.
       cover:
         type: files
         headline: Cover
         layout: cards
-        info: "{{ file.dimensions }}"
         info: false
-        template: cover
-        min: 1
+        template: heroCover
         max: 1
       previewCover:
         type: files
         headline: Preview cover
-        template: image
+        template: previewCover
         layout: cards
         info: "{{ file.dimensions }}"
-        min: 1
         max: 1
+      share:
+        type: fields
+        fields:
+          og_title:
+            label: Open Graph Title
+            type: text
+          sharetext:
+            label: Share text
+            type: textarea
+            size: small
+            buttons: false
       files:
         type: files
         headline: Files
         info: "{{ file.dimensions }}"
-

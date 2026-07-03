@@ -16,6 +16,10 @@ return [
   // 152-ФЗ: informational cookie notice, dismissable, non-blocking.
   'site.consentBanner' => 'notice',
 
+  // Hidden-section switches (see .com config for semantics).
+  'site.navJournal' => false,
+  'site.navShop'    => false,
+
   // Contact form addresses. SMTP not configured yet — see note in .com config.
   'site.contactFrom' => 'noreply@redobureau.ru',
   'site.contactTo'   => 'marina@redobureau.ru',

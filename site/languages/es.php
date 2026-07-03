@@ -24,6 +24,7 @@ return array(
     'work_type'        => 'Servicios',
     'team'             => 'Equipo',
     'next_project'     => 'Siguiente proyecto',
+    'next_story'       => 'Siguiente artículo',
     'brand_short'      => 'Rb',
     'brand_long'       => 'Redo Bureau',
     'cookie_text'      => 'Usamos cookies para analítica y publicidad.',

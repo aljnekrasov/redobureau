@@ -1,5 +1,7 @@
 import * as THREE from "three"
 import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js"
+import { simplex3 } from "./noise.js"
+import { makeFallbackSky, makeVelvetSky } from "./sky.js"
 
 // Liquid-metal blob in the homepage style: same psychedelic sky (11.jpg),
 // same CubeCamera live reflections and mouse-follow camera — but instead of
@@ -61,58 +63,55 @@ const skyMaterial = new THREE.MeshBasicMaterial({ side: THREE.BackSide })
 const sky = new THREE.Mesh(skyGeo, skyMaterial)
 scene.add(sky)
 
+// two skies: "waves" (the homepage 11.jpg) and "velvet" (procedural grain)
+const skyTextures = { waves: null, velvet: null }
+let currentSky = "waves"
+
+function setSkyMap(texture) {
+  skyMaterial.map = texture
+  skyMaterial.needsUpdate = true
+}
+
+function setSky(name) {
+  currentSky = name
+  if (name === "velvet" && !skyTextures.velvet) {
+    const texture = new THREE.CanvasTexture(makeVelvetSky())
+    texture.colorSpace = THREE.SRGBColorSpace
+    skyTextures.velvet = texture
+  }
+  if (skyTextures[name]) setSkyMap(skyTextures[name])
+
+  switchEl.classList.toggle("velvet", name === "velvet")
+  for (const label of switchEl.querySelectorAll(".sky-label")) {
+    label.classList.toggle("active", label.dataset.sky === name)
+  }
+}
+
+const switchEl = document.getElementById("sky_switch")
+switchEl.querySelector(".pill").addEventListener("click", () => {
+  setSky(currentSky === "waves" ? "velvet" : "waves")
+})
+for (const label of switchEl.querySelectorAll(".sky-label")) {
+  label.addEventListener("click", () => setSky(label.dataset.sky))
+}
+
 new THREE.TextureLoader().load(
   "../assets/models/11.jpg",
   texture => {
     texture.colorSpace = THREE.SRGBColorSpace
-    skyMaterial.map = texture
-    skyMaterial.needsUpdate = true
+    skyTextures.waves = texture
+    if (currentSky === "waves") setSkyMap(texture)
   },
   undefined,
   () => {
     // standalone fallback: procedural waves in the 11.jpg palette
     const texture = new THREE.CanvasTexture(makeFallbackSky())
     texture.colorSpace = THREE.SRGBColorSpace
-    skyMaterial.map = texture
-    skyMaterial.needsUpdate = true
+    skyTextures.waves = texture
+    if (currentSky === "waves") setSkyMap(texture)
   }
 )
 
-function makeFallbackSky() {
-  const size = 1024
-  const canvas = document.createElement("canvas")
-  canvas.width = canvas.height = size
-  const ctx = canvas.getContext("2d")
-
-  ctx.fillStyle = "#04041e"
-  ctx.fillRect(0, 0, size, size)
-
-  const bands = [
-    { color: "#d40000", y: 0.10, amp: 90, freq: 1.5, w: 70 },
-    { color: "#1414e0", y: 0.34, amp: 120, freq: 1.0, w: 160 },
-    { color: "#ff3fd2", y: 0.62, amp: 100, freq: 1.8, w: 60 },
-    { color: "#ffe93b", y: 0.72, amp: 110, freq: 1.8, w: 40 },
-    { color: "#63ffe9", y: 0.86, amp: 90, freq: 2.2, w: 46 },
-    { color: "#1414e0", y: 0.95, amp: 80, freq: 1.2, w: 120 }
-  ]
-
-  ctx.globalCompositeOperation = "lighter"
-  for (const band of bands) {
-    ctx.strokeStyle = band.color
-    ctx.lineWidth = band.w
-    ctx.shadowColor = band.color
-    ctx.shadowBlur = 70
-    ctx.beginPath()
-    for (let x = -40; x <= size + 40; x += 8) {
-      const y =
-        band.y * size +
-        Math.sin((x / size) * Math.PI * 2 * band.freq) * band.amp
-      x === -40 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-    }
-    ctx.stroke()
-  }
-  return canvas
-}
 
 // -- chrome blob with live reflections ---------------------------------------
 
@@ -245,104 +244,6 @@ function updateBlob() {
   }
   position.needsUpdate = true
   blobGeometry.computeVertexNormals()
-}
-
-// -- 3d simplex noise (Gustavson) --------------------------------------------
-
-const grad3 = [
-  [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
-  [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
-  [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]
-]
-
-const perm = makePerm(1929)
-
-function makePerm(seed) {
-  const p = []
-  for (let i = 0; i < 256; i++) p[i] = i
-  let s = seed >>> 0
-  const random = () => {
-    s |= 0
-    s = (s + 0x6d2b79f5) | 0
-    let t = Math.imul(s ^ (s >>> 15), 1 | s)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-  for (let i = 255; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1))
-    ;[p[i], p[j]] = [p[j], p[i]]
-  }
-  const out = new Uint8Array(512)
-  for (let i = 0; i < 512; i++) out[i] = p[i & 255]
-  return out
-}
-
-function simplex3(xin, yin, zin) {
-  const F3 = 1 / 3
-  const G3 = 1 / 6
-
-  const s = (xin + yin + zin) * F3
-  const i = Math.floor(xin + s)
-  const j = Math.floor(yin + s)
-  const k = Math.floor(zin + s)
-  const t = (i + j + k) * G3
-  const x0 = xin - (i - t)
-  const y0 = yin - (j - t)
-  const z0 = zin - (k - t)
-
-  let i1, j1, k1, i2, j2, k2
-  if (x0 >= y0) {
-    if (y0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 1; k2 = 0 }
-    else if (x0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 0; k2 = 1 }
-    else { i1 = 0; j1 = 0; k1 = 1; i2 = 1; j2 = 0; k2 = 1 }
-  } else {
-    if (y0 < z0) { i1 = 0; j1 = 0; k1 = 1; i2 = 0; j2 = 1; k2 = 1 }
-    else if (x0 < z0) { i1 = 0; j1 = 1; k1 = 0; i2 = 0; j2 = 1; k2 = 1 }
-    else { i1 = 0; j1 = 1; k1 = 0; i2 = 1; j2 = 1; k2 = 0 }
-  }
-
-  const x1 = x0 - i1 + G3
-  const y1 = y0 - j1 + G3
-  const z1 = z0 - k1 + G3
-  const x2 = x0 - i2 + 2 * G3
-  const y2 = y0 - j2 + 2 * G3
-  const z2 = z0 - k2 + 2 * G3
-  const x3 = x0 - 1 + 3 * G3
-  const y3 = y0 - 1 + 3 * G3
-  const z3 = z0 - 1 + 3 * G3
-
-  const ii = i & 255
-  const jj = j & 255
-  const kk = k & 255
-
-  let n = 0
-
-  let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0
-  if (t0 > 0) {
-    const g = grad3[perm[ii + perm[jj + perm[kk]]] % 12]
-    t0 *= t0
-    n += t0 * t0 * (g[0] * x0 + g[1] * y0 + g[2] * z0)
-  }
-  let t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1
-  if (t1 > 0) {
-    const g = grad3[perm[ii + i1 + perm[jj + j1 + perm[kk + k1]]] % 12]
-    t1 *= t1
-    n += t1 * t1 * (g[0] * x1 + g[1] * y1 + g[2] * z1)
-  }
-  let t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2
-  if (t2 > 0) {
-    const g = grad3[perm[ii + i2 + perm[jj + j2 + perm[kk + k2]]] % 12]
-    t2 *= t2
-    n += t2 * t2 * (g[0] * x2 + g[1] * y2 + g[2] * z2)
-  }
-  let t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3
-  if (t3 > 0) {
-    const g = grad3[perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]] % 12]
-    t3 *= t3
-    n += t3 * t3 * (g[0] * x3 + g[1] * y3 + g[2] * z3)
-  }
-
-  return 32 * n
 }
 
 animate()
