@@ -148,6 +148,16 @@
             if (!t) return;
             d.cookie = 'langPref=' + t.dataset.lang + ';path=/;max-age=31536000;samesite=lax';
         });
+        // ?setlang=xx — arriving from the other domain (e.g. "Redo Global"
+        // on redobureau.ru): persist the choice so the root dispatcher
+        // doesn't bounce this visitor back, then clean the URL.
+        var m = location.search.match(/[?&]setlang=(en|es|ru)\b/);
+        if (m) {
+            d.cookie = 'langPref=' + m[1] + ';path=/;max-age=31536000;samesite=lax';
+            if (history.replaceState) {
+                history.replaceState(null, '', location.pathname + location.hash);
+            }
+        }
     })();
     </script>
 
@@ -181,6 +191,9 @@
                         </a>
                         <a href="<?= $kirby->language()->url() . '' . '/contacts' ?>"><?= t('contacts') ?></a>
                         <?php snippet('language-switcher') ?>
+                        <?php if ($globalLink = option('site.globalLink')) : ?>
+                        <a href="<?= $globalLink ?>" rel="noopener">Redo Global</a>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

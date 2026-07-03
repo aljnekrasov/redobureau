@@ -33,6 +33,12 @@ return [
     'es' => 'https://redobureau.com',
   ],
 
+  // "Redo Global" link in the header — the escape hatch to the
+  // international site. ?setlang=en makes the .com inline script persist
+  // langPref=en, so the root dispatcher there won't bounce the visitor
+  // back here on the next visit.
+  'site.globalLink' => 'https://redobureau.com/en?setlang=en',
+
   // Plain routes, NO 'language' key. In Kirby 3.3 a route with
   // 'language' => '*' is matched AFTER the language prefix is consumed
   // (pattern '/' would match /en/, /ru/ — never the bare root), which
