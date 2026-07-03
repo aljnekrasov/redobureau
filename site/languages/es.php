@@ -26,5 +26,9 @@ return array(
     'next_project'     => 'Siguiente proyecto',
     'brand_short'      => 'Rb',
     'brand_long'       => 'Redo Bureau',
+    'cookie_text'      => 'Usamos cookies para analítica y publicidad.',
+    'cookie_accept'    => 'Aceptar',
+    'cookie_decline'   => 'Rechazar',
+    'cookie_ok'        => 'OK',
   ]
 );

@@ -7,8 +7,14 @@ return [
   // Only Russian is exposed on this host.
   'site.activeLanguages' => ['ru'],
 
-  // Yandex Metrika stays on the Russian site.
-  'site.useYandex' => true,
+  // Ad & analytics pixels (see snippets/analytics.php).
+  'site.analytics' => [
+    'metrika' => 45804984,
+    'vk'      => null, // VK Ads pixel, e.g. 'VK-RTRG-000000-XXXXX'
+  ],
+
+  // 152-ФЗ: informational cookie notice, dismissable, non-blocking.
+  'site.consentBanner' => 'notice',
 
   // Contact form addresses. SMTP not configured yet — see note in .com config.
   'site.contactFrom' => 'noreply@redobureau.ru',

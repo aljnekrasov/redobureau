@@ -24,9 +24,18 @@ return [
   // robots, JSON-LD) — always the real domain, even when browsing by IP.
   'site.canonicalBase' => 'https://redobureau.com',
 
-  // No Yandex Metrika here — Russian leakage on international.
-  // (Hook up Google Analytics / Plausible later via a separate option.)
-  'site.useYandex' => false,
+  // Ad & analytics pixels (see snippets/analytics.php). Fill in the IDs
+  // as the ad accounts get created — null means "not rendered".
+  // No Yandex anything on the international site.
+  'site.analytics' => [
+    'ga4'      => null, // Google Analytics 4, e.g. 'G-XXXXXXXXXX'
+    'meta'     => null, // Meta (FB/IG) Pixel ID, e.g. '1234567890123456'
+    'linkedin' => null, // LinkedIn Insight partner id, e.g. '1234567'
+  ],
+
+  // GDPR consent banner: marketing pixels fire only after Accept
+  // (GA4 runs in Consent Mode v2 with defaults=denied until then).
+  'site.consentBanner' => 'gdpr',
 
   // Contact form — addresses for $kirby->email() inside controllers/contacts.php.
   // SMTP itself is intentionally not configured anywhere yet (user request).

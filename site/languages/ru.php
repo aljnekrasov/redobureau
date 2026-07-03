@@ -26,5 +26,9 @@ return array(
     'next_project'     => 'Следующий проект',
     'brand_short'      => 'Редо',
     'brand_long'       => 'Студия Редо',
+    'cookie_text'      => 'Мы используем cookie для аналитики и рекламы.',
+    'cookie_accept'    => 'Принять',
+    'cookie_decline'   => 'Отклонить',
+    'cookie_ok'        => 'Хорошо',
   ]
 );

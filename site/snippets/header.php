@@ -126,29 +126,7 @@
     <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="<?= url('assets/icons/icon-192.png') ?>">
     <!-- 2 -->
 
-    <?php if (option('site.useYandex', false)) : ?>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript" async>
-        (function(m, e, t, r, i, k, a) {
-            m[i] = m[i] || function() {
-                (m[i].a = m[i].a || []).push(arguments)
-            };
-            m[i].l = 1 * new Date();
-            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(
-                k, a)
-        })
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-        ym(45804984, "init", {
-            clickmap: false,
-            trackLinks: true,
-            accurateTrackBounce: false,
-            webvisor: false
-        })
-    </script>
-    <noscript><img src="https://mc.yandex.ru/watch/45804984" style="position:absolute; left:-9999px;" alt="" /></noscript>
-    <!-- /Yandex.Metrika counter -->
-    <?php endif ?>
+    <?php snippet('analytics') ?>
 
     <!-- Language switcher: optional buttons (RU on .com) hidden by default.
          The inline script below adds .ru-eligible to <html> when the visitor
