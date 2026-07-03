@@ -13,8 +13,10 @@ return [
   ],
   'thumbs'    => ['driver' => 'gd'],
 
-  // Default list of UI-visible languages. Per-host configs override this:
-  //   .com -> ['en', 'es']  (ru shown only to ru-eligible visitors via plugin)
-  //   .ru  -> ['ru']
-  'site.activeLanguages' => ['en', 'ru', 'es'],
+  // NOTE: site.activeLanguages / site.optionalLanguages are defined ONLY in
+  // the per-host configs, never here. Kirby merges configs with
+  // array_replace_recursive(), which merges lists INDEX-BY-INDEX — a base
+  // default of ['en','ru','es'] overridden by ['ru'] would produce
+  // ['ru','ru','es'], not ['ru']. Templates fall back gracefully when the
+  // option is absent (e.g. on localhost).
 ];

@@ -2,18 +2,16 @@
 // Language switcher. Renders one <a> per language available on this host.
 //
 // Languages in option('site.activeLanguages') are visible unconditionally.
-// Other installed Kirby languages render with [data-optional]; CSS in the
-// <head> hides them, the inline script in <head> reveals them when the
-// visitor is ru-eligible (Accept-Language, cookie, or .ru-eligible class
-// added server-side via $site->ruEligible()).
-//
-// On redobureau.ru, activeLanguages = ['ru'] and there are no other
-// installed languages reachable (en/es get 301'd to /ru by the routes
-// in config.redobureau.ru.php), so this snippet renders effectively
-// nothing user-facing.
+// Languages in option('site.optionalLanguages') render with [data-optional]:
+// CSS in the <head> hides them, the inline script reveals them when the
+// visitor is ru-eligible (browser language or saved cookie preference).
+// Installed languages listed in neither option are not rendered at all —
+// on redobureau.ru (active = ['ru'], optional unset) en/es never appear,
+// so the switcher collapses to a single link and renders nothing.
 
 $current = $kirby->language() ? $kirby->language()->code() : null;
-$active  = option('site.activeLanguages', [$current]);
+$active   = option('site.activeLanguages', [$current]);
+$optCodes = option('site.optionalLanguages', []);
 
 $primary  = [];
 $optional = [];
@@ -22,7 +20,7 @@ foreach ($kirby->languages() as $lang) {
     $code = $lang->code();
     if (in_array($code, $active, true)) {
         $primary[] = $lang;
-    } else {
+    } elseif (in_array($code, $optCodes, true)) {
         $optional[] = $lang;
     }
 }

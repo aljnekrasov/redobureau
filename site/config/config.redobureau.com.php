@@ -9,6 +9,11 @@ return [
   // just doesn't expose RU unless ru-eligible (see plugin in phase 4).
   'site.activeLanguages' => ['en', 'es'],
 
+  // Languages rendered in the switcher as hidden [data-optional] buttons,
+  // revealed client-side for ru-eligible visitors. Languages listed in
+  // neither option are not rendered at all.
+  'site.optionalLanguages' => ['ru'],
+
   // No Yandex Metrika here — Russian leakage on international.
   // (Hook up Google Analytics / Plausible later via a separate option.)
   'site.useYandex' => false,

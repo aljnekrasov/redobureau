@@ -14,40 +14,39 @@ return [
   'site.contactFrom' => 'noreply@redobureau.ru',
   'site.contactTo'   => 'marina@redobureau.ru',
 
-  // Panel is disabled on .ru — content is edited on .com and synced over
-  // (manual button, phase 6).
-  'panel' => [
-    'install' => false,
-  ],
+  // Panel is fully disabled on .ru — content is edited on .com and synced
+  // over (manual button, phase 6). `false` is honored by Kirby's own panel
+  // route (config/routes.php: `if option('panel') === false return null`),
+  // which a custom route could NOT do — system routes register before
+  // custom ones, so a custom 'panel/(:all?)' route never fires.
+  'panel' => false,
 
   'cache.pages' => [
     'active' => true,
     'prefix' => 'ru',
   ],
 
+  // Plain routes, NO 'language' key. In Kirby 3.3 a route with
+  // 'language' => '*' is matched AFTER the language prefix is consumed
+  // (pattern '/' would match /en/, /ru/ — never the bare root), which
+  // silently disabled all three routes in the first version of this file.
   'routes' => [
-    // Block panel access entirely.
-    [
-      'pattern'  => 'panel/(:all?)',
-      'language' => '*',
-      'action'   => fn() => site()->errorPage()->render(),
-    ],
-
     // Bookmarks / SEO leftovers in en/es get a permanent redirect home.
-    // Going to /ru (root of the active language) rather than guessing slugs.
     [
-      'pattern'  => ['en/(:all?)', 'es/(:all?)'],
-      'language' => '*',
-      'action'   => fn() => go('/ru', 301),
+      'pattern' => 'en/(:all?)',
+      'action'  => fn() => go('/ru', 301),
+    ],
+    [
+      'pattern' => 'es/(:all?)',
+      'action'  => fn() => go('/ru', 301),
     ],
 
     // Root URL redirects to /ru — ru is the only language here, but the URL
     // prefix /ru is kept globally consistent across both deploys (so internal
     // links built with $kirby->language()->url() always resolve).
     [
-      'pattern'  => '/',
-      'language' => '*',
-      'action'   => fn() => go('/ru', 302),
+      'pattern' => '/',
+      'action'  => fn() => go('/ru', 302),
     ],
   ],
 ];
