@@ -252,3 +252,20 @@ nginx на .com — implicit default для любых Host. Запрос
   нажать «Sync now», дождаться зелёного «sync ok».
 - **Новый язык интерфейса:** `site/languages/xx.php` (копия `es.php` с
   переводами) + добавить `'xx'` в `site.activeLanguages` конфига .com.
+
+## 9. SEO-слой (плагин site/plugins/seo/)
+
+- `robots.txt`, `sitemap.xml`, `llms.txt` — динамические роуты, host-aware:
+  каждый домен отдаёт только свои языки и только audience-разрешённые
+  страницы. AI-краулеры (GPTBot, ClaudeBot, PerplexityBot) явно разрешены.
+- `$page->canonicalUrl($lang)` — абсолютный URL от `site.canonicalBase`
+  (canonical, hreflang, og:url не зависят от захода по IP).
+- `assetVersioned()` — `?v=mtime` для css/js, безопасный immutable-кэш.
+- Title-схема: «{Page} — Redo Bureau», у главной — просто «Redo Bureau».
+- h1: настоящий на проектах (`h1.seo-h` со снятыми дефолтами), скрытый
+  `.vh-seo` на home/work/studio/contacts.
+- JSON-LD Organization в `<head>` каждой страницы.
+- Медиа: `loading="lazy"` на img, видео через `data-lazy` +
+  IntersectionObserver (скрипт в tail.php), hero-видео проектов — eager.
+- nginx: gzip_types включён, deny на docs/scripts/mail/marketing/*.md,
+  php-fpm pm.max_children=10. Всё зашито в scripts/provision.sh.
