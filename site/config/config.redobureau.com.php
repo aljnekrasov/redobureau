@@ -51,15 +51,45 @@ return [
       'action'  => fn($path = null) => go('https://redobureau.ru/ru' . ($path ? '/' . $path : ''), 301),
     ],
 
-    // Root: detect only among languages served on THIS host (en/es).
-    // Kirby's built-in detect would also match ru and instantly bounce
-    // russophone browsers to the .ru domain — instead they land on /en
-    // and see the revealed RU button, leaving the choice to them.
+    // Root: language dispatch. SEO-safe per Google's locale-adaptive
+    // guidance: fires ONLY on the bare root (deep URLs always resolve
+    // directly), always 302 (never 301), hreflang+x-default are in place,
+    // and an explicit prior choice (langPref cookie, set by any switcher
+    // click) always wins over Accept-Language.
+    //
+    // Dispatch by the browser's PRIMARY language (highest q-weight that we
+    // recognize), not by mere presence: "en, ru;q=0.8" stays on /en,
+    // "ru, en;q=0.8" goes to the Russian domain.
     [
       'pattern' => '/',
       'action'  => function () {
-        $al = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
-        return go(preg_match('/\bes\b/i', $al) ? '/es' : '/en', 302);
+        // 1. Explicit previous choice wins.
+        $pref = $_COOKIE['langPref'] ?? null;
+        if ($pref === 'ru') return go('https://redobureau.ru/ru', 302);
+        if (in_array($pref, ['en', 'es'], true)) return go('/' . $pref, 302);
+
+        // 2. Parse Accept-Language into lang => max(q), pick best known.
+        $prefs = [];
+        foreach (explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
+          $bits = explode(';', trim($part));
+          $code = substr(trim($bits[0]), 0, 2);
+          if ($code === '' || $code === '*') continue;
+          $q = 1.0;
+          foreach ($bits as $b) {
+            if (preg_match('/^q=([0-9.]+)$/', trim($b), $m)) $q = (float)$m[1];
+          }
+          $prefs[$code] = max($prefs[$code] ?? 0, $q);
+        }
+        arsort($prefs);
+
+        foreach (array_keys($prefs) as $code) {
+          if ($code === 'ru') return go('https://redobureau.ru/ru', 302);
+          if ($code === 'es') return go('/es', 302);
+          if ($code === 'en') return go('/en', 302);
+        }
+
+        // 3. Nothing recognized (bots, curl, exotic locales) → default EN.
+        return go('/en', 302);
       },
     ],
   ],
