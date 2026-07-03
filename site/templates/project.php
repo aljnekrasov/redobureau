@@ -16,7 +16,7 @@
 <div class="main pt-20 md:pt-50" data-headerBg-main>
   <div class="page">
     <div class="container">
-      <div class="mb-25 extra"><?= $page->title() ?></div>
+      <h1 class="mb-25 extra seo-h"><?= $page->title() ?></h1>
 
       <div class="row mb-50">
         <div class="col-12 sm:col-6 mb-25 md:mb-0">

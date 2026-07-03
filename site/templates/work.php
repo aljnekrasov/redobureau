@@ -1,4 +1,5 @@
 <?php snippet('header') ?>
+<h1 class="vh-seo"><?= $page->title() ?></h1>
 
 <div class="main">
     <div class="page pt-50">

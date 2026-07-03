@@ -4,6 +4,7 @@ snippet('header');
 $teamList = $site->team()->toStructure();
 
 ?>
+<h1 class="vh-seo"><?= $page->title() ?></h1>
 
 <div class="main pt-75 md:pt-100">
     <div class="page">

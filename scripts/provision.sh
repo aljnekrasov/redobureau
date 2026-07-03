@@ -164,6 +164,21 @@ server {
         return 404;
     }
 
+    # Block repo/service files that must never be public (docs leak the
+    # infrastructure layout, mail/ may contain executable PHP).
+    location ~ ^/(docs|scripts|mail|marketing)/ {
+        deny all;
+        return 404;
+    }
+    location ~ ^/(package\.json|composer\.(json|lock)|gulpfile\.js|yarn\.lock)\$ {
+        deny all;
+        return 404;
+    }
+    location ~ \.(md|sh)\$ {
+        deny all;
+        return 404;
+    }
+
     # Block dotfiles (.git, .env, etc).
     location ~ /\\. {
         deny all;
@@ -185,6 +200,26 @@ server {
 EOF
 
 ln -sf "$VHOST" "/etc/nginx/sites-enabled/$DOMAIN"
+
+# Enable gzip for assets: Ubuntu's default nginx.conf compresses text/html
+# only — a 644KB JS bundle went over the wire uncompressed.
+sed -i \
+    -e 's/# gzip_vary on;/gzip_vary on;/' \
+    -e 's/# gzip_proxied any;/gzip_proxied any;/' \
+    -e 's/# gzip_comp_level 6;/gzip_comp_level 6;/' \
+    -e 's|# gzip_types .*|gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;|' \
+    /etc/nginx/nginx.conf
+
+# PHP-FPM: the 1GB default (pm.max_children=5) hits the ceiling during
+# thumbnail generation bursts — raise the pool a notch.
+FPM_POOL="/etc/php/${PHP_V}/fpm/pool.d/www.conf"
+sed -i \
+    -e 's/^pm.max_children = .*/pm.max_children = 10/' \
+    -e 's/^pm.start_servers = .*/pm.start_servers = 3/' \
+    -e 's/^pm.min_spare_servers = .*/pm.min_spare_servers = 2/' \
+    -e 's/^pm.max_spare_servers = .*/pm.max_spare_servers = 5/' \
+    "$FPM_POOL"
+systemctl restart "php${PHP_V}-fpm"
 
 # Remove the default vhost if it's enabled (it would otherwise grab the
 # server_name _ catch-all).

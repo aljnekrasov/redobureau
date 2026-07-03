@@ -1,4 +1,5 @@
 <?php snippet('header', ['isBlack' => true]) ?>
+<h1 class="vh-seo"><?= $page->title() ?></h1>
 <div class="main pt-75 md:pt-100" id="swup" class="transition-fade">
     <div class="page">
         <div class="container">

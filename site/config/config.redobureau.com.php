@@ -20,6 +20,10 @@ return [
     'ru' => 'https://redobureau.ru',
   ],
 
+  // Canonical origin for SEO surfaces (canonical link, hreflang, sitemap,
+  // robots, JSON-LD) — always the real domain, even when browsing by IP.
+  'site.canonicalBase' => 'https://redobureau.com',
+
   // No Yandex Metrika here — Russian leakage on international.
   // (Hook up Google Analytics / Plausible later via a separate option.)
   'site.useYandex' => false,

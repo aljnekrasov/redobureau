@@ -1,4 +1,5 @@
 <?php snippet('header') ?>
+<h1 class="vh-seo"><?= $page->title() ?></h1>
 
 <link rel=preload as=fetch href="assets/models/13feb_two_sides.glb" crossorigin="anonymous">
 

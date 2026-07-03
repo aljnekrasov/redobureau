@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-    <?= css(['assets/css/index.min.css']) ?>
-    <link rel="preload" href="<?= url('assets/js/index.min.js') ?>" as="script" crossorigin="anonymous">
+    <?= css([assetVersioned('assets/css/index.min.css')]) ?>
+    <link rel="preload" href="<?= assetVersioned('assets/js/index.min.js') ?>" as="script" crossorigin="anonymous">
 
-    <link rel="preload" href="<?= url('assets/fonts/5597801/92130cb4-d99d-43aa-a0a8-2cf4451f4d6e.woff2') ?>" as="font" crossorigin="anonymous">
-    <link rel="preload" href="<?= url('assets/fonts/5597801/cf9b3e3a-e56a-428a-83f3-9cb745540375.woff') ?>" as="font" crossorigin="anonymous">
+    <!-- woff2 only: preloading the .woff fallback made every browser
+         download both formats — modern browsers never use the .woff. -->
+    <link rel="preload" href="<?= url('assets/fonts/5597801/92130cb4-d99d-43aa-a0a8-2cf4451f4d6e.woff2') ?>" as="font" type="font/woff2" crossorigin="anonymous">
 
     <!-- 
 
@@ -33,8 +34,16 @@
 
     <?php
     $shareimg;
-    $title = $page->main_title()->or($site->main_title()->or($site->title()));
-    $ogtitle = $page->og_title()->or($site->og_title()->or($site->title()));
+    // Per-page titles: "Work — Redo Bureau", "Roomp — Redo Bureau", …
+    // The home page keeps the bare site title. main_title (panel field)
+    // still wins when editors set it explicitly.
+    $brand = $site->title();
+    if ($page->isHomePage()) {
+        $title = $page->main_title()->or($site->main_title()->or($brand));
+    } else {
+        $title = $page->main_title()->or($page->title()) . ' — ' . $brand;
+    }
+    $ogtitle = $page->og_title()->or($site->og_title()->or($title));
     $description = $page->sharetext()->or($site->sharetext()->or(''));
 
     if ($page->files()->template('share')->first()) {
@@ -53,8 +62,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="<?= $ogtitle ?>">
     <meta property="og:description" content="<?= $description ?>">
-    <meta property="og:url" content="<?= $page->url() ?>">
-    <meta property="og:site_name" content="<?= $site->url() ?>">
+    <meta property="og:url" content="<?= $page->canonicalUrl() ?>">
+    <meta property="og:site_name" content="<?= $site->title() ?>">
 
     <?php if ($shareimg) : ?>
         <meta property="og:image" content="<?= $shareimg ?>">
@@ -74,17 +83,34 @@
     <!-- all = follow, index -->
     <meta name="robots" content="all">
 
-    <!-- Canonical link -->
-    <link rel="canonical" href="<?= $page->url() ?>">
+    <!-- Canonical link — always the real domain, never the IP. -->
+    <link rel="canonical" href="<?= $page->canonicalUrl() ?>">
 
     <!-- hreflang: cross-domain — every language version points to its
          canonical domain (RU lives on redobureau.ru, EN/ES on .com), so
          search engines treat the two sites as language variants of one
          entity instead of duplicate content. -->
     <?php foreach ($kirby->languages() as $_lang) : ?>
-    <link rel="alternate" hreflang="<?= $_lang->code() ?>" href="<?= $page->crossLangUrl($_lang->code()) ?>">
+    <link rel="alternate" hreflang="<?= $_lang->code() ?>" href="<?= $page->canonicalUrl($_lang->code()) ?>">
     <?php endforeach ?>
-    <link rel="alternate" hreflang="x-default" href="<?= $page->crossLangUrl($kirby->defaultLanguage()->code()) ?>">
+    <link rel="alternate" hreflang="x-default" href="<?= $page->canonicalUrl($kirby->defaultLanguage()->code()) ?>">
+
+    <!-- Structured data: machine-readable identity for search and
+         generative engines (who we are, where, links to profiles). -->
+    <script type="application/ld+json">
+    <?= json_encode([
+        '@context'    => 'https://schema.org',
+        '@type'       => 'Organization',
+        'name'        => $site->title()->value(),
+        'url'         => rtrim(option('site.canonicalBase', $site->url()), '/'),
+        'logo'        => rtrim(option('site.canonicalBase', $site->url()), '/') . '/assets/icons/icon-192.png',
+        'description' => strip_tags($description),
+        'sameAs'      => array_values(array_filter(array_map(
+            fn($l) => $l->url()->value(),
+            $site->socialLinks()->toStructure()->data()
+        ))),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+    </script>
 
     <!-- Remove auto-formatting for telephone numbers -->
     <meta name="format-detection" content="telephone=no">

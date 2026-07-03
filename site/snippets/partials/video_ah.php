@@ -1,1 +1,1 @@
-<video class="w-full" src="<?= $src ?>" preload="auto" autoplay muted loop playsinline type="video/mp4">
+<video class="w-full" data-lazy data-src="<?= $src ?>" preload="none" muted loop playsinline type="video/mp4">

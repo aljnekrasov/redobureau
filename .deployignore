@@ -9,6 +9,11 @@
 .gitignore
 .deployignore
 
+# Internal docs and ops scripts — nginx also denies them, this is
+# belt-and-suspenders for the rsync deploy path
+docs/
+scripts/
+
 # Local dev / build inputs
 node_modules/
 src/

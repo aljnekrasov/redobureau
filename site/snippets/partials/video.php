@@ -1,3 +1,3 @@
 <div data-img-wrapper>
-  <video src="<?= $src ?>" preload="auto" autoplay muted loop playsinline type="video/mp4">
+  <video data-lazy data-src="<?= $src ?>" preload="none" muted loop playsinline type="video/mp4">
 </div>
