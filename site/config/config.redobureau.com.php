@@ -64,56 +64,74 @@ return [
   'routes' => [
     // Hard domain separation: the Russian version is served by
     // redobureau.ru only. Any /ru URL on .com (bookmarks, old index)
-    // permanently moves to the same path on the Russian domain.
+    // permanently moves to the Russian domain; the bare /ru goes to its
+    // root (the Russian home lives at redobureau.ru/, see site.langRoots).
     [
       'pattern' => 'ru/(:all?)',
-      'action'  => fn($path = null) => go('https://redobureau.ru/ru' . ($path ? '/' . $path : ''), 301),
+      'action'  => fn($path = null) => go('https://redobureau.ru' . ($path ? '/ru/' . $path : '/'), 301),
     ],
 
-    // Root: language dispatch. SEO-safe per Google's locale-adaptive
-    // guidance: fires ONLY on the bare root (deep URLs always resolve
-    // directly), always 302 (never 301), hreflang+x-default are in place,
-    // and an explicit prior choice (langPref cookie, set by any switcher
-    // click) always wins over Accept-Language.
-    //
-    // Dispatch: ANY Russian in the browser's language list (even as a
-    // secondary language) sends the visitor to the Russian domain.
-    // Non-russophones get their primary language among es/en.
+    // The EN home lives at the bare root — /en (old bookmarks, switcher
+    // hops) permanently moves to /, preserving the query string
+    // (?setlang=en from the .ru "Redo Global" link must survive).
+    [
+      'pattern' => 'en',
+      'action'  => function () {
+        $qs = $_SERVER['QUERY_STRING'] ?? '';
+        return go('/' . ($qs ? '?' . $qs : ''), 301);
+      },
+    ],
+
+    // Root: language dispatch, then the ENGLISH HOMEPAGE RENDERS RIGHT
+    // HERE (200, no redirect). SEO-safe per Google's locale-adaptive
+    // guidance: only the bare root dispatches, deep URLs always resolve
+    // directly, redirects are 302, hreflang+x-default are in place, and
+    // an explicit prior choice (langPref cookie) always wins.
     [
       'pattern' => '/',
       'action'  => function () {
+        // 0. ?setlang=xx (e.g. "Redo Global" from the .ru site) — honor
+        //    and persist server-side, BEFORE any Accept-Language logic,
+        //    otherwise a russophone would bounce straight back to .ru.
+        $set = get('setlang');
+        if (in_array($set, ['en', 'es', 'ru'], true)) {
+          setcookie('langPref', $set, time() + 31536000, '/');
+          $_COOKIE['langPref'] = $set;
+        }
+
         // 1. Explicit previous choice wins.
         $pref = $_COOKIE['langPref'] ?? null;
-        if ($pref === 'ru') return go('https://redobureau.ru/ru', 302);
-        if (in_array($pref, ['en', 'es'], true)) return go('/' . $pref, 302);
+        if ($pref === 'ru') return go('https://redobureau.ru/', 302);
+        if ($pref === 'es') return go('/es', 302);
 
-        // 2. Russian present anywhere in Accept-Language → Russian site.
-        $al = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
-        if (preg_match('/\bru\b/', $al)) {
-          return go('https://redobureau.ru/ru', 302);
-        }
-
-        // 3. Otherwise pick the highest-weighted language we serve here.
-        $prefs = [];
-        foreach (explode(',', $al) as $part) {
-          $bits = explode(';', trim($part));
-          $code = substr(trim($bits[0]), 0, 2);
-          if ($code === '' || $code === '*') continue;
-          $q = 1.0;
-          foreach ($bits as $b) {
-            if (preg_match('/^q=([0-9.]+)$/', trim($b), $m)) $q = (float)$m[1];
+        if ($pref !== 'en') {
+          // 2. Russian anywhere in Accept-Language → Russian site.
+          $al = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
+          if (preg_match('/\bru\b/', $al)) {
+            return go('https://redobureau.ru/', 302);
           }
-          $prefs[$code] = max($prefs[$code] ?? 0, $q);
-        }
-        arsort($prefs);
 
-        foreach (array_keys($prefs) as $code) {
-          if ($code === 'es') return go('/es', 302);
-          if ($code === 'en') return go('/en', 302);
+          // 3. Otherwise the highest-weighted language we serve here.
+          $prefs = [];
+          foreach (explode(',', $al) as $part) {
+            $bits = explode(';', trim($part));
+            $code = substr(trim($bits[0]), 0, 2);
+            if ($code === '' || $code === '*') continue;
+            $q = 1.0;
+            foreach ($bits as $b) {
+              if (preg_match('/^q=([0-9.]+)$/', trim($b), $m)) $q = (float)$m[1];
+            }
+            $prefs[$code] = max($prefs[$code] ?? 0, $q);
+          }
+          arsort($prefs);
+          foreach (array_keys($prefs) as $code) {
+            if ($code === 'es') return go('/es', 302);
+            if ($code === 'en') break;
+          }
         }
 
-        // 4. Nothing recognized (bots, curl, exotic locales) → default EN.
-        return go('/en', 302);
+        // 4. English homepage at the bare root (bots and en-visitors).
+        return site()->visit(page('home'), 'en');
       },
     ],
   ],

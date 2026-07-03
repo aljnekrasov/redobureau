@@ -27,6 +27,11 @@ Kirby::plugin('rb/seo', [
         'canonicalUrl' => function (?string $code = null) {
             $code = $code ?? kirby()->language()->code();
             $path = parse_url($this->url($code), PHP_URL_PATH) ?? '';
+            // Root languages live at the bare root of their host:
+            // the EN home is https://redobureau.com/, not /en.
+            if ($this->isHomePage() && (option('site.langRoots')[$code] ?? false)) {
+                $path = '/';
+            }
             $external = option('site.externalLanguages', []);
             $base = $external[$code] ?? option('site.canonicalBase');
             return $base ? rtrim($base, '/') . $path : $this->url($code);

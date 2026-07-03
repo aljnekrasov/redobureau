@@ -44,10 +44,10 @@ return [
   ],
 
   // "Redo Global" link in the header — the escape hatch to the
-  // international site. ?setlang=en makes the .com inline script persist
-  // langPref=en, so the root dispatcher there won't bounce the visitor
-  // back here on the next visit.
-  'site.globalLink' => 'https://redobureau.com/en?setlang=en',
+  // international site. ?setlang=en is honored SERVER-SIDE by the root
+  // dispatcher on .com (sets langPref cookie before any Accept-Language
+  // logic), so a russophone clicking it isn't bounced straight back.
+  'site.globalLink' => 'https://redobureau.com/?setlang=en',
 
   // Canonical origin for SEO surfaces (canonical link, hreflang, sitemap,
   // robots, JSON-LD) — always the real domain, even when browsing by IP.
@@ -58,23 +58,30 @@ return [
   // (pattern '/' would match /en/, /ru/ — never the bare root), which
   // silently disabled all three routes in the first version of this file.
   'routes' => [
-    // en/es URLs permanently move to the same path on the international
-    // domain — mirror of the ru/(:all?) route on .com.
+    // en/es URLs permanently move to the international domain — mirror of
+    // the ru/(:all?) route on .com. The bare /en goes to the .com root
+    // (the EN home lives there, see site.langRoots); /es keeps its prefix.
     [
       'pattern' => 'en/(:all?)',
-      'action'  => fn($path = null) => go('https://redobureau.com/en' . ($path ? '/' . $path : ''), 301),
+      'action'  => fn($path = null) => go('https://redobureau.com' . ($path ? '/en/' . $path : '/'), 301),
     ],
     [
       'pattern' => 'es/(:all?)',
       'action'  => fn($path = null) => go('https://redobureau.com/es' . ($path ? '/' . $path : ''), 301),
     ],
 
-    // Root URL redirects to /ru — ru is the only language here, but the URL
-    // prefix /ru is kept globally consistent across both deploys (so internal
-    // links built with $kirby->language()->url() always resolve).
+    // The Russian home lives at the bare root; /ru (old bookmarks,
+    // internal language-root links) permanently moves to /.
+    // Deep /ru/... URLs stay as-is.
+    [
+      'pattern' => 'ru',
+      'action'  => fn() => go('/', 301),
+    ],
+
+    // Bare root renders the Russian homepage directly (200, no redirect).
     [
       'pattern' => '/',
-      'action'  => fn() => go('/ru', 302),
+      'action'  => fn() => site()->visit(page('home'), 'ru'),
     ],
   ],
 ];

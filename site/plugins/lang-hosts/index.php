@@ -15,15 +15,18 @@ Kirby::plugin('rb/lang-hosts', [
   'pageMethods' => [
 
     'crossLangUrl' => function (string $code) {
-      $external = option('site.externalLanguages', []);
-      $url = $this->url($code);
+      // Root languages live at the bare root of their host (see
+      // site.langRoots in config.php) — the home switcher links go to /
+      // instead of /en (or the .ru root instead of /ru).
+      $isRootHome = $this->isHomePage() && (option('site.langRoots')[$code] ?? false);
+      $external   = option('site.externalLanguages', []);
 
       if (isset($external[$code])) {
-        $path = parse_url($url, PHP_URL_PATH) ?? '';
+        $path = $isRootHome ? '/' : (parse_url($this->url($code), PHP_URL_PATH) ?? '');
         return rtrim($external[$code], '/') . $path;
       }
 
-      return $url;
+      return $isRootHome ? url('/') : $this->url($code);
     },
 
   ],

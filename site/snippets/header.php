@@ -181,7 +181,10 @@
             <div class="body">
                 <div class="row">
                     <div class="col-3 sm:col logotype">
-                        <a href="<?= url($pages->template('home')->first()->url()) ?>">
+                        <?php /* Logo goes to the bare root: the host's root
+                               language renders there; es-visitors get
+                               re-dispatched to /es by the root route. */ ?>
+                        <a href="<?= url('/') ?>">
                             <span class="sm:hidden"><?= t('brand_short') ?></span>
                             <span class="hidden sm:inline"><?= t('brand_long') ?></span>
                         </a>

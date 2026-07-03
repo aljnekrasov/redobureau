@@ -46,11 +46,14 @@ test_com() {
     echo
     echo "=== redobureau.com ($COM_HOST) ==="
 
-    assert "GET / returns 2xx or 3xx" \
-        "[ \$(fetch_status -L '$COM_HOST/') -lt 400 ]"
+    assert "GET / (no lang) serves the English home at the bare root (200)" \
+        "[ \$(fetch_status '$COM_HOST/') = 200 ]"
 
-    assert "GET /en/ returns 200" \
-        "[ \$(fetch_status '$COM_HOST/en/') = 200 ]"
+    assert "GET /en 301s to the bare root" \
+        "code=\$(fetch_status '$COM_HOST/en'); [ \$code = 301 ]"
+
+    assert "GET /en/work returns 200 (deep URLs keep the prefix)" \
+        "[ \$(fetch_status '$COM_HOST/en/work') = 200 ]"
 
     assert "GET /ru/ 301s to redobureau.ru (hard domain separation)" \
         "fetch_redirect '$COM_HOST/ru/' | grep -q 'redobureau\\.ru'"
@@ -75,11 +78,14 @@ test_ru() {
     echo
     echo "=== redobureau.ru ($RU_HOST) ==="
 
-    assert "GET / redirects (3xx) to /ru" \
-        "[ \$(fetch_status '$RU_HOST/') -ge 300 ] && [ \$(fetch_status '$RU_HOST/') -lt 400 ]"
+    assert "GET / serves the Russian home at the bare root (200)" \
+        "[ \$(fetch_status '$RU_HOST/') = 200 ]"
 
-    assert "GET /ru/ returns 200" \
-        "[ \$(fetch_status '$RU_HOST/ru/') = 200 ]"
+    assert "GET /ru 301s to the bare root" \
+        "[ \$(fetch_status '$RU_HOST/ru') = 301 ]"
+
+    assert "GET /ru/work returns 200 (deep URLs keep the prefix)" \
+        "[ \$(fetch_status '$RU_HOST/ru/work') = 200 ]"
 
     assert "GET /en/ 301s cross-domain to redobureau.com" \
         "fetch_redirect '$RU_HOST/en/' | grep -q 'redobureau\\.com'"

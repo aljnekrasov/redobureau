@@ -18,5 +18,12 @@ return [
   // array_replace_recursive(), which merges lists INDEX-BY-INDEX — a base
   // default of ['en','ru','es'] overridden by ['ru'] would produce
   // ['ru','ru','es'], not ['ru']. Templates fall back gracefully when the
-  // option is absent (e.g. on localhost).
+  // option is absent (e.g. on localhost). (Assoc maps like langRoots below
+  // merge by KEY, which is safe.)
+
+  // Languages whose HOMEPAGE lives at the bare root of their host:
+  // redobureau.com/ is the English home, redobureau.ru/ is the Russian one.
+  // Deep URLs keep the prefix (/en/work, /ru/work). Used by canonicalUrl /
+  // crossLangUrl and the root routes in the host configs.
+  'site.langRoots' => ['en' => true, 'ru' => true],
 ];
