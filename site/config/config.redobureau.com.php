@@ -4,6 +4,11 @@
 // Auto-loaded by Kirby on top of config.php when SERVER_NAME = redobureau.com.
 
 return [
+  // Audience of this host (plugins/audience): project/product filtering
+  // and ₽-vs-$ pricing key off this, not off the host string — so the
+  // IP-alias config keeps bare-IP browsing identical to the real domain.
+  'site.audience' => 'intl',
+
   // UI-visible languages on the international site.
   // RU page rendering still works (URLs like /ru/work resolve), the switcher
   // just doesn't expose RU unless ru-eligible (see plugin in phase 4).

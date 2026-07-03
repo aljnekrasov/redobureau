@@ -10,11 +10,15 @@ Kirby::plugin('rb/audience', [
     /**
      * Returns the audience id for the current request.
      *
-     *   redobureau.ru  -> 'ru'
-     *   redobureau.com -> 'intl'
-     *   anything else  -> 'intl'  (localhost, staging — show everything)
+     * Config-driven (site.audience in the per-host configs, which the
+     * IP-alias configs include too) — so browsing by bare IP behaves
+     * exactly like the real domain. Host-string sniffing remains only
+     * as a fallback for unconfigured environments.
      */
     'currentAudience' => function() {
+      if ($configured = option('site.audience')) {
+        return $configured;
+      }
       $host = $_SERVER['SERVER_NAME'] ?? $_SERVER['HTTP_HOST'] ?? '';
       return strpos($host, 'redobureau.ru') !== false ? 'ru' : 'intl';
     },

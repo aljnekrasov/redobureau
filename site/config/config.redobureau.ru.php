@@ -4,6 +4,9 @@
 // Auto-loaded by Kirby on top of config.php when SERVER_NAME = redobureau.ru.
 
 return [
+  // Audience of this host — see the note in config.redobureau.com.php.
+  'site.audience' => 'ru',
+
   // Only Russian is exposed on this host.
   'site.activeLanguages' => ['ru'],
 
