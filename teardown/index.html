@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Brand Teardown — Redo Bureau</title>
+<meta name="description" content="A 10-minute Loom video: where your brand is leaving money on the shelf or on the screen — and the 2 fixes I'd make first. No pitch, no deck, no obligation.">
+
+<!-- OG tags for DM sharing -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Get a free teardown of your packaging or product page">
+<meta property="og:description" content="A 10-minute Loom video: where your brand is leaving money — and the 2 fixes I'd make first. No pitch, no obligation.">
+<meta property="og:url" content="https://redobureau.com/teardown/">
+<meta property="og:image" content="https://redobureau.com/teardown/og.png"><!-- TODO: upload og.png 1200x630 -->
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   ALL PLACEHOLDERS LIVE HERE — fill in and everything lights up.
+   Empty string = that feature stays off (page still works).
+   ══════════════════════════════════════════════════════════════ */
+const FORM_ENDPOINT = '';           // TODO: Formspree endpoint, e.g. 'https://formspree.io/f/xxxxxxx'
+const FALLBACK_EMAIL = 'hello@redobureau.com'; // mailto fallback while FORM_ENDPOINT is empty
+const CALENDLY_URL  = '';           // TODO: e.g. 'https://calendly.com/yourname/15min'
+const ANALYTICS_CONFIG = {
+  metrika:  '',                     // TODO: Yandex.Metrica counter ID
+  metaPixel: '',                    // TODO: Meta Pixel ID
+  linkedin: '',                     // TODO: LinkedIn Insight Tag partner ID
+};
+const SOCIAL = {
+  linkedin: '#',                    // TODO: LinkedIn profile URL
+  behance:  'https://www.behance.net/redobureau',
+};
+</script>
+
+<style>
+:root{
+  --bg:#0A0A0A; --fg:#FFFFFF; --muted:#8A8A8A; --line:#222;
+  --step:clamp(56px,10vw,120px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:400 17px/1.55 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px}
+section{padding:var(--step) 0}
+a{color:var(--fg)}
+
+/* arrows motif */
+.arrows{color:var(--muted);letter-spacing:.35em;font-weight:600;font-size:13px;text-transform:uppercase}
+.divider{border:0;border-top:1px solid var(--line)}
+
+/* hero */
+.hero{padding-top:clamp(48px,8vw,96px)}
+.hero .arrows{margin-bottom:28px}
+h1{font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1.02;font-size:clamp(34px,7vw,76px);max-width:15ch}
+.sub{color:var(--muted);font-size:clamp(17px,2.2vw,21px);max-width:52ch;margin:28px 0 36px}
+.sub b{color:var(--fg);font-weight:600}
+
+.btn{display:inline-block;background:var(--fg);color:var(--bg);font-weight:600;font-size:16px;padding:16px 34px;text-decoration:none;border:0;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.82}
+
+/* sections */
+h2{font-weight:900;text-transform:uppercase;letter-spacing:-.01em;font-size:clamp(22px,3.4vw,32px);margin-bottom:36px}
+.steps{display:grid;gap:28px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start}
+.step .n{font-weight:900;font-size:24px;color:var(--muted)}
+.step p{max-width:56ch}
+.step p em{color:var(--muted);font-style:normal}
+
+/* who */
+.who{display:grid;gap:32px;grid-template-columns:1fr}
+@media(min-width:640px){.who{grid-template-columns:180px 1fr;align-items:center}}
+.portrait{width:180px;height:180px;background:#161616;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+/* TODO: replace .portrait div with <img src="alexander.jpg"> */
+
+/* inside list */
+.inside{display:grid;gap:18px;max-width:56ch}
+.inside div{display:grid;grid-template-columns:28px 1fr;gap:10px}
+.inside span{color:var(--muted)}
+
+/* form */
+form{display:grid;gap:14px;max-width:560px}
+label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input,textarea{width:100%;background:#141414;border:1px solid var(--line);color:var(--fg);font:inherit;padding:14px 16px;border-radius:0;-webkit-appearance:none}
+input:focus,textarea:focus{outline:none;border-color:var(--muted)}
+textarea{min-height:110px;resize:vertical}
+.form-note{color:var(--muted);font-size:14px}
+
+/* calendly */
+#calendly-section{display:none}
+#calendly-embed{min-height:660px}
+
+/* footer */
+footer{padding:64px 0 80px;color:var(--muted);font-size:15px}
+footer .arrows{margin-bottom:20px}
+footer a{color:var(--muted)}
+footer a:hover{color:var(--fg)}
+.foot-links{margin-top:10px;display:flex;gap:22px}
+</style>
+</head>
+<body>
+
+<section class="hero wrap">
+  <div class="arrows">Strategy → Idea → Design</div>
+  <h1>Get a free teardown of your packaging or product page</h1>
+  <p class="sub">A 10-minute Loom video: <b>where your brand is leaving money</b> on the shelf or on the screen — and the 2 fixes I'd make first. No pitch, no deck, no obligation.</p>
+  <a class="btn" href="#request">Request my teardown</a>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<section class="wrap">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1→</div><p>You send a link — your product page, your packaging shot, or your site.</p></div>
+    <div class="step"><div class="n">2→</div><p>Within 48 hours you get a 10-minute Loom + a one-page summary.</p></div>
+    <div class="step"><div class="n">3→</div><p>If it's useful and you want it turned into a real direction — that's a separate conversation. <em>The teardown is yours either way.</em></p></div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<section class="wrap">
+  <h2>Who's doing the teardown</h2>
+  <div class="who">
+    <div class="portrait">Photo<br>&nbsp;TODO</div>
+    <p>I'm Alexander, founder of Redo Bureau. 14 years, 200+ projects across SaaS, apps, wine, and cosmetics. Strategy first, then the idea, then the design.</p>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<section class="wrap">
+  <h2>What's inside</h2>
+  <div class="inside">
+    <div><span>→</span><p>What's working — the things you shouldn't touch.</p></div>
+    <div><span>→</span><p>Where you're losing money — on the shelf, on the screen, at checkout.</p></div>
+    <div><span>→</span><p>What I'd change first — one or two moves, not a full redesign.</p></div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<section class="wrap" id="request">
+  <h2>Request your teardown</h2>
+  <form id="teardown-form" method="POST">
+    <div>
+      <label for="f-name">Name</label>
+      <input id="f-name" name="name" type="text" required autocomplete="name">
+    </div>
+    <div>
+      <label for="f-email">Email</label>
+      <input id="f-email" name="email" type="email" required autocomplete="email">
+    </div>
+    <div>
+      <label for="f-link">Link to your product / site</label>
+      <input id="f-link" name="link" type="url" required placeholder="https://">
+    </div>
+    <div>
+      <label for="f-about">What are you launching or fixing? <em style="text-transform:none;letter-spacing:0">(optional)</em></label>
+      <textarea id="f-about" name="about"></textarea>
+    </div>
+    <button class="btn" type="submit">Request my teardown</button>
+    <p class="form-note" id="form-note"></p>
+  </form>
+</section>
+
+<section class="wrap" id="calendly-section">
+  <h2>Or book a 15-min intro call</h2>
+  <div id="calendly-embed"></div>
+</section>
+
+<footer class="wrap">
+  <hr class="divider" style="margin-bottom:40px">
+  <div class="arrows">Strategy → Idea → Design</div>
+  <div>Redo Bureau — strategy, idea, design. <a href="https://redobureau.com">redobureau.com</a></div>
+  <div class="foot-links">
+    <a id="link-li" href="#">LinkedIn</a>
+    <a id="link-be" href="#">Behance</a>
+  </div>
+</footer>
+
+<script>
+/* ── social links ── */
+document.getElementById('link-li').href = SOCIAL.linkedin;
+document.getElementById('link-be').href = SOCIAL.behance;
+
+/* ── form: Formspree when configured, graceful mailto fallback otherwise ── */
+document.getElementById('teardown-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var f = this, note = document.getElementById('form-note');
+  var data = {
+    name:  f.name.value.trim(),
+    email: f.email.value.trim(),
+    link:  f.link.value.trim(),
+    about: f.about.value.trim(),
+  };
+  if (!FORM_ENDPOINT) {
+    var body = 'Name: ' + data.name + '\nEmail: ' + data.email +
+               '\nLink: ' + data.link + '\n\n' + data.about;
+    location.href = 'mailto:' + FALLBACK_EMAIL +
+      '?subject=' + encodeURIComponent('Teardown request — ' + data.name) +
+      '&body=' + encodeURIComponent(body);
+    return;
+  }
+  note.textContent = 'Sending…';
+  try {
+    var res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) { location.href = 'thanks.html'; return; }
+    throw new Error(res.status);
+  } catch (err) {
+    note.textContent = 'Something went wrong — email me instead: ' + FALLBACK_EMAIL;
+  }
+});
+
+/* ── Calendly: renders only when URL is configured ── */
+if (CALENDLY_URL) {
+  var sec = document.getElementById('calendly-section');
+  sec.style.display = 'block';
+  var d = document.createElement('div');
+  d.className = 'calendly-inline-widget';
+  d.dataset.url = CALENDLY_URL;
+  d.style.minWidth = '320px';
+  d.style.height = '660px';
+  document.getElementById('calendly-embed').appendChild(d);
+  var s = document.createElement('script');
+  s.src = 'https://assets.calendly.com/assets/external/widget.js';
+  s.async = true;
+  document.head.appendChild(s);
+}
+
+/* ── analytics: each loads only if its ID is filled ── */
+(function (a) {
+  if (a.metrika) {
+    (function(m,e,t,r,i,k,x){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),x=e.getElementsByTagName(t)[0];k.async=1;
+    k.src=r;x.parentNode.insertBefore(k,x)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+    ym(a.metrika, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true });
+  }
+  if (a.metaPixel) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', a.metaPixel); fbq('track', 'PageView');
+  }
+  if (a.linkedin) {
+    window._linkedin_partner_id = a.linkedin;
+    window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+    window._linkedin_data_partner_ids.push(a.linkedin);
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
+    document.head.appendChild(s);
+  }
+})(ANALYTICS_CONFIG);
+</script>
+
+</body>
+</html>

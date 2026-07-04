@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Got it — Redo Bureau</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+<script>
+const BEHANCE_URL = 'https://www.behance.net/redobureau'; // TODO: confirm
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0A0A0A;color:#fff;font:400 17px/1.55 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center}
+.wrap{max-width:720px;margin:0 auto;padding:40px 20px}
+.arrows{color:#8A8A8A;letter-spacing:.35em;font-weight:600;font-size:13px;text-transform:uppercase;margin-bottom:28px}
+h1{font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1.05;font-size:clamp(30px,6vw,56px)}
+p{color:#8A8A8A;font-size:19px;margin:24px 0 36px;max-width:44ch}
+.btn{display:inline-block;background:#fff;color:#0A0A0A;font-weight:600;font-size:16px;padding:16px 34px;text-decoration:none}
+.btn:hover{opacity:.82}
+footer{margin-top:64px;color:#8A8A8A;font-size:15px}
+footer a{color:#8A8A8A}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="arrows">Strategy → Idea → Design</div>
+  <h1>Got it.</h1>
+  <p>Your teardown will land in your inbox within 48 hours.</p>
+  <a class="btn" id="behance" href="#">Meanwhile, see the work →</a>
+  <footer>Redo Bureau — strategy, idea, design. <a href="https://redobureau.com">redobureau.com</a></footer>
+</div>
+<script>document.getElementById('behance').href = BEHANCE_URL;</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Teardown: {{BRAND}} — Redo Bureau</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+<style>
+/* Light print version of the teardown page style. Fill {{...}} per lead,
+   then Chrome → Print → Save as PDF → exactly one A4 page. */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--fg:#0A0A0A;--muted:#6B6B6B;--line:#DDD}
+body{background:#fff;color:var(--fg);font:400 13px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.page{width:210mm;min-height:297mm;margin:0 auto;padding:18mm 18mm 14mm;display:flex;flex-direction:column}
+
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--fg);padding-bottom:6mm;margin-bottom:8mm}
+.brandmark{font-weight:900;text-transform:uppercase;letter-spacing:-.01em;font-size:16px}
+.arrows{color:var(--muted);letter-spacing:.3em;font-weight:600;font-size:8px;text-transform:uppercase}
+h1{font-weight:900;text-transform:uppercase;letter-spacing:-.02em;font-size:26px;line-height:1.05;margin-bottom:2mm}
+.meta{color:var(--muted);font-size:11px;margin-bottom:8mm}
+
+.block{margin-bottom:7mm}
+.block h2{font-weight:900;text-transform:uppercase;font-size:13px;letter-spacing:.02em;margin-bottom:3mm}
+.block h2 span{color:var(--muted);margin-right:6px}
+.block ul{list-style:none}
+.block li{display:grid;grid-template-columns:14px 1fr;gap:6px;margin-bottom:2.5mm;max-width:70ch}
+.block li::before{content:"→";color:var(--muted)}
+
+footer{margin-top:auto;border-top:1px solid var(--line);padding-top:5mm;font-size:12px}
+footer b{font-weight:600}
+footer .url{color:var(--muted)}
+
+@page{size:A4;margin:0}
+@media print{
+  html,body{width:210mm;height:297mm}
+  .page{width:210mm;height:297mm;overflow:hidden;page-break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brandmark">Redo Bureau</div>
+    <div class="arrows">Strategy → Idea → Design</div>
+  </header>
+
+  <h1>Brand Teardown: {{BRAND}}</h1>
+  <div class="meta">{{DATE}} · Reviewed: {{URL}} · 10-min Loom: {{LOOM_LINK}}</div>
+
+  <div class="block">
+    <h2><span>01</span>What's working</h2>
+    <ul>
+      <li>{{WORKING_1}}</li>
+      <li>{{WORKING_2}}</li>
+      <li>{{WORKING_3}}</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <h2><span>02</span>Where you're losing money</h2>
+    <ul>
+      <li>{{LOSING_1}}</li>
+      <li>{{LOSING_2}}</li>
+      <li>{{LOSING_3}}</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <h2><span>03</span>What I'd change first</h2>
+    <ul>
+      <li>{{CHANGE_1}}</li>
+      <li>{{CHANGE_2}}</li>
+    </ul>
+  </div>
+
+  <footer>
+    <b>Want this turned into a direction?</b>
+    Quick Brand Consult — $500, credits toward the full project.
+    <span class="url">→ redobureau.com/teardown</span>
+  </footer>
+
+</div>
+</body>
+</html>

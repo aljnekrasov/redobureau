@@ -141,7 +141,8 @@ server {
     server_name $DOMAIN $ALIAS;
 
     root $ROOT;
-    index index.php;
+    # index.html serves static sub-sites (e.g. /teardown/), index.php is Kirby
+    index index.php index.html;
 
     client_max_body_size 64M;
 
