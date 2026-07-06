@@ -151,15 +151,21 @@ Kirby::plugin('rb/shop', [
                 kirby()->impersonate('kirby');
                 $defaultLang = kirby()->defaultLanguage()->code();
 
-                // Parent page for orders — created on first order.
-                $orders = page('orders');
+                // Parent page for orders — created on first order. Look
+                // among drafts too: page() only finds published pages, and
+                // a half-created draft parent must not cause duplicates.
+                $orders = site()->childrenAndDrafts()->find('orders');
                 if (!$orders) {
                     $orders = site()->createChild([
                         'slug'     => 'orders',
                         'template' => 'orders',
                         'content'  => ['title' => 'Orders'],
                     ]);
-                    $orders = $orders->changeStatus('unlisted');
+                }
+                if ($orders->isDraft()) {
+                    try { $orders = $orders->changeStatus('unlisted'); } catch (Throwable $e) {
+                        rb_shop_log('webhook: orders parent stays draft (' . $e->getMessage() . ')');
+                    }
                 }
 
                 // Idempotency: Stripe retries — one order per session id.
@@ -195,7 +201,9 @@ Kirby::plugin('rb/shop', [
                         'orderStatus'   => 'paid',
                     ],
                 ]);
-                $order->changeStatus('unlisted');
+                try { $order = $order->changeStatus('unlisted'); } catch (Throwable $e) {
+                    rb_shop_log('webhook: order stays draft (' . $e->getMessage() . ')');
+                }
 
                 // Inventory: decrement tracked quantity, flip to soldout at 0.
                 if ($product && $product->quantity()->isNotEmpty()) {

@@ -4,7 +4,6 @@ icon: 📦
 options:
   url: false
   changeSlug: false
-  changeStatus: false
   delete: false
 
 sections:
