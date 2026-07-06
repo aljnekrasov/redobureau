@@ -72,7 +72,16 @@ $mailto   = 'mailto:' . $site->contactEmail()
                 </div>
 
                 <div class="col-12 sm:col-6 sm:offset-1 mt-40 sm:mt-0">
-                    <?php foreach ($page->files()->template('previewCover')->add($page->gallery()->toFiles()) as $file) : ?>
+                    <?php
+                    // Gallery = the preview cover first, then every other
+                    // attached image (the Gallery panel section stores
+                    // plain files, not a field).
+                    $galleryFiles = $page->files()->template('previewCover')
+                        ->add($page->files()->filter(
+                            fn($f) => $f->type() === 'image' && $f->template()->value() === null
+                        ));
+                    ?>
+                    <?php foreach ($galleryFiles as $file) : ?>
                         <?php if ($file->type() == 'image') : ?>
                         <div class="mb-20" data-img-wrapper style="padding-bottom: <?= generatePadding($file) ?>;">
                             <img src="<?= $file->resize(1200)->url() ?>"
