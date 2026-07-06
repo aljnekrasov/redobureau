@@ -5,7 +5,9 @@
 
 return function ($page, $site, $kirby) {
   if (!$page->audienceAllows()) {
-    $kirby->response()->code(404);
+    // http_response_code, not $kirby->response()->code(): echo+exit
+    // bypasses Kirby's response pipeline and its code is never emitted.
+    http_response_code(404);
     echo $site->errorPage()->render();
     exit;
   }
