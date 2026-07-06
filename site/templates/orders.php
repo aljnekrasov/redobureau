@@ -1,6 +1,7 @@
 <?php
 // Orders are panel-only. Any front-end render (any language prefix)
-// is a 404 — the route-level guards in plugins/shop cover the bare
-// paths, this covers /en/orders, /ru/orders/…, etc.
+// is a hard 404 — exit() is required, otherwise Kirby finishes its
+// render pipeline and overwrites the status code with 200.
 $kirby->response()->code(404);
 echo $site->errorPage()->render();
+exit;
