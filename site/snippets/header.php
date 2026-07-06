@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
     <?= css([assetVersioned('assets/css/index.min.css')]) ?>
+    <?php /* Section-specific styles: snippet('header', ['pageCss' => ['assets/css/journal.css']]) */ ?>
+    <?php foreach (($pageCss ?? []) as $_css) : ?>
+    <?= css([assetVersioned($_css)]) ?>
+    <?php endforeach ?>
     <link rel="preload" href="<?= assetVersioned('assets/js/index.min.js') ?>" as="script" crossorigin="anonymous">
 
     <!-- woff2 only: preloading the .woff fallback made every browser

@@ -1,0 +1,169 @@
+/* Journal — editorial layout. Loaded only by stories/story templates.
+   Book/print logic (columns, pull quotes, folios) re-thought for web —
+   not a facsimile. Accent: typographic print green. */
+
+:root {
+  --j-accent: #00A857;
+  --j-hair: #111;
+  --j-muted: #8a8a8a;
+}
+
+/* ── Listing ─────────────────────────────────────────────────────── */
+
+.j-masthead { padding: 24px 0 8px; }
+.j-masthead .j-kicker {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-top: 2px solid var(--j-hair);
+  border-bottom: 1px solid var(--j-hair);
+  padding: 6px 0;
+  font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
+}
+.j-masthead .j-kicker .a { color: var(--j-accent); }
+.j-masthead h2.j-title {
+  font-size: clamp(48px, 9vw, 120px);
+  line-height: .95; letter-spacing: -.03em;
+  margin: 18px 0 10px;
+}
+
+/* Playground strip */
+.j-play { margin: 28px 0 56px; }
+.j-play .j-play-head {
+  display: flex; gap: 14px; align-items: baseline;
+  font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--j-accent);
+  border-bottom: 1px solid var(--j-hair);
+  padding-bottom: 6px; margin-bottom: 18px;
+}
+.j-play .j-play-head span { color: var(--j-muted); letter-spacing: .1em; text-transform: none; }
+.j-play-row {
+  display: grid; gap: 18px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px) { .j-play-row { grid-template-columns: repeat(3, 1fr); } }
+.j-toy { position: relative; }
+.j-toy canvas {
+  display: block; width: 100%; aspect-ratio: 4/3;
+  border: 1px solid var(--j-hair);
+  cursor: crosshair; touch-action: none;
+}
+.j-toy figcaption {
+  display: flex; justify-content: space-between;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  padding-top: 8px;
+}
+.j-toy figcaption span { color: var(--j-muted); text-transform: none; letter-spacing: 0; }
+
+/* Article index rows */
+.j-index { border-top: 2px solid var(--j-hair); }
+.j-row {
+  display: grid; gap: 8px 28px;
+  grid-template-columns: 1fr;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--j-hair);
+  text-decoration: none; color: inherit;
+}
+@media (min-width: 800px) {
+  .j-row { grid-template-columns: 110px 1fr 180px; align-items: start; }
+}
+.j-row .j-no {
+  font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--j-muted);
+}
+.j-row .j-no b { display: block; color: var(--j-accent); font-size: 26px; letter-spacing: 0; }
+.j-row h3 {
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1.05; letter-spacing: -.02em; margin: 0 0 8px;
+}
+.j-row:hover h3 { color: var(--j-accent); }
+.j-row .j-intro { color: var(--j-muted); max-width: 60ch; }
+.j-row .j-thumb img, .j-row .j-thumb video {
+  width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+  border: 1px solid var(--j-hair);
+}
+
+/* ── Article ─────────────────────────────────────────────────────── */
+
+.j-article-head { padding: 24px 0 12px; }
+.j-article-head .j-kicker {
+  display: flex; flex-wrap: wrap; gap: 6px 24px;
+  justify-content: space-between; align-items: baseline;
+  border-top: 2px solid var(--j-hair);
+  border-bottom: 1px solid var(--j-hair);
+  padding: 6px 0; margin-bottom: 26px;
+  font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
+}
+.j-article-head .j-kicker .a { color: var(--j-accent); }
+.j-article-head h1 {
+  font-size: clamp(40px, 7.6vw, 96px);
+  line-height: .97; letter-spacing: -.03em;
+  margin: 0 0 26px; max-width: 18ch;
+}
+.j-lead {
+  font-size: clamp(19px, 2.3vw, 24px); line-height: 1.4;
+  max-width: 34ch; margin-bottom: 18px;
+}
+.j-lead-rule { border: 0; border-top: 1px solid var(--j-hair); margin: 34px 0 0; }
+
+.j-hero { margin: 0 0 40px; }
+.j-hero img, .j-hero video { width: 100%; display: block; }
+
+/* Body: each text block flows in two justified, hyphenated columns on
+   desktop — quotes and media interleave as full-width breaks. */
+.j-body { padding-bottom: 20px; }
+.j-text { margin: 0 0 34px; }
+.j-text p { margin: 0 0 1em; }
+@media (min-width: 1000px) {
+  .j-text {
+    column-count: 2; column-gap: 64px;
+    column-rule: 1px solid #e3e3e3;
+    text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+  }
+  .j-text p { break-inside: avoid-column; }
+}
+/* Drop cap on the very first text block */
+.j-body > .j-text:first-child > p:first-child::first-letter {
+  float: left;
+  font-size: 4.4em; line-height: .82;
+  padding: .04em .08em 0 0;
+  font-weight: 600;
+  color: var(--j-accent);
+}
+
+/* Pull quote — the green marginal voice from the book spread */
+.j-quote {
+  margin: 46px auto; padding: 0 0 0 22px;
+  max-width: 30ch;
+  border-left: 3px solid var(--j-accent);
+  color: var(--j-accent);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.25; letter-spacing: -.01em;
+}
+.j-quote footer {
+  margin-top: 12px; color: var(--j-muted);
+  font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+}
+
+/* Media breaks */
+.j-media { margin: 46px 0; }
+.j-media figcaption {
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--j-muted); padding-top: 8px;
+}
+.j-media-2 { display: grid; gap: 20px; }
+@media (min-width: 700px) { .j-media-2 { grid-template-columns: 1fr 1fr; } }
+
+/* Folio — running footer before related/next */
+.j-folio {
+  display: flex; justify-content: space-between; gap: 20px;
+  border-top: 2px solid var(--j-hair);
+  padding: 10px 0 60px;
+  font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--j-muted);
+}
+.j-folio .a { color: var(--j-accent); }
+
+/* Related strip inherits site grid; just the label */
+.j-related-label {
+  font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--j-accent); margin-bottom: 18px;
+}

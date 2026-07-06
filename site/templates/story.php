@@ -1,43 +1,60 @@
-<?php snippet('header', ['noindex' => !option('site.navJournal', false)]) ?>
+<?php snippet('header', [
+    'noindex' => !option('site.navJournal', false),
+    'pageCss' => ['assets/css/journal.css'],
+]) ?>
 
 <?php $cover = $page->files()->template('heroCover')->first(); ?>
-<?php if ($cover) : ?>
-<div class="hero" data-target="heroContainer">
-    <div data-behavior="hero">
-        <?php if ($cover->type() == 'video') : ?>
-        <video src="<?= $cover->url() ?>" preload="auto" autoplay loop muted playsinline>
-        <?php else : ?>
-        <img src="<?= $cover->resize(2500)->url() ?>" alt="<?= $page->title() ?>">
-        <?php endif ?>
-    </div>
-</div>
-<?php endif ?>
 
-<div class="main <?= $cover ? 'pt-20 md:pt-50' : 'pt-75 md:pt-100' ?>" data-headerBg-main>
+<div class="main pt-50">
     <div class="page">
         <div class="container">
-            <div class="row mb-50">
-                <div class="col-12 sm:col-8">
-                    <h1 class="mb-15 extra seo-h"><?= $page->title() ?></h1>
-                    <div class="fg-muted mb-25">
-                        <?= $page->date()->toDate('d.m.Y') ?>
-                        <?php if ($page->authors()->isNotEmpty()) : ?>
-                        · <?= $page->authors() ?>
-                        <?php endif ?>
-                    </div>
-                    <?php if ($page->intro()->isNotEmpty()) : ?>
-                    <div class="mb-25"><?= $page->intro()->kt() ?></div>
+
+            <!-- Editorial head: kicker rule, display title, lead -->
+            <div class="j-article-head">
+                <div class="j-kicker">
+                    <span><?= page('journal') ? page('journal')->title() : 'Journal' ?></span>
+                    <span class="a"><?= $page->date()->toDate('d.m.Y') ?></span>
+                    <?php if ($page->authors()->isNotEmpty()) : ?>
+                    <span><?= $page->authors() ?></span>
                     <?php endif ?>
                 </div>
+                <h1><?= $page->title() ?></h1>
+                <?php if ($page->intro()->isNotEmpty()) : ?>
+                <div class="j-lead"><?= $page->intro()->kt() ?></div>
+                <?php endif ?>
+                <hr class="j-lead-rule">
             </div>
 
-            <?php foreach ($page->body()->toBuilderBlocks() as $block) : ?>
-                <?php snippet('blocks/' . $block->_key(), ['data' => $block]) ?>
-            <?php endforeach ?>
+        </div>
+
+        <?php if ($cover) : ?>
+        <div class="container j-hero">
+            <?php if ($cover->type() == 'video') : ?>
+            <video src="<?= $cover->url() ?>" preload="auto" autoplay loop muted playsinline></video>
+            <?php else : ?>
+            <img src="<?= $cover->resize(2500)->url() ?>" alt="<?= $page->title() ?>">
+            <?php endif ?>
+        </div>
+        <?php endif ?>
+
+        <div class="container">
+            <div class="j-body">
+                <?php foreach ($page->body()->toBuilderBlocks() as $block) : ?>
+                    <?php snippet('blocks/' . $block->_key(), ['data' => $block]) ?>
+                <?php endforeach ?>
+            </div>
+
+            <!-- Folio -->
+            <div class="j-folio">
+                <span><?= $site->title() ?> — <?= page('journal') ? page('journal')->title() : 'Journal' ?></span>
+                <span class="a">Strategy → Idea → Design</span>
+                <span><?= $page->date()->toDate('Y') ?></span>
+            </div>
 
             <?php $related = $page->related()->toPages(); ?>
             <?php if ($related->count()) : ?>
-            <div class="row mt-100">
+            <div class="j-related-label"><?= t('related_work') ?></div>
+            <div class="row" style="margin-bottom:60px">
                 <?php foreach ($related as $rel) : ?>
                 <div class="col-12 sm:col-4 mb-20">
                     <a href="<?= url($rel->url()) ?>" class="block link">
