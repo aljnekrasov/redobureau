@@ -81,9 +81,9 @@ Kirby::plugin('rb/shop', [
                     'line_items[0][price_data][currency]'           => $currency,
                     'line_items[0][price_data][unit_amount]'        => $amount,
                     'line_items[0][price_data][product_data][name]' => (string) $page->title(),
-                    'success_url'                                   => $back . '?paid=1',
+                    'success_url'                                   => rb_shop_status_url($back),
                     'cancel_url'                                    => $back,
-                    'metadata[product]'                             => $page->slug(),
+                    'metadata[products]'                            => json_encode([['slug' => $page->slug(), 'qty' => 1]]),
                 ];
                 if (($f = $page->files()->template('previewCover')->first())
                     && strpos($img = $f->resize(800)->url(), 'https://') === 0) {
@@ -118,6 +118,81 @@ Kirby::plugin('rb/shop', [
                 }
                 rb_shop_log("checkout product={$slug} HTTP {$code} " . substr((string) $res, 0, 400));
                 return go($back . '?checkout=error', 302);
+            },
+        ],
+
+        // ── Cart checkout: JSON {items:[{slug,qty}]} → Stripe session ──
+        // Returns JSON {url} — prices and availability are re-validated
+        // against content; the client cart is never trusted.
+        [
+            'pattern' => 'shop/checkout-cart',
+            'method'  => 'POST',
+            'action'  => function () {
+                $fail = fn(string $msg, int $code = 400) =>
+                    new Kirby\Http\Response(json_encode(['error' => $msg]), 'application/json', $code);
+
+                $secret = option('site.stripeSecret');
+                if (!$secret || site()->currentAudience() === 'ru') {
+                    return $fail('Checkout is not available yet', 503);
+                }
+
+                $body  = json_decode(file_get_contents('php://input'), true);
+                $items = $body['items'] ?? [];
+                if (!$items || count($items) > 20) return $fail('Bad cart');
+
+                $fields = [
+                    'mode'        => 'payment',
+                    'success_url' => rb_shop_status_url(url('/')),
+                    'cancel_url'  => ($c = page('shop/cart')) ? $c->url() : url('/'),
+                ];
+                $currency = null;
+                $meta = [];
+
+                foreach (array_values($items) as $i => $it) {
+                    $p = page('shop/' . ($it['slug'] ?? ''));
+                    if (!$p || $p->intendedTemplate()->name() !== 'product'
+                        || !$p->audienceAllows() || $p->isSoldOut()) {
+                        return $fail('Item unavailable: ' . ($it['slug'] ?? '?'));
+                    }
+                    $qty = max(1, min(10, (int) ($it['qty'] ?? 1)));
+                    $cur = strtolower($p->currency()->or('usd')->value());
+                    $currency = $currency ?? $cur;
+                    if ($cur !== $currency) return $fail('Mixed currencies in cart');
+                    $amount = (int) round($p->price()->toFloat() * 100);
+                    if ($amount < 50) return $fail('Bad price: ' . $p->slug());
+
+                    $fields["line_items[$i][quantity]"] = $qty;
+                    $fields["line_items[$i][price_data][currency]"] = $cur;
+                    $fields["line_items[$i][price_data][unit_amount]"] = $amount;
+                    $fields["line_items[$i][price_data][product_data][name]"] = (string) $p->title();
+                    if (($f = $p->files()->template('previewCover')->first())
+                        && strpos($img = $f->resize(800)->url(), 'https://') === 0) {
+                        $fields["line_items[$i][price_data][product_data][images][0]"] = $img;
+                    }
+                    $meta[] = ['slug' => $p->slug(), 'qty' => $qty];
+                }
+                $fields['metadata[products]'] = json_encode($meta);
+
+                if ($ship = option('site.shopShipping')) {
+                    foreach (array_values($ship['allowed_countries'] ?? []) as $i => $cc) {
+                        $fields["shipping_address_collection[allowed_countries][$i]"] = $cc;
+                    }
+                    if (($flat = $ship['flat'][$currency] ?? null) !== null) {
+                        $fields['shipping_options[0][shipping_rate_data][type]'] = 'fixed_amount';
+                        $fields['shipping_options[0][shipping_rate_data][fixed_amount][amount]'] = $flat;
+                        $fields['shipping_options[0][shipping_rate_data][fixed_amount][currency]'] = $currency;
+                        $fields['shipping_options[0][shipping_rate_data][display_name]'] = $ship['label'] ?? 'Shipping';
+                    }
+                }
+                if (option('site.shopStripeTax', false)) $fields['automatic_tax[enabled]'] = 'true';
+
+                [$code, $res] = rb_shop_stripe_post('https://api.stripe.com/v1/checkout/sessions', $fields, $secret);
+                $json = json_decode((string) $res, true);
+                if ($code === 200 && !empty($json['url'])) {
+                    return new Kirby\Http\Response(json_encode(['url' => $json['url']]), 'application/json', 200);
+                }
+                rb_shop_log('checkout-cart HTTP ' . $code . ' ' . substr((string) $res, 0, 400));
+                return $fail('Payment provider error — try again', 502);
             },
         ],
 
@@ -175,24 +250,40 @@ Kirby::plugin('rb/shop', [
                     }
                 }
 
-                $productSlug = $s['metadata']['product'] ?? '';
-                $product     = $productSlug ? page('shop/' . $productSlug) : null;
-                $cust        = $s['customer_details'] ?? [];
-                $shipTo      = $s['shipping_details'] ?? [];
-                $addr        = $shipTo['address'] ?? [];
-                $address     = trim(implode(', ', array_filter([
+                // Items: metadata.products JSON (cart & single share the
+                // format); metadata.product kept as legacy fallback.
+                $metaItems = json_decode($s['metadata']['products'] ?? '', true);
+                if (!$metaItems && !empty($s['metadata']['product'])) {
+                    $metaItems = [['slug' => $s['metadata']['product'], 'qty' => 1]];
+                }
+                $metaItems = $metaItems ?: [];
+
+                $lines = [];
+                $firstTitle = '';
+                foreach ($metaItems as $it) {
+                    $p = page('shop/' . ($it['slug'] ?? ''));
+                    $title = $p ? (string) $p->title() : ($it['slug'] ?? '?');
+                    $firstTitle = $firstTitle ?: $title;
+                    $lines[] = $title . ' × ' . (int) ($it['qty'] ?? 1);
+                }
+                $titleSuffix = count($metaItems) > 1 ? ' +' . (count($metaItems) - 1) : '';
+
+                $cust    = $s['customer_details'] ?? [];
+                $shipTo  = $s['shipping_details'] ?? [];
+                $addr    = $shipTo['address'] ?? [];
+                $address = trim(implode(', ', array_filter([
                     $addr['line1'] ?? null, $addr['line2'] ?? null, $addr['city'] ?? null,
                     $addr['state'] ?? null, $addr['postal_code'] ?? null, $addr['country'] ?? null,
                 ])));
 
+                $orderNo = 'ord-' . date('Ymd-His') . '-' . substr(md5($sid), 0, 6);
                 $order = $orders->createChild([
-                    'slug'     => 'ord-' . date('Ymd-His') . '-' . substr(md5($sid), 0, 6),
+                    'slug'     => $orderNo,
                     'template' => 'order',
                     'content'  => [
-                        'title'         => 'Order — ' . ($product ? $product->title() : $productSlug) . ' — ' . date('d.m.Y H:i'),
+                        'title'         => 'Order — ' . $firstTitle . $titleSuffix . ' — ' . date('d.m.Y H:i'),
                         'orderDate'     => date('Y-m-d H:i'),
-                        'productSlug'   => $productSlug,
-                        'productTitle'  => $product ? (string) $product->title() : $productSlug,
+                        'products'      => implode("\n", $lines),
                         'amount'        => number_format(($s['amount_total'] ?? 0) / 100, 2, '.', '') . ' ' . strtoupper($s['currency'] ?? ''),
                         'customerEmail' => $cust['email'] ?? '',
                         'customerName'  => $cust['name'] ?? ($shipTo['name'] ?? ''),
@@ -205,12 +296,16 @@ Kirby::plugin('rb/shop', [
                     rb_shop_log('webhook: order stays draft (' . $e->getMessage() . ')');
                 }
 
-                // Inventory: decrement tracked quantity, flip to soldout at 0.
-                if ($product && $product->quantity()->isNotEmpty()) {
-                    $q = max(0, $product->quantity()->toInt() - 1);
-                    $update = ['quantity' => $q];
-                    if ($q === 0) $update['stock'] = 'soldout';
-                    $product->update($update, $defaultLang);
+                // Inventory per item: decrement tracked quantity by the
+                // ordered qty, flip to soldout at 0.
+                foreach ($metaItems as $it) {
+                    $p = page('shop/' . ($it['slug'] ?? ''));
+                    if ($p && $p->quantity()->isNotEmpty()) {
+                        $q = max(0, $p->quantity()->toInt() - max(1, (int) ($it['qty'] ?? 1)));
+                        $update = ['quantity' => $q];
+                        if ($q === 0) $update['stock'] = 'soldout';
+                        $p->update($update, $defaultLang);
+                    }
                 }
 
                 // Notify by email — works once SMTP is configured, until
@@ -219,9 +314,9 @@ Kirby::plugin('rb/shop', [
                     kirby()->email([
                         'from'    => option('site.contactFrom', 'noreply@redobureau.com'),
                         'to'      => option('site.contactTo', 'hello@redobureau.com'),
-                        'subject' => '🛍 Paid order: ' . ($product ? $product->title() : $productSlug),
-                        'body'    => "Product: " . ($product ? $product->title() : $productSlug)
-                                   . "\nAmount: " . ($order->amount())
+                        'subject' => '🛍 Paid order ' . $orderNo,
+                        'body'    => "Items:\n" . implode("\n", $lines)
+                                   . "\nAmount: " . $order->amount()
                                    . "\nCustomer: " . ($cust['name'] ?? '') . ' <' . ($cust['email'] ?? '') . '>'
                                    . "\nShip to: " . $address
                                    . "\nStripe session: " . $sid,
@@ -249,6 +344,15 @@ Kirby::plugin('rb/shop', [
 ]);
 
 // ── helpers ──────────────────────────────────────────────────────────
+
+// Stripe success_url: the order-status page with the session id — the
+// page looks the order up (webhook may lag a few seconds) and shows the
+// number + tracking form. {CHECKOUT_SESSION_ID} is expanded by Stripe.
+function rb_shop_status_url(string $fallback): string
+{
+    $p = page('shop/order-status');
+    return ($p ? $p->url() : $fallback) . '?sid={CHECKOUT_SESSION_ID}';
+}
 
 function rb_shop_stripe_post(string $url, array $fields, string $secret): array
 {

@@ -1,4 +1,7 @@
-<?php snippet('header', ['noindex' => !option('site.navShop', false)]) ?>
+<?php snippet('header', [
+    'noindex' => !option('site.navShop', false),
+    'pageCss' => ['assets/css/shop.css'],
+]) ?>
 
 <?php
 $isRu     = $site->currentAudience() === 'ru';
@@ -23,16 +26,45 @@ $mailto   = 'mailto:' . $site->contactEmail()
 
                     <?= $page->desc()->kt() ?>
 
-                    <div class="mt-25">
+                    <?php
+                    $specs = array_filter([
+                        t('spec_materials')  => $page->materials()->value(),
+                        t('spec_dimensions') => $page->dimensions()->value(),
+                        t('spec_edition')    => $page->edition()->value(),
+                        t('spec_ships_in')   => $page->ships_in()->value(),
+                    ]);
+                    ?>
+                    <?php if ($specs) : ?>
+                    <dl class="p-specs">
+                        <?php foreach ($specs as $k => $v) : ?>
+                        <div><dt><?= $k ?></dt><dd><?= html($v) ?></dd></div>
+                        <?php endforeach ?>
+                    </dl>
+                    <?php endif ?>
+
+                    <div class="p-actions">
                         <?php if ($soldout) : ?>
-                        <button class="buy-btn" disabled><?= t('shop_soldout') ?></button>
-                        <?php elseif ($stripeOk) : ?>
-                        <form action="<?= url('/shop/checkout') ?>" method="POST" data-checkout="<?= $page->slug() ?>">
-                            <input type="hidden" name="product" value="<?= $page->slug() ?>">
-                            <button class="buy-btn" type="submit"><?= $preorder ? t('shop_preorder') : t('shop_buy') ?></button>
-                        </form>
+                        <button class="rb-btn rb-btn--primary" disabled><?= t('shop_soldout') ?></button>
+                        <?php elseif ($stripeOk || (!$isRu && !option('site.stripeSecret'))) : ?>
+                            <?php if ($stripeOk) : ?>
+                            <form action="<?= url('/shop/checkout') ?>" method="POST" data-checkout="<?= $page->slug() ?>">
+                                <input type="hidden" name="product" value="<?= $page->slug() ?>">
+                                <button class="rb-btn rb-btn--primary" type="submit"><?= $preorder ? t('shop_preorder') : t('shop_buy') ?></button>
+                            </form>
+                            <?php else : ?>
+                            <a class="rb-btn rb-btn--primary" href="<?= $mailto ?>"><?= t('shop_order_mail') ?></a>
+                            <?php endif ?>
+                            <button class="rb-btn rb-btn--secondary"
+                                data-cart-add
+                                data-slug="<?= $page->slug() ?>"
+                                data-title="<?= html($page->title()) ?>"
+                                data-price="<?= $page->price()->toFloat() ?>"
+                                data-currency="<?= strtolower($page->currency()->or('usd')->value()) ?>"
+                                data-img="<?= ($pcov = $page->files()->template('previewCover')->first()) ? $pcov->resize(200)->url() : '' ?>"
+                                data-label="<?= t('cart_add') ?>"
+                                data-added="<?= t('cart_added') ?>"><?= t('cart_add') ?></button>
                         <?php else : ?>
-                        <a class="buy-btn" href="<?= $mailto ?>"><?= t('shop_order_mail') ?></a>
+                        <a class="rb-btn rb-btn--primary" href="<?= $mailto ?>"><?= t('shop_order_mail') ?></a>
                         <?php endif ?>
                     </div>
 
@@ -75,5 +107,10 @@ document.addEventListener('submit', function (e) {
     if (f && window.rbTrack) rbTrack('begin_checkout', { product: f.dataset.checkout });
 });
 </script>
+
+<?php if (!$isRu && ($cartPage = page('shop/cart'))) : ?>
+<a class="cart-badge" href="<?= url($cartPage->url()) ?>" data-cart-badge hidden><?= t('cart') ?> <b>0</b></a>
+<script src="<?= assetVersioned('assets/js/cart.js') ?>" defer></script>
+<?php endif ?>
 
 <?php snippet('footer') ?>

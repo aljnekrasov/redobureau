@@ -55,6 +55,25 @@ columns:
             label: Description
             type: textarea
             size: medium
+          materials:
+            label: Materials
+            type: text
+            width: 1/2
+          dimensions:
+            label: Dimensions
+            type: text
+            width: 1/2
+            placeholder: 50 × 50 cm
+          edition:
+            label: Edition
+            type: text
+            width: 1/2
+            placeholder: Edition of 20, signed
+          ships_in:
+            label: Ships in
+            type: text
+            width: 1/2
+            placeholder: 5–7 business days
       gallery:
         type: files
         headline: Gallery

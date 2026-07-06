@@ -1,4 +1,7 @@
-<?php snippet('header', ['noindex' => !option('site.navShop', false)]) ?>
+<?php snippet('header', [
+    'noindex' => !option('site.navShop', false),
+    'pageCss' => ['assets/css/shop.css'],
+]) ?>
 <h1 class="vh-seo"><?= $page->title() ?></h1>
 
 <div class="main pt-75 md:pt-100">
@@ -32,4 +35,8 @@
     </div>
 </div>
 
+<?php if ($site->currentAudience() !== 'ru' && ($cartPage = page('shop/cart'))) : ?>
+<a class="cart-badge" href="<?= url($cartPage->url()) ?>" data-cart-badge hidden><?= t('cart') ?> <b>0</b></a>
+<script src="<?= assetVersioned('assets/js/cart.js') ?>" defer></script>
+<?php endif ?>
 <?php snippet('footer') ?>

@@ -25,16 +25,22 @@ fields:
     type: text
     width: 1/3
     disabled: true
-  productTitle:
-    label: Product
+  products:
+    label: Items
+    type: textarea
+    size: small
+    buttons: false
+    disabled: true
+  tracking:
+    label: Tracking number
     type: text
     width: 1/2
-    disabled: true
-  productSlug:
-    label: Product slug
-    type: text
+    help: Shown to the customer on the order-status page once status = Shipped
+  trackingUrl:
+    label: Tracking URL
+    type: url
     width: 1/2
-    disabled: true
+    help: Carrier link (DHL/UPS/…) — becomes a link on the status page
   customerName:
     label: Customer
     type: text
