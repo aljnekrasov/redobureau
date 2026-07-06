@@ -1,0 +1,63 @@
+title: Order
+icon: 📦
+
+options:
+  url: false
+  changeSlug: false
+
+fields:
+  orderStatus:
+    label: Status
+    type: select
+    width: 1/3
+    options:
+      paid: Paid
+      shipped: Shipped
+      done: Done
+      refunded: Refunded
+  orderDate:
+    label: Date
+    type: text
+    width: 1/3
+    disabled: true
+  amount:
+    label: Amount
+    type: text
+    width: 1/3
+    disabled: true
+  productTitle:
+    label: Product
+    type: text
+    width: 1/2
+    disabled: true
+  productSlug:
+    label: Product slug
+    type: text
+    width: 1/2
+    disabled: true
+  customerName:
+    label: Customer
+    type: text
+    width: 1/2
+    disabled: true
+  customerEmail:
+    label: Email
+    type: text
+    width: 1/2
+    disabled: true
+  shippingAddress:
+    label: Ship to
+    type: textarea
+    size: small
+    buttons: false
+    disabled: true
+  sessionId:
+    label: Stripe session
+    type: text
+    disabled: true
+  notes:
+    label: Notes
+    type: textarea
+    size: small
+    buttons: false
+    help: Internal — tracking number, fulfilment notes

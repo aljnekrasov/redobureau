@@ -2,7 +2,7 @@
 
 <?php
 $isRu     = $site->currentAudience() === 'ru';
-$soldout  = $page->stock()->value() === 'soldout';
+$soldout  = $page->isSoldOut();
 $preorder = $page->stock()->value() === 'preorder';
 // Stripe only works internationally; .ru falls back to mail-order until
 // a Russian PSP (ЮKassa) lands in V2. Same fallback when no key is set.

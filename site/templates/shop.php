@@ -18,7 +18,7 @@
                         <?php endif ?>
                         <div class="mt-10"><?= $product->title() ?></div>
                         <div class="fg-muted">
-                            <?php if ($product->stock()->value() === 'soldout') : ?>
+                            <?php if ($product->isSoldOut()) : ?>
                             <?= t('shop_soldout') ?>
                             <?php else : ?>
                             <?= $product->displayPrice() ?>

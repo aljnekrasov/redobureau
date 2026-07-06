@@ -57,6 +57,30 @@ return [
           ? trim((string) file_get_contents('/var/www/.stripe-secret'))
           : null),
 
+  // Webhook endpoint secret (whsec_…) — from Stripe dashboard →
+  // Developers → Webhooks → endpoint https://redobureau.com/shop/webhook,
+  // event: checkout.session.completed. Same storage rules as above.
+  'site.stripeWebhookSecret' => $_SERVER['STRIPE_WEBHOOK_SECRET']
+      ?? (is_readable('/var/www/.stripe-webhook-secret')
+          ? trim((string) file_get_contents('/var/www/.stripe-webhook-secret'))
+          : null),
+
+  // Shipping in Stripe Checkout: address collected for these countries,
+  // flat rate charged per currency (minor units — 2500 = $25.00).
+  'site.shopShipping' => [
+    'allowed_countries' => [
+      'US','CA','GB','IE','DE','FR','ES','IT','PT','NL','BE','AT','CH',
+      'SE','NO','DK','FI','PL','CZ','GR','AR','BR','MX','CL','UY','CO',
+      'AU','NZ','JP','KR','SG','HK','AE','IL',
+    ],
+    'label' => 'Worldwide shipping (tracked)',
+    'flat'  => ['usd' => 2500, 'eur' => 2300], // TODO: real rates
+  ],
+
+  // Flip ONLY after enabling Stripe Tax in the dashboard — otherwise
+  // session creation fails.
+  'site.shopStripeTax' => false,
+
   // Contact form — addresses for $kirby->email() inside controllers/contacts.php.
   // SMTP itself is intentionally not configured anywhere yet (user request).
   // When SMTP gets enabled, the credentials live here, not in code.

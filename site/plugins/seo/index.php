@@ -73,7 +73,7 @@ Kirby::plugin('rb/seo', [
             'action'  => function () {
                 $kirby = kirby();
                 $langs = option('site.activeLanguages', [$kirby->defaultLanguage()->code()]);
-                $skipTemplates = ['error', 'presentation', 'presentations', 'inbox'];
+                $skipTemplates = ['error', 'presentation', 'presentations', 'inbox', 'orders', 'order'];
                 // Hidden sections stay out of the sitemap until launched.
                 if (!option('site.navJournal', false)) {
                     array_push($skipTemplates, 'stories', 'story');

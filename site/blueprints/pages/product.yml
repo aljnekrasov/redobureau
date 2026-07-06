@@ -43,6 +43,14 @@ columns:
               available: Available
               preorder: Pre-order
               soldout: Sold out
+          quantity:
+            label: Quantity left
+            type: number
+            width: 1/4
+            help: >
+              Leave empty = not tracked. When set, each paid order
+              decrements it; at 0 the product flips to Sold out
+              automatically.
           desc:
             label: Description
             type: textarea

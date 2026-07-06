@@ -1,0 +1,20 @@
+title: Orders
+icon: 📦
+
+options:
+  url: false
+  changeSlug: false
+  changeStatus: false
+  delete: false
+
+sections:
+  orders:
+    type: pages
+    headline: Orders (newest first)
+    status: all
+    template: order
+    layout: list
+    text: "{{ page.title }}"
+    info: "{{ page.amount }} · {{ page.customerEmail }}"
+    sortBy: orderDate desc
+    image: false
