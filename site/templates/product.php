@@ -73,13 +73,13 @@ $mailto   = 'mailto:' . $site->contactEmail()
 
                 <div class="col-12 sm:col-6 sm:offset-1 mt-40 sm:mt-0">
                     <?php
-                    // Gallery = the preview cover first, then every other
-                    // attached image (the Gallery panel section stores
-                    // plain files, not a field).
-                    $galleryFiles = $page->files()->template('previewCover')
-                        ->add($page->files()->filter(
-                            fn($f) => $f->type() === 'image' && $f->template()->value() === null
-                        ));
+                    // Gallery = the preview cover first, then any other
+                    // attached images (Gallery panel section = plain files).
+                    $cover = $page->files()->template('previewCover')->first();
+                    $rest  = $page->images()->filter(function ($f) use ($cover) {
+                        return !$cover || $f->id() !== $cover->id();
+                    });
+                    $galleryFiles = $cover ? $rest->prepend($cover->id(), $cover) : $rest;
                     ?>
                     <?php foreach ($galleryFiles as $file) : ?>
                         <?php if ($file->type() == 'image') : ?>
