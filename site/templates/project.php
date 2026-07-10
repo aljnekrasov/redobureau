@@ -48,9 +48,44 @@
 
       </div>
 
+      <?php if ($page->challenge()->isNotEmpty()) : ?>
+      <div class="row case-block">
+        <div class="col-12 sm:col-6">
+          <div class="case-label"><?= t('case_challenge') ?></div>
+          <?= $page->challenge()->kt() ?>
+        </div>
+      </div>
+      <?php endif ?>
+
       <?php foreach ($page->builder()->toBuilderBlocks() as $block) : ?>
         <?php snippet('blocks/' . $block->_key(), array('data' => $block)) ?>
       <?php endforeach ?>
+
+      <?php $metrics = $page->results()->toStructure(); ?>
+      <?php if ($metrics->count() || $page->result_text()->isNotEmpty()) : ?>
+      <div class="row case-block">
+        <div class="col-12 sm:col-8">
+          <div class="case-label"><?= t('case_result') ?></div>
+          <?php if ($metrics->count()) : ?>
+          <div class="case-metrics">
+            <?php foreach ($metrics as $m) : ?>
+            <div><b><?= $m->value() ?></b><span><?= $m->label() ?></span></div>
+            <?php endforeach ?>
+          </div>
+          <?php endif ?>
+          <?= $page->result_text()->kt() ?>
+        </div>
+      </div>
+      <?php endif ?>
+
+      <?php if ($page->testimonial()->isNotEmpty()) : ?>
+      <blockquote class="case-quote">
+        <?= $page->testimonial()->kt() ?>
+        <?php if ($page->testimonial_author()->isNotEmpty()) : ?>
+        <footer><?= $page->testimonial_author() ?></footer>
+        <?php endif ?>
+      </blockquote>
+      <?php endif ?>
     </div>
 
 

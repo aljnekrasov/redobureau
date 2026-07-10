@@ -38,6 +38,8 @@ return array(
     'playground_throw' => 'хватай и кидай',
     'related_work'     => 'Связанные проекты',
     'geo_line'         => 'Москва, Россия · Делавэр, США',
+    'case_challenge'   => 'Задача',
+    'case_result'      => 'Результат',
     'clients_label'    => 'Клиенты',
     'cta_teardown'     => '',
     'cta_teardown_long'=> '',

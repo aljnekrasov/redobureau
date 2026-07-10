@@ -38,6 +38,8 @@ return array(
     'playground_throw' => 'grab and throw',
     'related_work'     => 'Related work',
     'geo_line'         => 'United States · Argentina · Spain',
+    'case_challenge'   => 'Challenge',
+    'case_result'      => 'Result',
     'clients_label'    => 'Selected clients',
     'cta_teardown'     => 'Get a free brand teardown →',
     'cta_teardown_long'=> 'Want this kind of thinking on your brand? Get a free 10-minute teardown — no pitch, no obligation →',

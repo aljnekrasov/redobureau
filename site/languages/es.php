@@ -38,6 +38,8 @@ return array(
     'playground_throw' => 'agarra y lanza',
     'related_work'     => 'Proyectos relacionados',
     'geo_line'         => 'Estados Unidos · Argentina · España',
+    'case_challenge'   => 'Desafío',
+    'case_result'      => 'Resultado',
     'clients_label'    => 'Clientes seleccionados',
     'cta_teardown'     => 'Consigue un teardown gratuito de tu marca →',
     'cta_teardown_long'=> '¿Quieres esta mirada sobre tu marca? Pide un teardown gratuito de 10 minutos — sin pitch ni compromiso →',
