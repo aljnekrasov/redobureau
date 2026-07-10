@@ -17,6 +17,18 @@ sections:
   content:
     type: fields
     fields:
+    clients:
+      label: Clients
+      type: structure
+      columns:
+        name:
+      fields:
+        name:
+          label: Name
+          type: text
+        url:
+          label: URL
+          type: url
       text:
         label: Main text
         type: textarea

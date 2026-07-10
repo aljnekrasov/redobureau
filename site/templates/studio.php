@@ -32,6 +32,16 @@ $teamList = $site->team()->toStructure();
                 </div>
             </div>
 
+            <?php if ($page->clients()->isNotEmpty()) : ?>
+            <div class="row mb-100">
+                <div class="col-12 sm:col-2"><div class="fg-muted"><?= t('clients_label') ?></div></div>
+                <div class="col-12 sm:col-9">
+                    <?php $__cl = []; foreach ($page->clients()->toStructure() as $c) $__cl[] = (string) $c->name(); ?>
+                    <?= implode(' · ', $__cl) ?>
+                </div>
+            </div>
+            <?php endif ?>
+
             <div class="row mb-100">
                 <?php foreach (Str::split($page->team()) as $i) : ?>
                 <?php foreach ($teamList as $j) : ?>

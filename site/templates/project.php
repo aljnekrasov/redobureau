@@ -56,6 +56,21 @@
 
   </div>
 
+  <?php if ($site->currentAudience() !== 'ru') : ?>
+  <a href="<?= url('/teardown/') ?>" class="block next-project">
+    <div class="py-50">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="text-small fg-muted mb-15">Redo × your brand</div>
+            <div><?= t('cta_teardown_long') ?></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  <?php endif ?>
+
   <!-- NEXT PROJECT -->
   <?php if ($next = $page->next()) : ?>
     <a href="<?= url($next->url()) ?>" class="block next-project">
