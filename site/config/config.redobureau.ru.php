@@ -56,6 +56,8 @@ return [
   // robots, JSON-LD) — always the real domain, even when browsing by IP.
   'site.canonicalBase' => 'https://redobureau.ru',
 
+  'site.calendlyUrl' => null,
+
   // Plain routes, NO 'language' key. In Kirby 3.3 a route with
   // 'language' => '*' is matched AFTER the language prefix is consumed
   // (pattern '/' would match /en/, /ru/ — never the bare root), which

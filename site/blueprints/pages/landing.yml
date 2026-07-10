@@ -1,0 +1,58 @@
+title: Industry Landing
+icon: 🎯
+
+status:
+  draft:
+    label: Draft
+  listed:
+    label: Published
+
+columns:
+  - width: 2/3
+    fields:
+      intro:
+        label: Intro (query copy)
+        type: textarea
+        size: medium
+        help: 2–4 abzatsa under the search intent — who it's for, how we work, why us.
+      pull_industries:
+        label: Pull projects — industries
+        type: multiselect
+        options: query
+        query:
+          fetch: site.industries.toStructure
+          text: "{{ structureItem.name }}"
+          value: "{{ structureItem.name }}"
+      pull_types:
+        label: Pull projects — work types
+        type: multiselect
+        options: query
+        query:
+          fetch: site.worktypes.toStructure
+          text: "{{ structureItem.name }}"
+          value: "{{ structureItem.name }}"
+      topics:
+        label: Pull articles — topics
+        type: multiselect
+        options: query
+        query:
+          fetch: site.worktypes.toStructure
+          text: "{{ structureItem.name }}"
+          value: "{{ structureItem.name }}"
+  - width: 1/3
+    fields:
+      main_title:
+        label: Meta title
+        type: text
+      sharetext:
+        label: Meta description
+        type: textarea
+        size: small
+        buttons: false
+      audience:
+        label: Audience
+        type: checkboxes
+        options:
+          intl: International (redobureau.com)
+          ru: Russia (redobureau.ru)
+        default: [intl, ru]

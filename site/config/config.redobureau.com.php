@@ -29,6 +29,9 @@ return [
   // robots, JSON-LD) — always the real domain, even when browsing by IP.
   'site.canonicalBase' => 'https://redobureau.com',
 
+  // Calendly booking link for landing CTAs (null = mailto fallback).
+  'site.calendlyUrl' => null,
+
   // Ad & analytics pixels (see snippets/analytics.php). Fill in the IDs
   // as the ad accounts get created — null means "not rendered".
   // No Yandex anything on the international site.

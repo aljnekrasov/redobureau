@@ -27,6 +27,10 @@
             <?php if ($site->currentAudience() !== 'ru') : ?>
             <a class="text-small" style="margin-left:14px" href="<?= url('/teardown/') ?>"><?= t('cta_teardown') ?></a>
             <?php endif ?>
+            <div class="text-small" style="margin-top:8px">
+                <?php $__ls = $site->children()->template('landing')->listed()->filter(fn($l) => $l->audienceAllows()); ?>
+                <?php foreach ($__ls as $__i => $__l) : ?><a href="<?= url($__l->url()) ?>"><?= $__l->title() ?></a><?php if ($__l !== $__ls->last()) : ?> · <?php endif ?><?php endforeach ?>
+            </div>
         </div>
     </div>
 </div>
