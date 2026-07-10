@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Dziļums</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #060608;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #view {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      touch-action: none;
+      perspective: 980px;
+      perspective-origin: 50% 50%;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(230, 226, 210, 0.075), transparent 58%),
+        #060608;
+      cursor: ns-resize;
+    }
+    #look, #world {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+    #world { will-change: transform; }
+    .card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: #101013;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      will-change: transform, opacity;
+    }
+    .card img.work {
+      display: block;
+      width: 100%;
+      aspect-ratio: var(--ar);
+      height: auto;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      pointer-events: none;
+    }
+    .card img.work.is-loaded { opacity: 1; }
+    #vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      background: radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.55) 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="view">
+    <div id="look">
+      <div id="world"></div>
+    </div>
+  </div>
+  <div id="vignette"></div>
+  <script type="module" src="mood4.js"></script>
+</body>
+</html>

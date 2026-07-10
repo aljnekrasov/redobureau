@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Tīkls</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #101216; user-select: none; -webkit-user-select: none;
+    }
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
+    #stage.is-dragging { cursor: grabbing; }
+    #web { position: absolute; inset: 0; z-index: 1; }
+    .node {
+      position: absolute; left: 0; top: 0; z-index: 2; will-change: transform;
+      overflow: hidden; border-radius: 2px; background: #1a1e23;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); pointer-events: none;
+    }
+    .node img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .node img.on { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="stage"><canvas id="web"></canvas></div>
+  <script type="module" src="mood16.js"></script>
+</body>
+</html>

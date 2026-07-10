@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Izkliede</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #060606;
+      color: #F1F1EE;
+      font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      cursor: crosshair;
+    }
+    #field {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+    .mark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #F1F1EE;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .mark svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .ticker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 10px;
+      line-height: 1.5;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #F1F1EE;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .intro {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px 16px;
+      pointer-events: none;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .intro a {
+      color: inherit;
+      opacity: 0.5;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+    .intro a:hover { opacity: 1; }
+    .intro .tag { opacity: 0.55; }
+  </style>
+</head>
+<body>
+  <div id="field"></div>
+  <div class="intro">
+    <a href="redo4.html">← Vēdeklis 006</a>
+    <span class="tag">Fable Animation — Izkliede 007 · <a href="redo6.html">Gredzens 008 →</a></span>
+  </div>
+  <script type="module" src="redo5.js"></script>
+</body>
+</html>

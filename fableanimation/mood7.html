@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Gaisma</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #050506; user-select: none; -webkit-user-select: none;
+      cursor: none;
+    }
+    #wall {
+      position: fixed; inset: 0; display: grid; gap: 2px; will-change: transform;
+    }
+    .cell { overflow: hidden; background: #0a0a0b; }
+    .cell img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.9s ease; pointer-events: none;
+    }
+    .cell img.on { opacity: 1; }
+    /* the darkness: opaque black everywhere, punched transparent at the beam.
+       inset:0 so the mask's px coordinates map straight to viewport px */
+    #dark {
+      position: fixed; inset: 0; z-index: 20; pointer-events: none;
+      background: #050506;
+      -webkit-mask: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%),
+        transparent 0%, transparent 32%, #000 78%);
+      mask: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%),
+        transparent 0%, transparent 32%, #000 78%);
+    }
+    /* warm halo of the beam itself */
+    #glow {
+      position: fixed; z-index: 21; pointer-events: none;
+      width: 1px; height: 1px; left: 0; top: 0;
+      transform: translate(var(--gx, -50%), var(--gy, -50%));
+      box-shadow: 0 0 220px 180px rgba(255, 244, 214, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="wall"></div>
+  <div id="dark"></div>
+  <div id="glow"></div>
+  <script type="module" src="mood7.js"></script>
+</body>
+</html>

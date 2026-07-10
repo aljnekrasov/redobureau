@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Terminālis</title>
+  <style>
+    html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#04120a;
+      color:#5bff9a; font-family:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace; cursor:crosshair; }
+    #screen { position:fixed; inset:0; white-space:pre; overflow:hidden;
+      letter-spacing:0; line-height:1.0; text-shadow:0 0 6px rgba(60,255,150,.55); }
+    .scan { position:fixed; inset:0; pointer-events:none; z-index:2;
+      background:repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px); }
+    .glow { position:fixed; inset:0; pointer-events:none; z-index:1;
+      background:radial-gradient(ellipse at center, rgba(20,60,35,0) 55%, rgba(2,10,5,.7) 100%); }
+    .intro { position:fixed; left:0; right:0; bottom:0; z-index:3; display:flex;
+      justify-content:space-between; align-items:center; padding:0 20px 14px; pointer-events:none;
+      font-size:11px; letter-spacing:.14em; color:#2f8f5a; text-transform:uppercase; }
+    .intro a { color:inherit; opacity:.8; text-decoration:none; pointer-events:auto; }
+    .intro a:hover { opacity:1; }
+  </style>
+</head>
+<body>
+  <div id="screen"></div>
+  <div class="glow"></div>
+  <div class="scan"></div>
+  <div class="intro">
+    <a href="redo28.html">← Smiltis 031</a>
+    <span>Fable Animation — Terminālis 032 · <a href="redo30.html">Magnēti 033 →</a></span>
+  </div>
+  <script type="module" src="redo29.js"></script>
+</body>
+</html>

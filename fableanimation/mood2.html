@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Straumes</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0a0a0c;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      touch-action: none;
+      cursor: ns-resize;
+    }
+    #wall {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 118vmax;
+      height: 118vmax;
+      transform: translate(-50%, -50%) rotate(-8deg);
+      display: flex;
+      justify-content: center;
+      gap: 1.1vmax;
+    }
+    .col {
+      flex: none;
+      height: 100%;
+      overflow: hidden;
+    }
+    .track { will-change: transform; }
+    .cell {
+      margin-bottom: 1.1vmax;
+      overflow: hidden;
+      background: #141417;
+    }
+    .cell img.work {
+      display: block;
+      width: 100%;
+      aspect-ratio: var(--ar);
+      height: auto;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.9s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+    .cell img.work.is-loaded { opacity: 1; }
+    .cell:hover img.work { transform: scale(1.05); }
+    /* soft exits top and bottom */
+    #stage::before, #stage::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 16vh;
+      z-index: 5;
+      pointer-events: none;
+    }
+    #stage::before { top: 0; background: linear-gradient(#0a0a0c, transparent); }
+    #stage::after { bottom: 0; background: linear-gradient(transparent, #0a0a0c); }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="wall"></div>
+  </div>
+  <script type="module" src="mood2.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Mozaīka</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0e0e12; user-select: none; -webkit-user-select: none;
+    }
+    #stage {
+      position: fixed; inset: 0; overflow: hidden; touch-action: none;
+      background: radial-gradient(ellipse at 50% 50%, #17171d, #0b0b0e 78%);
+    }
+    .disc {
+      position: absolute; left: 0; top: 0; border-radius: 50%; overflow: hidden;
+      will-change: transform; background: #1b1b22;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); pointer-events: auto;
+    }
+    .disc img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .disc img.on { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script type="module" src="mood25.js"></script>
+</body>
+</html>

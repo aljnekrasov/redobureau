@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Vilnis II</title>
+  <style>
+    @font-face {
+      font-family: "YFF Rare VF";
+      src: url("yff-rare-vf.ttf") format("truetype");
+      font-weight: 100 900;
+      font-stretch: 50% 150%;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #F4F0EA;
+      color: #E3170D;
+      font-family: "YFF Rare VF", "Helvetica Neue", sans-serif;
+      cursor: crosshair;
+    }
+    #sheet {
+      position: fixed;
+      inset: 0;
+      display: block;
+    }
+    #block {
+      position: fixed;
+      inset: 18px 22px 40px 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .ln {
+      white-space: nowrap;
+      overflow: hidden;
+      text-transform: uppercase;
+      color: #E3170D;
+      will-change: font-variation-settings, word-spacing, letter-spacing;
+    }
+    .intro {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px 12px;
+      pointer-events: none;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
+      color: #b4483f;
+    }
+    .intro a {
+      color: inherit;
+      opacity: 0.7;
+      text-decoration: none;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+    .intro a:hover { opacity: 1; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="sheet"></canvas>
+  <div class="intro">
+    <a href="redo17.html">← Vilnis 020</a>
+    <span>Fable Animation — Vilnis II 021 · <a href="redo19.html">Metāls 022 →</a></span>
+  </div>
+  <script type="module" src="redo18.js"></script>
+</body>
+</html>

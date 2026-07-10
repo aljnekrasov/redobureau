@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Režģis</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #efece5;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #grid {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(var(--c), 1fr);
+      grid-template-rows: repeat(var(--r), 1fr);
+      gap: 3px;
+      padding: 3px;
+      cursor: pointer;
+    }
+    .cell {
+      position: relative;
+      overflow: hidden;
+      background: #e2ded4;
+      transform-origin: 0 0;
+    }
+    .cell img.work {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.85);
+      transform: scale(1.001);
+      transition: opacity 0.8s ease, filter 0.5s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cell img.work.is-loaded { opacity: 1; }
+    .cell:hover { z-index: 20; }
+    .cell:hover img.work {
+      filter: saturate(1.12);
+      transform: scale(1.06);
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <script type="module" src="mood5.js"></script>
+</body>
+</html>

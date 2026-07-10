@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Karuselis</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0c0c0f; user-select: none; -webkit-user-select: none;
+    }
+    #view {
+      position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab;
+      perspective: 1500px; perspective-origin: 50% 50%;
+      background: radial-gradient(ellipse at 50% 50%, #17171c, #08080a 76%);
+    }
+    #view.is-dragging { cursor: grabbing; }
+    #ring {
+      position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+      transform-style: preserve-3d; will-change: transform;
+    }
+    .panel {
+      position: absolute; left: 0; top: 0; will-change: transform;
+      transform-origin: 50% 50%;
+    }
+    .panel .inner {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      overflow: hidden; background: #1a1a1f;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
+      outline: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .panel img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.8s ease; pointer-events: none;
+    }
+    .panel img.on { opacity: 1; }
+    #floor {
+      position: fixed; inset: 0; pointer-events: none; z-index: 30;
+      background: linear-gradient(transparent 62%, rgba(0, 0, 0, 0.45));
+    }
+  </style>
+</head>
+<body>
+  <div id="view"><div id="ring"></div></div>
+  <div id="floor"></div>
+  <script type="module" src="mood10.js"></script>
+</body>
+</html>

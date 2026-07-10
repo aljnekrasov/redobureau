@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Galds</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #131110;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      touch-action: none;
+      cursor: grab;
+    }
+    #stage.is-dragging { cursor: grabbing; }
+    .spot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: var(--z, 1);
+      will-change: transform;
+    }
+    .spot:hover { z-index: 400; }
+    .print {
+      position: relative;
+      background: #f5f2ea;
+      padding: min(1.1vw, 12px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+      transform: rotate(var(--rot));
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s;
+    }
+    .print:hover {
+      transform: rotate(0deg) scale(1.07);
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .print img.work {
+      display: block;
+      width: 100%;
+      aspect-ratio: var(--ar);
+      height: auto;
+      object-fit: cover;
+      background: #232019;
+      opacity: 0;
+      transition: opacity 0.9s ease 0.1s;
+      pointer-events: none;
+    }
+    .print img.work.is-loaded { opacity: 1; }
+    #vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0, 0, 0, 0.42) 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="vignette"></div>
+  <script type="module" src="mood1.js"></script>
+</body>
+</html>

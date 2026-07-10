@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Vilnis</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0c0d10; user-select: none; -webkit-user-select: none;
+    }
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; }
+    #grid {
+      position: absolute; inset: -2%; display: grid; gap: 6px;
+      perspective: 1000px; perspective-origin: 50% 50%;
+    }
+    .tile {
+      position: relative; overflow: hidden; background: #16181d; will-change: transform;
+      transform-style: preserve-3d;
+    }
+    .tile img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .tile img.on { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="stage"><div id="grid"></div></div>
+  <script type="module" src="mood19.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Kārtis</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #171514; user-select: none; -webkit-user-select: none;
+    }
+    #felt {
+      position: fixed; inset: 0; overflow: hidden; touch-action: none;
+      display: grid; place-items: center; cursor: grab;
+      background: radial-gradient(ellipse at 50% 45%, #211d1b, #100e0d 78%);
+    }
+    #felt.is-dragging { cursor: grabbing; }
+    #deck {
+      position: relative; width: min(56vw, 62vh); height: min(40vw, 44vh);
+    }
+    .card {
+      position: absolute; inset: 0; margin: auto; will-change: transform, opacity;
+      background: #f4f1ea; padding: 12px; box-sizing: border-box;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    }
+    .card .frame {
+      width: 100%; height: 100%; overflow: hidden; background: #241f1b;
+    }
+    .card img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
+    }
+    .card img.on { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="felt"><div id="deck"></div></div>
+  <script type="module" src="mood9.js"></script>
+</body>
+</html>

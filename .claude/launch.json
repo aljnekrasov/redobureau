@@ -4,8 +4,22 @@
     {
       "name": "fableanimation",
       "runtimeExecutable": "php",
-      "runtimeArgs": ["-S", "localhost:8123", "kirby/router.php"],
+      "runtimeArgs": [
+        "-S",
+        "localhost:8123",
+        "kirby/router.php"
+      ],
       "port": 8123
+    },
+    {
+      "name": "fable2",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "localhost:8124",
+        "kirby/router.php"
+      ],
+      "port": 8124
     }
   ]
 }

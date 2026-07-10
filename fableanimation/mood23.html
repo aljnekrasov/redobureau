@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Žalūzijas</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0a0a0c; user-select: none; -webkit-user-select: none;
+    }
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none;
+      perspective: 1600px; perspective-origin: 50% 50%; display: flex; cursor: pointer; }
+    .slat {
+      position: relative; height: 100%; flex: 1 1 0; transform-style: preserve-3d;
+      background-size: cover; background-position: center; will-change: transform, filter;
+      backface-visibility: hidden;
+    }
+    .slat::after { /* thin seam between slats */
+      content: ""; position: absolute; inset: 0; box-shadow: inset -1px 0 0 rgba(0,0,0,0.35);
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script type="module" src="mood23.js"></script>
+</body>
+</html>

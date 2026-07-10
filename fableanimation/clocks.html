@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pulksteņi — five cities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #d3d1cd;
+      color: #2b2a28;
+      font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    /* the white ceiling band from the photo */
+    #ceiling {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 18vh;
+      background: #f7f6f3;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    }
+    #hall {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-start;
+    }
+    .unit {
+      transform-origin: 50% 0;
+      will-change: transform;
+      width: min(17vw, 220px);
+    }
+    .unit svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .city {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .intro {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px 16px;
+      pointer-events: none;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .intro a {
+      color: inherit;
+      opacity: 0.55;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+    .intro a:hover { opacity: 1; }
+    .intro .tag { opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <div id="ceiling"></div>
+  <div id="hall"></div>
+  <div class="intro">
+    <a href="redo6.html">← Gredzens 008</a>
+    <span class="tag">Fable Animation — Pulksteņi 009 · <a href="redo7.html">Punkti 010 →</a></span>
+  </div>
+  <script type="module" src="clocks.js"></script>
+</body>
+</html>

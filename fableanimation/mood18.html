@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Lente</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0b0b0c; user-select: none; -webkit-user-select: none;
+    }
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: ew-resize;
+      display: flex; align-items: center; }
+    #strip {
+      position: relative; width: 100%; height: 58vh; background: #171514;
+      border-top: 2px solid #000; border-bottom: 2px solid #000;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6); overflow: hidden;
+    }
+    /* sprocket holes top & bottom */
+    #strip::before, #strip::after {
+      content: ""; position: absolute; left: 0; right: 0; height: 5%;
+      background: repeating-linear-gradient(90deg,
+        transparent 0 10px, #d9d4c6 10px 24px, transparent 24px 34px);
+      opacity: 0.85; z-index: 3; pointer-events: none;
+    }
+    #strip::before { top: 3.5%; }
+    #strip::after { bottom: 3.5%; }
+    #track { position: absolute; top: 12%; height: 76%; left: 0; will-change: transform; }
+    .cell {
+      position: absolute; top: 0; height: 100%; will-change: transform;
+      padding: 0 5px; box-sizing: border-box;
+    }
+    .cell .frame { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    .cell img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: contrast(1.05) saturate(0.88) sepia(0.1);
+      opacity: 0; transition: opacity 0.7s ease;
+    }
+    .cell img.on { opacity: 1; }
+    /* faint playhead line down the middle */
+    #head { position: fixed; left: 50%; top: 0; bottom: 0; width: 1px; z-index: 5;
+      background: rgba(255,255,255,0.12); pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="stage"><div id="strip"><div id="track"></div></div></div>
+  <div id="head"></div>
+  <script type="module" src="mood18.js"></script>
+</body>
+</html>

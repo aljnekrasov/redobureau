@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Orbīta</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0d0d10;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      touch-action: none;
+      cursor: grab;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(255, 252, 240, 0.06), transparent 55%),
+        #0d0d10;
+    }
+    #stage.is-dragging { cursor: grabbing; }
+    #system {
+      position: absolute;
+      inset: 0;
+      will-change: transform;
+    }
+    .orb {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      will-change: transform;
+    }
+    .ph {
+      background: #17171b;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 12px 44px rgba(0, 0, 0, 0.55);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s;
+    }
+    .orb:hover { z-index: 50; }
+    .orb:hover .ph {
+      transform: scale(1.16);
+      box-shadow: 0 26px 80px rgba(0, 0, 0, 0.7);
+    }
+    .ph img.work {
+      display: block;
+      width: 100%;
+      aspect-ratio: var(--ar);
+      height: auto;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      pointer-events: none;
+    }
+    .ph img.work.is-loaded { opacity: 1; }
+    #vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="system"></div>
+  </div>
+  <div id="vignette"></div>
+  <script type="module" src="mood3.js"></script>
+</body>
+</html>

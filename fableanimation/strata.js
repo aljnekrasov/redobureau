@@ -14,8 +14,9 @@ const GOLD = "#C09A2E"
 const LEVELS = [0.05, 0.14, 0.28, 0.48, 0.72, 1]
 
 const CELL = 22 // css px per grid cell (op-slani cell ≈ 20px)
-const BOX = 9.4 / 12 // square side as a fraction of the cell, op-slani ratio
 const SS = 2 // 3d samples per cell side (supersampling)
+const SKY_PX_W = 72 // sky texture is downsampled to this — the chrome blob
+const SKY_PX_H = 36 // reflects chunky texels instead of a smooth gradient
 
 const distance = 14
 const fov = 50
@@ -52,8 +53,27 @@ const camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 80)
 // and the blob coverage mask (pass 2) would read as full-frame
 const renderer = new THREE.WebGLRenderer({
   powerPreference: "high-performance",
-  alpha: true
+  alpha: true,
+  antialias: true
 })
+
+// the blob itself is composited at full resolution — only its WORLD is
+// pixelated: the sky texture is crushed to a few dozen texels with nearest
+// filtering, so the chrome surface reflects hard pixel blocks
+function pixelate(source) {
+  const c = document.createElement("canvas")
+  c.width = SKY_PX_W
+  c.height = SKY_PX_H
+  const cc = c.getContext("2d")
+  cc.imageSmoothingEnabled = false
+  cc.drawImage(source, 0, 0, SKY_PX_W, SKY_PX_H)
+  const texture = new THREE.CanvasTexture(c)
+  texture.colorSpace = THREE.SRGBColorSpace
+  texture.magFilter = THREE.NearestFilter
+  texture.minFilter = THREE.NearestFilter
+  texture.generateMipmaps = false
+  return texture
+}
 
 const light = new THREE.AmbientLight(0xffffff, Math.PI)
 light.matrixAutoUpdate = false
@@ -80,9 +100,7 @@ function setSkyMap(texture) {
 function setSky(name) {
   currentSky = name
   if (name === "velvet" && !skyTextures.velvet) {
-    const texture = new THREE.CanvasTexture(makeVelvetSky())
-    texture.colorSpace = THREE.SRGBColorSpace
-    skyTextures.velvet = texture
+    skyTextures.velvet = pixelate(makeVelvetSky())
   }
   if (skyTextures[name]) setSkyMap(skyTextures[name])
 
@@ -103,16 +121,14 @@ for (const label of switchEl.querySelectorAll(".sky-label")) {
 new THREE.TextureLoader().load(
   "../assets/models/11.jpg",
   texture => {
-    texture.colorSpace = THREE.SRGBColorSpace
-    skyTextures.waves = texture
-    if (currentSky === "waves") setSkyMap(texture)
+    skyTextures.waves = pixelate(texture.image)
+    texture.dispose()
+    if (currentSky === "waves") setSkyMap(skyTextures.waves)
   },
   undefined,
   () => {
-    const texture = new THREE.CanvasTexture(makeFallbackSky())
-    texture.colorSpace = THREE.SRGBColorSpace
-    skyTextures.waves = texture
-    if (currentSky === "waves") setSkyMap(texture)
+    skyTextures.waves = pixelate(makeFallbackSky())
+    if (currentSky === "waves") setSkyMap(skyTextures.waves)
   }
 )
 
@@ -170,6 +186,11 @@ function applySize() {
   camera.aspect = width / height
   camera.updateProjectionMatrix()
 
+  // the default framebuffer carries the full-res blob pass that gets
+  // composited over the grid each frame
+  renderer.setPixelRatio(1)
+  renderer.setSize(width, height, false)
+
   cols = Math.max(8, Math.round(width / CELL))
   rows = Math.max(6, Math.round(height / CELL))
 
@@ -183,7 +204,11 @@ function applySize() {
     for (let x = 0; x < cols; x++) cellHash[y * cols + x] = hash(x, y)
   }
 
-  dpr = window.devicePixelRatio ? Math.min(window.devicePixelRatio, 2) : 1
+  // dpr locked to 1: embedded preview compositors blit the backing bitmap
+  // 1:1 without scaling it into the css box, so a retina-sized bitmap shows
+  // up as a top-left crop (the mass "runs into the corner"). flat rects on
+  // a grid lose almost nothing at 1x
+  dpr = 1
   gridCanvas.width = Math.round(width * dpr)
   gridCanvas.height = Math.round(height * dpr)
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -193,7 +218,9 @@ applySize()
 
 // -- events ----------------------------------------------------------------------
 
-window.addEventListener("resize", applySize, false)
+// full render, not just applySize: resizing reallocates the canvas bitmap,
+// which blanks it — redraw in the same tick so no cleared frame is presented
+window.addEventListener("resize", render, false)
 gridCanvas.addEventListener("mousemove", onDocumentMouseMove, false)
 gridCanvas.addEventListener("touchmove", onDocumentTouch, { passive: false })
 
@@ -245,6 +272,14 @@ function render() {
 
   camera.position.x += (mouseX - camera.position.x) * 0.05
   camera.position.y -= (mouseY + camera.position.y) * 0.05
+  // on wide windows the raw parallax can carry the camera out through the
+  // sky sphere (r=20) — cap the lateral swing so the scene always holds
+  const swing = Math.hypot(camera.position.x, camera.position.y)
+  const maxSwing = 8
+  if (swing > maxSwing) {
+    camera.position.x *= maxSwing / swing
+    camera.position.y *= maxSwing / swing
+  }
   camera.lookAt(scene.position)
 
   blob.visible = false
@@ -262,11 +297,15 @@ function render() {
   sky.visible = false
   renderer.render(scene, camera)
   renderer.readRenderTargetPixels(target, 0, 0, cols * SS, rows * SS, pixelsBlob)
+
+  // third pass: the blob itself, full resolution on a transparent buffer —
+  // the liquid body stays smooth, only its reflections carry the pixels
+  renderer.setRenderTarget(null)
+  renderer.render(scene, camera)
   sky.visible = true
 
-  renderer.setRenderTarget(null)
-
   drawGrid(fieldTime)
+  ctx.drawImage(renderer.domElement, 0, 0, width, height)
 }
 
 function updateBlob() {
@@ -296,9 +335,6 @@ function drawGrid(t) {
 
   const cw = width / cols
   const ch = height / rows
-  const box = Math.min(cw, ch) * BOX
-  const ox = (cw - box) / 2
-  const oy = (ch - box) / 2
 
   const srcW = cols * SS
   const driftAmp = 1 + energy * 0.5
@@ -370,7 +406,10 @@ function drawGrid(t) {
       ctx.globalAlpha = LEVELS[q]
       // gild only the hottest crests of the mass
       ctx.fillStyle = q === maxQ && cov > 0.5 && blobPeak > 0.9 ? GOLD : PAPER
-      ctx.fillRect(cx * cw + ox, cy * ch + oy, box, box)
+      // integer edges: cells tile edge-to-edge with no seams or gaps
+      const x0 = Math.round(cx * cw)
+      const y0 = Math.round(cy * ch)
+      ctx.fillRect(x0, y0, Math.round((cx + 1) * cw) - x0, Math.round((cy + 1) * ch) - y0)
     }
   }
   ctx.globalAlpha = 1
