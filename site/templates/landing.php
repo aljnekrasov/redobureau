@@ -1,5 +1,4 @@
-return array_intersect($inds, $p->content('en')->get('industry')->split())
-            || array_intersect($types, $p->content('en')->get('types')->split());<?php snippet('header') ?>
+<?php snippet('header') ?>
 
 <?php
 // Industry landing: query copy → matching projects → matching articles →
@@ -9,8 +8,8 @@ $types = $page->content('en')->get('pull_types')->split();
 $projects = page('work')->children()->listed()
     ->filter(fn($p) => $p->audienceAllows())
     ->filter(function ($p) use ($inds, $types) {
-        return array_intersect($inds, $p->industry()->split())
-            || array_intersect($types, $p->types()->split());
+        return array_intersect($inds, $p->content('en')->get('industry')->split())
+            || array_intersect($types, $p->content('en')->get('types')->split());
     });
 
 $topics = $page->topics()->split();
