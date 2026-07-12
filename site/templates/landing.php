@@ -24,17 +24,20 @@ $calendly = option('site.calendlyUrl');
 $ctaHref  = $calendly ?: 'mailto:' . $site->contactEmail() . '?subject=' . rawurlencode('Intro call — ' . $page->title());
 ?>
 
-<div class="main pt-75 md:pt-100">
-    <div class="page">
+<?php /* Wrapper mirrors work.php exactly (main → page pt-50 → container)
+         so the tag row sits at the SAME position on /work and on every
+         landing — no jumping while "filtering". Tags always first. */ ?>
+<div class="main">
+    <div class="page pt-50">
         <div class="container">
+            <?php snippet('landing-tags', ['active' => $page->id()]) ?>
+
             <div class="row mb-50">
                 <div class="col-12 sm:col-8">
                     <h1 class="mb-25 extra seo-h"><?= $page->title() ?></h1>
                     <?= $page->intro()->kt() ?>
                 </div>
             </div>
-
-            <?php snippet('landing-tags', ['active' => $page->id()]) ?>
 
             <?php if ($projects->count()) : ?>
             <div class="case-label mb-25"><?= t('landing_work') ?></div>
