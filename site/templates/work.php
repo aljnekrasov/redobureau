@@ -4,6 +4,7 @@
 <div class="main">
     <div class="page pt-50">
         <div class="container">
+            <?php snippet('landing-tags') ?>
             <?php foreach (page('home')->projects()->toBuilderBlocks() as $block) :
             ?>
             <?php snippet('blocks/home.' . $block->_key(), array('data' => $block))

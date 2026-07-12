@@ -11,12 +11,6 @@
                   </div>
 
                   <div class="col sm-col:4 md:col-3 links">
-                      <?php foreach ($site->children()->template('landing')->listed()->filter(fn($l) => $l->audienceAllows()) as $__l) : ?>
-                      <a href="<?= url($__l->url()) ?>"><?= $__l->title() ?></a>
-                      <?php endforeach ?>
-                  </div>
-
-                  <div class="col sm-col:4 md:col-3 links">
                       <?php foreach ($site->socialLinks()->toStructure() as $link) : ?>
                       <a rel="noopener" href="<?= url($link->url()) ?>" target="_blank"><?= $link->name() ?></a>
                       <?php endforeach ?>

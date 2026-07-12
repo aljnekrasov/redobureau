@@ -34,6 +34,8 @@ $ctaHref  = $calendly ?: 'mailto:' . $site->contactEmail() . '?subject=' . rawur
                 </div>
             </div>
 
+            <?php snippet('landing-tags', ['active' => $page->id()]) ?>
+
             <?php if ($projects->count()) : ?>
             <div class="case-label mb-25"><?= t('landing_work') ?></div>
             <div class="row">
