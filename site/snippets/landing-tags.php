@@ -12,3 +12,14 @@ if (!$__tags->count()) return;
     <a href="<?= url($__t->url()) ?>" class="<?= ($active ?? null) === $__t->id() ? 'is-active' : '' ?>"><?= $__t->title() ?></a>
     <?php endforeach ?>
 </div>
+<script>
+/* Cursor spotlight inside the pills (meduza-style): a radial glow
+   follows the pointer via --mx/--my, CSS does the rest. */
+document.querySelectorAll('.work-tags a').forEach(function (a) {
+    a.addEventListener('pointermove', function (e) {
+        var r = a.getBoundingClientRect();
+        a.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        a.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+});
+</script>
