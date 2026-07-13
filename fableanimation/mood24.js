@@ -134,7 +134,7 @@ function frame(now) {
   if (!REDUCED) {
     if (!phaseMorph) {
       timer += dt
-      if (timer > 0.3) {
+      if (timer > 2.7) {
         timer = 0
         phaseMorph = true
       }

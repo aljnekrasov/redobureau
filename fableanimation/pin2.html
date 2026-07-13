@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — работы на столе. Брендинг и digital</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Redo Bureau — 30 работ. Брендинг и digital">
+  <meta property="og:description" content="Айдентика, упаковка, сайты. Понравится — созвонимся: 15 минут, без обязательств.">
+  <meta property="og:image" content="https://redobureau.com/media/pages/work/uppa-winery/1531238323-1770145982/uppa-bc-mock-up-1-900x.jpg">
+  <style>
+    :root { --ink: #14120f; --paper: #f5f2ea; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #131110; user-select: none; -webkit-user-select: none;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
+    #stage.is-dragging { cursor: grabbing; }
+
+    /* ---------- header (лёгкий, поверх мира) ---------- */
+    #top { position: fixed; top: 0; left: 0; right: 0; z-index: 70; display: flex;
+      align-items: center; justify-content: space-between; padding: 18px 22px;
+      pointer-events: none; }
+    #top > * { pointer-events: auto; }
+    #top img { height: 26px; display: block; filter: invert(1); opacity: 0.92; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px;
+      padding: 12px 19px; font-size: 14px; font-weight: 600; background: #fff; color: var(--ink);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35); transition: transform 0.15s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.dark { background: var(--ink); color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
+    .btn.small { padding: 9px 14px; font-size: 13px; }
+    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: #2fae5f;
+      box-shadow: 0 0 0 3px rgba(47,174,95,0.25); }
+
+    /* ---------- предметы на столе ---------- */
+    .spot { position: absolute; left: 0; top: 0; z-index: var(--z, 1); will-change: transform;
+      perspective: 1100px; }
+    .spot:hover { z-index: 400; }
+    .print { position: relative; background: var(--paper); padding: min(1vw, 11px);
+      box-shadow: 0 16px 44px rgba(0,0,0,0.5); transform: rotate(var(--rot)) rotateY(0deg);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
+      transform-style: preserve-3d; }
+    .spot:hover .print { transform: rotate(0deg) rotateY(0deg) scale(1.05);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+    .print.flipped { transform: rotate(var(--rot)) rotateY(180deg) !important; }
+    .print .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .print img.work { display: block; width: 100%; aspect-ratio: var(--ar); height: auto;
+      object-fit: cover; background: #232019; opacity: 0; transition: opacity 0.8s ease;
+      pointer-events: none; }
+    .print img.work.is-loaded { opacity: 1; }
+    /* задняя грань — CTA */
+    .print .back { position: absolute; inset: 0; transform: rotateY(180deg);
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      background: var(--ink); color: #fff; display: flex; flex-direction: column;
+      justify-content: center; gap: 10px; padding: 18px; box-sizing: border-box; }
+    .print .back h3 { margin: 0; font-size: 17px; line-height: 1.2; letter-spacing: -0.01em; }
+    .print .back p { margin: 0; font-size: 12.5px; opacity: 0.65; line-height: 1.4; }
+    .print .back .later { background: none; border: 0; color: rgba(255,255,255,0.5);
+      font-size: 12px; align-self: flex-start; padding: 0; }
+
+    .veil { position: absolute; inset: min(1vw, 11px); display: flex; justify-content: space-between;
+      align-items: flex-start; padding: 8px; opacity: 0; transition: opacity 0.2s; pointer-events: none;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent 45%); }
+    .spot:hover .veil { opacity: 1; }
+    .veil > * { pointer-events: auto; }
+    .chip { border: 0; border-radius: 999px; padding: 7px 11px; font-size: 12px; font-weight: 700;
+      background: rgba(255,255,255,0.94); color: var(--ink); }
+    .chip.pin { background: #e60023; color: #fff; }
+
+    /* CTA-карточка среди работ */
+    .ctacard { background: var(--ink); color: #fff; padding: 22px; box-sizing: border-box;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.55); transform: rotate(var(--rot));
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); display: flex;
+      flex-direction: column; gap: 12px; cursor: pointer; }
+    .spot:hover .ctacard { transform: rotate(0deg) scale(1.05); }
+    .ctacard h3 { margin: 0; font-size: clamp(17px, 1.6vw, 22px); line-height: 1.15; letter-spacing: -0.01em; }
+    .ctacard p { margin: 0; font-size: 13px; opacity: 0.65; line-height: 1.45; }
+    .ctacard .btn { align-self: flex-start; }
+
+    /* стопка-полароиды Instagram */
+    .igstack { position: relative; cursor: pointer; transform: rotate(var(--rot));
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); }
+    .spot:hover .igstack { transform: rotate(0deg) scale(1.06); }
+    .igstack .ph { position: absolute; background: #fff; padding: 6px 6px 20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45); }
+    .igstack .ph img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .igstack .tag { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%);
+      white-space: nowrap; background: #fff; border-radius: 999px; padding: 8px 14px;
+      font-size: 13px; font-weight: 700; color: var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,0.4); }
+
+    /* самолётик Telegram */
+    #plane { position: absolute; left: 0; top: 0; z-index: 450; cursor: pointer;
+      filter: drop-shadow(0 14px 18px rgba(0,0,0,0.45)); will-change: transform; }
+    #plane svg { display: block; }
+    #plane .tag { position: absolute; left: 26px; top: 30px; white-space: nowrap;
+      background: #1d93d2; color: #fff; border-radius: 999px; padding: 7px 12px;
+      font-size: 12.5px; font-weight: 700; opacity: 0; transform: translateY(4px);
+      transition: opacity 0.2s, transform 0.2s; }
+    #plane:hover .tag { opacity: 1; transform: none; }
+
+    /* ---------- стопка лайков ---------- */
+    #likestack { position: fixed; left: 18px; bottom: 18px; z-index: 80; width: 74px; height: 92px;
+      pointer-events: none; }
+    #likestack .mini { position: absolute; width: 62px; height: 78px; background: #fff; padding: 3px;
+      box-sizing: border-box; box-shadow: 0 8px 22px rgba(0,0,0,0.4); }
+    #likestack .mini img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #likestack .count { position: absolute; right: -6px; top: -8px; z-index: 5; background: #e60023;
+      color: #fff; font-size: 12px; font-weight: 800; border-radius: 999px; padding: 4px 8px;
+      display: none; }
+    #tgoffer { position: fixed; left: 18px; bottom: 118px; z-index: 80; transform: translateY(16px);
+      opacity: 0; transition: 0.35s; pointer-events: none; }
+    #tgoffer.on { transform: none; opacity: 1; pointer-events: auto; }
+
+    /* ---------- спотлайт / exit ---------- */
+    .overlay { position: fixed; inset: 0; background: rgba(10, 9, 8, 0.7); display: none;
+      align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .overlay.on { display: flex; }
+    .sheet { background: #fff; color: var(--ink); border-radius: 16px; max-width: min(1000px, 95vw);
+      max-height: 92vh; overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 50px 140px rgba(0,0,0,0.5); }
+    .sheet img { max-width: min(960px, 91vw); max-height: 60vh; width: 100%;
+      object-fit: contain; background: #f1efe9; display: block; }
+    .sheet .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 16px 16px; }
+    .sheet .meta .name { font-weight: 700; font-size: 16px; margin-right: auto; }
+    .navbtn { position: absolute; top: 50%; transform: translateY(-50%); border: 0; width: 44px;
+      height: 44px; border-radius: 50%; background: rgba(255,255,255,0.92); font-size: 19px;
+      font-weight: 700; z-index: 2; }
+    #prevW { left: 22px; }
+    #nextW { right: 22px; }
+    .modal { background: #fff; color: var(--ink); border-radius: 18px; padding: 28px;
+      max-width: 420px; box-shadow: 0 50px 140px rgba(0,0,0,0.5); }
+    .modal h3 { margin: 0 0 8px; font-size: 23px; letter-spacing: -0.01em; }
+    .modal p { margin: 0 0 16px; color: rgba(20,18,15,0.6); line-height: 1.5; font-size: 15px; }
+    .modal .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal .btn { background: var(--ink); color: #fff; box-shadow: none; }
+    .modal .btn.ghost { background: #fff; color: var(--ink); border: 1.5px solid rgba(20,18,15,0.25); }
+
+    #toast { position: fixed; right: 18px; bottom: 18px; z-index: 90; background: #fff; color: var(--ink);
+      border-radius: 12px; padding: 12px 16px; font-size: 14px; box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+      transform: translateY(140%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); }
+    #toast.on { transform: none; }
+
+    #vignette { position: fixed; inset: 0; pointer-events: none; z-index: 40;
+      background: radial-gradient(ellipse at 50% 42%, transparent 44%, rgba(0,0,0,0.42) 100%); }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="vignette"></div>
+
+  <div id="top">
+    <img src="redo-logo.svg" alt="Redo">
+    <a class="btn dark" data-cta="call" data-place="header" href="#"><span class="dot-live"></span>Забукать 15 минут</a>
+  </div>
+
+  <!-- стопка лайков + TG-оффер -->
+  <div id="likestack"><span class="count" id="likecount"></span></div>
+  <a class="btn small" id="tgoffer" data-cta="telegram" data-place="like_magnet" href="#">Прислать подборку в Telegram →</a>
+
+  <!-- спотлайт -->
+  <div class="overlay" id="spot">
+    <button class="navbtn" id="prevW">←</button>
+    <div class="sheet">
+      <img id="spotImg" alt="">
+      <div class="meta">
+        <span class="name" id="spotName"></span>
+        <button class="chip pin" id="spotPin">Pin</button>
+        <button class="chip" id="spotShare">Поделиться</button>
+        <button class="chip" id="spotLike">♡</button>
+        <a class="btn dark small" data-cta="call" data-place="spotlight" href="#">Обсудить похожий проект</a>
+      </div>
+    </div>
+    <button class="navbtn" id="nextW">→</button>
+  </div>
+
+  <!-- exit-intent: стол раздвигается, в центре — это -->
+  <div class="overlay" id="exit" style="background: rgba(10,9,8,0.25)">
+    <div class="modal">
+      <h3>Уже уходите?</h3>
+      <p>Стол подождёт. Заберите 15-минутный разбор вашей задачи — бесплатно.
+        Или разборы кейсов в Telegram.</p>
+      <div class="row">
+        <a class="btn" data-cta="call" data-place="exit" href="#">Забукать 15 минут</a>
+        <a class="btn ghost" data-cta="telegram" data-place="exit" href="#">Telegram</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script type="module" src="pin2.js"></script>
+</body>
+</html>

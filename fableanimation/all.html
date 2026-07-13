@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Fable Animation: все страницы</title>
+  <style>
+    :root { --bg: #0d0d10; --card: #16161a; --line: rgba(255,255,255,0.08); }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: #f2f0ea;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    header { max-width: 1560px; margin: 0 auto; padding: 40px 28px 6px; }
+    h1 { font-size: clamp(26px, 3.6vw, 44px); margin: 0 0 8px; letter-spacing: -0.02em; }
+    header p { color: rgba(242,240,234,0.55); margin: 0; font-size: 15px; line-height: 1.5; }
+    h2 { max-width: 1560px; margin: 42px auto 0; padding: 0 28px; font-size: 20px;
+      letter-spacing: -0.01em; color: rgba(242,240,234,0.9); }
+    .grid { max-width: 1560px; margin: 16px auto 0; padding: 0 28px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+    .item { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column; transition: transform 0.18s, border-color 0.18s; }
+    .item:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.22); }
+    .prev { position: relative; aspect-ratio: 16 / 10; background: #0a0a0c; overflow: hidden; }
+    .prev .num { position: absolute; right: 10px; bottom: 4px; font-size: 54px; font-weight: 800;
+      color: rgba(255,255,255,0.07); letter-spacing: -0.04em; z-index: 1; }
+    .prev iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 800px;
+      transform-origin: 0 0; border: 0; pointer-events: none; z-index: 2; background: #0a0a0c; }
+    .prev .hint { position: absolute; inset: 0; display: grid; place-items: center;
+      color: rgba(255,255,255,0.22); font-size: 12px; letter-spacing: 0.14em;
+      text-transform: uppercase; z-index: 0; }
+    .meta { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 5px; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .name { font-weight: 700; font-size: 15px; }
+    .badge { margin-left: auto; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line);
+      color: rgba(242,240,234,0.7); }
+    .badge.webgl { color: #7fc2ff; border-color: rgba(127,194,255,0.35); }
+    .badge.canvas { color: #ffb27f; border-color: rgba(255,178,127,0.35); }
+    .desc { font-size: 13px; color: rgba(242,240,234,0.55); line-height: 1.45; }
+    footer { max-width: 1560px; margin: 44px auto 60px; padding: 0 28px;
+      color: rgba(242,240,234,0.4); font-size: 13px; line-height: 1.6; }
+    code { background: rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 6px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fable Animation — все страницы</h1>
+    <p>Наведите на карточку — внутри запустится живое превью. Клик — открыть страницу целиком.</p>
+  </header>
+
+  <h2 id="t-moods"></h2>
+  <div class="grid" id="moods"></div>
+
+  <h2>Pinterest-воронка</h2>
+  <div class="grid" id="funnel"></div>
+
+  <h2 id="t-legacy"></h2>
+  <div class="grid" id="legacy"></div>
+
+  <footer>
+    Сервер: <code>php -S localhost:8126 kirby/router.php</code> из корня репозитория
+    (или конфиг <code>fable3</code> в .claude/launch.json). Мудборды: точки внизу
+    каждой страницы, ←/→ и клавиши 1–9 переключают варианты.
+  </footer>
+
+  <script>
+    const MOODS = [
+      [1, "Galds", "dom", "Стол с разбросанными отпечатками: драг с инерцией, дрейф, параллакс глубины"],
+      [2, "Straumes", "dom", "Наклонная стена из пяти бесконечных рек; колесо разгоняет поток"],
+      [3, "Orbīta", "dom", "Три эллиптические орбиты в противофазе; драг крутит, колесо — зум"],
+      [4, "Dziļums", "dom", "Полёт сквозь 3D-коридор работ; мышь подруливает взгляд"],
+      [5, "Režģis", "dom", "Живой квилт на бумаге: плитки меняются местами (FLIP), клик — перекроить"],
+      [6, "Bezgalība", "dom", "Бесконечный холст во все стороны с виртуализованными плитками"],
+      [7, "Gaisma", "dom", "Тёмная комната: курсор-фонарик выхватывает работы из мрака"],
+      [8, "Peldēšana", "dom", "Работы плавают как в аквариуме; курсор толкает воду"],
+      [9, "Kārtis", "dom", "Колода: флик сбрасывает верхнюю карту, цикл бесконечный"],
+      [10, "Karuselis", "dom", "3D-барабан-коверфлоу из двух колец; драг крутит"],
+      [11, "Šķidrums", "webgl", "Сетка работ течёт как жидкость: волны, линза, хроматика"],
+      [12, "Punkti", "canvas", "Типографский растр из точек; курсор-лупа показывает чистое фото"],
+      [13, "Spogulis", "webgl", "Калейдоскоп: X — число зеркал (6–16), Y — зум"],
+      [14, "Atbalss", "canvas", "Эхо-тоннель видеообратной связи; клик меняет направление зума"],
+      [15, "Drumstalas", "canvas", "Работа собирается из ~8000 частиц и рассыпается в следующую"],
+      [16, "Tīkls", "dom", "Упругая сеть 6×5 на пружинах: тяни любой узел"],
+      [17, "Ritenis", "dom", "Веер-павлин из одного пивота; драг крутит с инерцией"],
+      [18, "Lente", "dom", "Кинолента с перфорацией; кадр у центра растёт (coverflow)"],
+      [19, "Vilnis", "dom", "Сетка дышит диагональной 3D-волной; курсор поднимает свою"],
+      [20, "Magnēts", "dom", "Работы стягиваются к курсору; клик — магнит переворачивается"],
+      [21, "Mirāža", "webgl", "Тепловое марево: воздух дрожит сильнее к низу кадра"],
+      [22, "Matrica", "canvas", "LED-стена: работы из светящихся диодов с блумом"],
+      [23, "Žalūzijas", "dom", "Сплит-флап: ламели переворачиваются волной между работами"],
+      [24, "Sapnis", "webgl", "Сон-слайдшоу: работы перетекают жидким морфом"],
+      [25, "Mozaīka", "dom", "Круги-скопление с мягкой физикой; наведение раздувает"],
+      [26, "Spirāle", "dom", "Филлотаксис: работы посеяны подсолнечником, колесо — внутрь"],
+      [27, "Šūnas", "dom", "Соты во всё поле; клетка под курсором раздувается"],
+      [28, "Lietus", "dom", "Дождь из работ с растворяющимися трейлами; колесо — ливень"],
+      [29, "Tunelis", "dom", "Шестиугольная труба из работ; полёт внутри, колесо — газ"],
+      [30, "Gravitācija", "canvas", "Орбиты вокруг светящегося центра масс, шлейфы; клик — пинок"],
+      [31, "Sietspiede", "canvas", "Ризограф: две краски, сбитая приводка, зерно; клик — краски"],
+      [32, "Duncis", "canvas", "Slit-scan: срез работы размазывается лентами во времени"],
+      [33, "Mērogs", "canvas", "Зум Дросте: картина в картине, бесконечное падение внутрь"],
+      [34, "Tekstils", "canvas", "Две работы сплетены в ткань шахматкой; клик — поменять"],
+      [35, "Lāse", "webgl", "Работы под водой: клик роняет каплю, рябь преломляет"],
+      [36, "Grāmata", "dom", "Книга-альбом: страницы листаются через корешок"],
+      [37, "Radars", "canvas", "Луч радара зажигает работы, после — послесвечение"],
+      [38, "Puzle", "dom", "Пятнашки: скрамбл и решение воспроизведением ходов назад"],
+      [39, "Skeneris", "canvas", "Фотокопир: светящаяся планка проявляет следующую работу"],
+      [40, "Vitrāža", "canvas", "Витраж из треугольных осколков со свинцовыми жилками"],
+      [41, "Svārsts", "dom", "Волна маятников: расходятся и снова сходятся; клик — заново"],
+      [42, "Karogs", "canvas", "Флаг: волна и светотень по складкам; быстрый курсор — порыв"],
+      [43, "Ekrāns", "webgl", "ЭЛТ-телевизор: бочка, скан-линии, помехи между каналами"],
+      [44, "Domino", "dom", "Костяшки валятся волной встречными курсами и встают"],
+      [45, "Aizkari", "dom", "Занавес из фотолент: курсор проходит сквозь, пряди качаются"],
+    ]
+
+    const LEGACY = [
+      ["index.html", "001", "Liquid", "Хромированный блоб жидкого металла под психоделическим небом"],
+      ["strata.html", "002", "Strata", "Redo × RAF AVIA — жидкие слои"],
+      ["redo.html", "003", "Šķidrā forma", ""],
+      ["redo2.html", "004", "Skaidrā forma", ""],
+      ["redo3.html", "005", "Lentes", ""],
+      ["redo4.html", "006", "Vēdeklis", ""],
+      ["redo5.html", "007", "Izkliede", ""],
+      ["redo6.html", "008", "Gredzens", ""],
+      ["clocks.html", "009", "Pulksteņi", "Пять городов — пять циферблатов"],
+      ["redo7.html", "010", "Punkti", ""],
+      ["redo8.html", "011", "Svītras", ""],
+      ["redo9.html", "012", "Lēcas", ""],
+      ["redo10.html", "013", "Audums", ""],
+      ["redo11.html", "014", "Tunelis", ""],
+      ["redo12.html", "015", "Neons", ""],
+      ["redo13.html", "016", "Zīme", ""],
+      ["redo14.html", "017", "Satīns", ""],
+      ["redo15.html", "018", "Ēnas", ""],
+      ["redo16.html", "019", "Līnijas", ""],
+      ["redo17.html", "020", "Vilnis", ""],
+      ["redo18.html", "021", "Vilnis II", ""],
+      ["redo19.html", "022", "Metāls", ""],
+      ["redo20.html", "023", "Spogulis", ""],
+      ["redo21.html", "024", "Ruļļi", ""],
+      ["redo22.html", "025", "Nobīde", ""],
+      ["redo23.html", "026", "Skatuve", ""],
+      ["redo24.html", "027", "Iela", ""],
+      ["redo25.html", "028", "Sabrukums", ""],
+      ["redo26.html", "029", "Anamorfoze", ""],
+    ]
+
+    const BADGE = { dom: "DOM", canvas: "CANVAS", webgl: "WEBGL" }
+
+    function card(href, num, name, type, desc) {
+      const a = document.createElement("a")
+      a.className = "item"
+      a.href = href
+      a.target = "_blank"
+      a.rel = "noopener"
+      a.innerHTML = `
+        <div class="prev" data-src="${href}">
+          <div class="hint">hover — live</div>
+          <div class="num">${num}</div>
+        </div>
+        <div class="meta">
+          <div class="row">
+            <span class="name">${name}</span>
+            <span class="badge ${type}">${BADGE[type] || "3D"}</span>
+          </div>
+          ${desc ? `<div class="desc">${desc}</div>` : ""}
+        </div>`
+      return a
+    }
+
+    const moods = document.getElementById("moods")
+    MOODS.forEach(([n, name, type, desc]) => moods.appendChild(card(`mood${n}.html`, n, name, type, desc)))
+    document.getElementById("t-moods").textContent = `Мудборды портфолио — 30 работ на страницу (${MOODS.length})`
+
+    document.getElementById("funnel").appendChild(
+      card("pin.html", "★", "Pin — воронка", "dom",
+        "Публикация работ в Pinterest + возврат трафика: спотлайт с пина, букинг звонка, IG/TG, exit-intent, лайки, UTM")
+    )
+    document.getElementById("funnel").appendChild(
+      card("pin2.html", "★2", "Pin — креативная воронка (стол)", "dom",
+        "Та же воронка внутри анимации: драг-стол из работ, CTA-карточка среди отпечатков, полароиды-IG, самолётик-TG, exit раздвигает стол, надж переворачивает работу, лайки слетаются в стопку")
+    )
+
+    const legacy = document.getElementById("legacy")
+    LEGACY.forEach(([file, num, name, desc]) => legacy.appendChild(card(file, num, name, "webgl", desc)))
+    document.getElementById("t-legacy").textContent = `Ранние прототипы Fable Animation (${LEGACY.length})`
+
+    // живое превью: одно наведение — один iframe, уходишь — сносим
+    let liveFrame = null
+    let hoverTimer = null
+    document.addEventListener("mouseover", e => {
+      const prev = e.target.closest && e.target.closest(".prev")
+      if (!prev || prev.querySelector("iframe")) return
+      clearTimeout(hoverTimer)
+      hoverTimer = setTimeout(() => {
+        if (!prev.matches(":hover")) return
+        if (liveFrame) liveFrame.remove()
+        const f = document.createElement("iframe")
+        f.src = prev.dataset.src
+        f.loading = "lazy"
+        const scale = prev.clientWidth / 1280
+        f.style.transform = `scale(${scale})`
+        f.style.height = Math.round(prev.clientHeight / scale) + "px"
+        prev.appendChild(f)
+        liveFrame = f
+      }, 220)
+    })
+    document.addEventListener("mouseout", e => {
+      const prev = e.target.closest && e.target.closest(".prev")
+      if (!prev) return
+      const f = prev.querySelector("iframe")
+      if (f && !prev.contains(e.relatedTarget)) {
+        f.remove()
+        if (liveFrame === f) liveFrame = null
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Grāmata</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #121013; user-select: none; -webkit-user-select: none; cursor: pointer;
+      display: grid; place-items: center; }
+    #book { position: relative; perspective: 2400px;
+      filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.55)); }
+    .half { position: absolute; top: 0; overflow: hidden; background: #1c1a1e; }
+    #left { left: 0; }
+    #rightUnder { right: 0; }
+    #flip {
+      position: absolute; top: 0; right: 0; transform-origin: left center;
+      transform-style: preserve-3d; will-change: transform;
+    }
+    #flip .face { position: absolute; inset: 0; backface-visibility: hidden;
+      -webkit-backface-visibility: hidden; overflow: hidden; background: #1c1a1e; }
+    #flip .back { transform: rotateY(180deg); }
+    /* spine shadow */
+    #spine { position: absolute; top: 0; left: 50%; width: 7%; height: 100%;
+      transform: translateX(-50%); pointer-events: none; z-index: 5;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.42) 50%, transparent); }
+  </style>
+</head>
+<body>
+  <div id="book">
+    <div class="half" id="left"></div>
+    <div class="half" id="rightUnder"></div>
+    <div id="flip">
+      <div class="face front"></div>
+      <div class="face back"></div>
+    </div>
+    <div id="spine"></div>
+  </div>
+  <script type="module" src="mood36.js"></script>
+</body>
+</html>

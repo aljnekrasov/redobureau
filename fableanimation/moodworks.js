@@ -49,7 +49,7 @@ export const WORKS = LIST.map(([file, w, h]) => ({
 export const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches
 
 // How many mood-board studies exist (mood1…moodTOTAL) — drives the dot nav.
-export const TOTAL = 25
+export const TOTAL = 45
 
 // Layouts are built from innerWidth/innerHeight — but prerendered or
 // embedded tabs report a 0×0 viewport until they are actually shown.

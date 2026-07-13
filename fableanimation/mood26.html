@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Spirāle</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #0d0c10; user-select: none; -webkit-user-select: none; }
+    #stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab;
+      background: radial-gradient(ellipse at 50% 50%, #18161e, #0a090c 76%); }
+    #stage.is-dragging { cursor: grabbing; }
+    #galaxy { position: absolute; left: 50%; top: 50%; width: 0; height: 0; will-change: transform; }
+    .seed { position: absolute; left: 0; top: 0; will-change: transform; overflow: hidden;
+      background: #1a1922; box-shadow: 0 8px 22px rgba(0,0,0,0.5); }
+    .seed img { width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity 0.7s ease; }
+    .seed img.on { opacity: 1; }
+    #vignette { position: fixed; inset: 0; pointer-events: none; z-index: 40;
+      background: radial-gradient(ellipse at 50% 50%, transparent 52%, rgba(0,0,0,0.55) 100%); }
+  </style>
+</head>
+<body>
+  <div id="stage"><div id="galaxy"></div></div>
+  <div id="vignette"></div>
+  <script type="module" src="mood26.js"></script>
+</body>
+</html>

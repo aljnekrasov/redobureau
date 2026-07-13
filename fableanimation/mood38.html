@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Redo — Puzle</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #101013; user-select: none; -webkit-user-select: none; cursor: pointer;
+      display: grid; place-items: center; }
+    #board { position: relative; background: #0a0a0c;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55); }
+    .tile { position: absolute; left: 0; top: 0; will-change: transform;
+      transition: transform 0.24s cubic-bezier(0.4, 0.1, 0.3, 1);
+      background-repeat: no-repeat; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35); }
+  </style>
+</head>
+<body>
+  <div id="board"></div>
+  <script type="module" src="mood38.js"></script>
+</body>
+</html>

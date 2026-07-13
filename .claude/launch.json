@@ -20,6 +20,16 @@
         "kirby/router.php"
       ],
       "port": 8124
+    },
+    {
+      "name": "fable3",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "localhost:8126",
+        "kirby/router.php"
+      ],
+      "port": 8126
     }
   ]
 }
