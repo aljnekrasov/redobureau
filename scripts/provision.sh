@@ -157,6 +157,7 @@ server {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:$FPM_SOCK;
         fastcgi_param SERVER_NAME \$host;
+        add_header Cache-Control "no-cache";
     }
 
     # Block direct access to Kirby internals.
