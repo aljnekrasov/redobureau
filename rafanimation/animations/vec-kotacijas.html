@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Kotācijas</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#F4F2E9;color:#1E2B7B}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(92vw,680px)}
+.stage svg{display:block;width:100%;height:auto}
+.st{stroke:#1E2B7B;fill:none;stroke-width:2}
+.stg{stroke:#C09A2E;fill:none;stroke-width:2}
+.fl{fill:#1E2B7B}
+.flg{fill:#C09A2E}
+.cap{max-width:500px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Kotācijas</h1><p class="en">The Ticker</p></header>
+<div class="stage"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="70" x2="480" y2="70" class="st" opacity="0.12"/><line x1="0" y1="118" x2="480" y2="118" class="st" opacity="0.12"/><line x1="0" y1="166" x2="480" y2="166" class="st" opacity="0.12"/><line x1="0" y1="214" x2="480" y2="214" class="st" opacity="0.12"/><line x1="0" y1="262" x2="480" y2="262" class="st" opacity="0.12"/><line x1="0" y1="310" x2="480" y2="310" class="st" opacity="0.12"/><polyline id="ln" class="st" stroke-width="2.5" points=""/><circle id="hd" r="5" class="flg"/></svg></div>
+<p class="cap">The market breathes and drifts upward — a line that never sleeps.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var $=function(id){return document.getElementById(id)};
+var s=42;function rnd(){s=(s*1664525+1013904223)>>>0;return s/4294967296}
+var V=[170];for(var i=1;i<2400;i++){var nv=V[i-1]+(rnd()-0.52)*26;V.push(Math.max(70,Math.min(305,nv)))}
+function f(t){var off=t*36,i0=Math.floor(off/12),fr=(off%12)/12,pts='',lx=0,ly=0;
+for(var k=0;k<=40;k++){var idx=(i0+k)%2399,x=k*12-fr*12,y=V[idx];pts+=x+','+y+' ';lx=x;ly=y;}
+$('ln').setAttribute('points',pts);$('hd').setAttribute('cx',lx);$('hd').setAttribute('cy',ly);}
+var T0=performance.now();
+function _loop(){f((performance.now()-T0)/1000);requestAnimationFrame(_loop)}
+requestAnimationFrame(_loop);
+</script>
+</body></html>

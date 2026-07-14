@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RAF AVIA — Māras zeme · Enerģija</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#0B1038;color:#F4F2E9;font-family:"Space Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif}
+#scene_root{position:fixed;inset:0;display:block;touch-action:none}
+.hud{position:fixed;z-index:1;pointer-events:none;animation:fade 1s 4s forwards}
+@keyframes fade{to{opacity:.14}}
+.tl{top:24px;left:28px;font-size:12px;font-weight:700;letter-spacing:.3em}
+.tr{top:24px;right:28px;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.tr a{color:inherit;text-decoration:none;opacity:.7;pointer-events:auto}
+.tr a:hover{opacity:1}
+.bl{bottom:22px;left:28px;font-size:12px;max-width:520px;line-height:1.5;opacity:.85}
+.bl b{display:block;font-size:15px;letter-spacing:.06em;margin-bottom:3px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+</script>
+</head>
+<body>
+<canvas id="scene_root"></canvas>
+<div class="hud tl">RAF AVIA</div>
+<div class="hud tr"><a href="../galerija.html">← galerija</a></div>
+<div class="hud bl"><b>Māras zeme · Enerģija</b>Поток энергии идёт по траектории знака земли Мары: жидкая форма дышит, золотой импульс обегает контур. Движение мыши подгоняет поток.</div>
+<script type="module">
+import * as THREE from "three"
+
+// -- Māra earth sign trajectory ------------------------------------------------
+// a rhombus with stepped teeth on every side — the sown-field sign of Māra,
+// drawn as one closed path the energy can circulate along
+const R = 4.2       // sign radius, world units
+const W = 0.62      // tooth depth
+function signPoints() {
+  const corners = [
+    new THREE.Vector2(0, R), new THREE.Vector2(R, 0),
+    new THREE.Vector2(0, -R), new THREE.Vector2(-R, 0),
+  ]
+  const pts = []
+  for (let s = 0; s < 4; s++) {
+    const A = corners[s], B = corners[(s + 1) % 4]
+    const d = B.clone().sub(A)
+    const n = new THREE.Vector2(d.y, -d.x).normalize() // outward normal
+    // battlement profile: flat — out — flat — in — flat
+    const prof = [
+      [0.00, 0], [0.14, 0], [0.16, 1], [0.36, 1], [0.38, 0],
+      [0.55, 0], [0.57, -1], [0.77, -1], [0.79, 0], [0.96, 0],
+    ]
+    for (const [t, h] of prof) {
+      const p = A.clone().addScaledVector(d, t).addScaledVector(n, h * W)
+      pts.push(new THREE.Vector3(p.x, p.y, 0))
+    }
+  }
+  return pts
+}
+const rawPts = signPoints()
+const curve = new THREE.CatmullRomCurve3(rawPts, true, "centripetal", 0.12)
+
+// -- scene ----------------------------------------------------------------------
+const INK = new THREE.Color("#0B1038")
+const BASE = new THREE.Color("#6D84D8")   // ultramarine light — body of the flow
+const PAPER = new THREE.Color("#F4F2E9")  // paper — grazing highlights
+const GOLD = new THREE.Color("#D8AC3A")   // the pulse
+
+let width = window.innerWidth || 1280, height = window.innerHeight || 720
+let windowHalfX = width / 2, windowHalfY = height / 2
+let mouseX = 0, mouseY = 0, lastX = null, lastY = null, energy = 0
+
+const canvas = document.getElementById("scene_root")
+const scene = new THREE.Scene()
+scene.background = INK
+const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 120)
+const renderer = new THREE.WebGLRenderer({ canvas, powerPreference: "high-performance", antialias: true })
+renderer.setPixelRatio(1)
+
+const NOISE_GLSL = /* glsl */ `
+  vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
+  vec4 mod289(vec4 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
+  vec4 permute(vec4 x){ return mod289(((x*34.0)+1.0)*x); }
+  vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
+  float snoise(vec3 v){
+    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+    vec3 i  = floor(v + dot(v, C.yyy));
+    vec3 x0 = v - i + dot(i, C.xxx);
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min(g.xyz, l.zxy);
+    vec3 i2 = max(g.xyz, l.zxy);
+    vec3 x1 = x0 - i1 + C.xxx;
+    vec3 x2 = x0 - i2 + C.yyy;
+    vec3 x3 = x0 - D.yyy;
+    i = mod289(i);
+    vec4 p = permute(permute(permute(
+              i.z + vec4(0.0, i1.z, i2.z, 1.0))
+            + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+            + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+    float n_ = 0.142857142857;
+    vec3 ns = n_ * D.wyz - D.xzx;
+    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_);
+    vec4 x = x_ * ns.x + ns.yyyy;
+    vec4 y = y_ * ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+    vec4 b0 = vec4(x.xy, y.xy);
+    vec4 b1 = vec4(x.zw, y.zw);
+    vec4 s0 = floor(b0) * 2.0 + 1.0;
+    vec4 s1 = floor(b1) * 2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+    vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+    vec3 p0 = vec3(a0.xy, h.x);
+    vec3 p1 = vec3(a0.zw, h.y);
+    vec3 p2 = vec3(a1.xy, h.z);
+    vec3 p3 = vec3(a1.zw, h.w);
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+    p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+  }
+`
+
+// vertex: shared liquid field (same recipe as Redo 003) + shell inflation;
+// vUv.x = position along the sign path, used by the traveling pulse
+const vertexShader = /* glsl */ `
+  uniform float uTime;
+  uniform float uShell;
+  uniform float uAmp;
+  varying vec3 vN;
+  varying vec3 vV;
+  varying float vNoise;
+  varying vec2 vUv;
+  ${NOISE_GLSL}
+  void main() {
+    vec3 n = normalize(normal);
+    float t = uTime;
+    float d =
+      0.7 * snoise(vec3(position.xy * 0.30, position.z * 0.28) + vec3(t * 0.16, 0.0, t * 0.11)) +
+      0.3 * snoise(vec3(position.xy * 0.85, t * 0.20) - vec3(t * 0.13, 0.0, 0.0));
+    vec3 p = position
+      + n * (d * uAmp)
+      + n * (uShell * (1.0 + 0.45 * d));
+    vNoise = d;
+    vUv = uv;
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    vN = normalMatrix * n;
+    vV = -mv.xyz;
+    gl_Position = projectionMatrix * mv;
+  }
+`
+
+// shells: fresnel contours + the golden packet racing along uv.x
+const fragmentShader = /* glsl */ `
+  uniform vec3 uBase;
+  uniform vec3 uPaper;
+  uniform vec3 uGold;
+  uniform float uShellF;
+  uniform float uHead;
+  uniform float uEnergy;
+  varying vec3 vN;
+  varying vec3 vV;
+  varying float vNoise;
+  varying vec2 vUv;
+  void main() {
+    vec3 N = normalize(vN);
+    vec3 V = normalize(vV);
+    float fres = pow(1.0 - abs(dot(N, V)), 3.2);
+    vec3 base = mix(uBase, uPaper, smoothstep(-0.1, 1.1, vNoise));
+    vec3 col = base * fres;
+
+    float d1 = abs(fract(vUv.x - uHead + 0.5) - 0.5);
+    float d2 = abs(fract(vUv.x - uHead + 0.045 + 0.5) - 0.5);
+    float pulse = exp(-d1 * d1 * 900.0) + 0.45 * exp(-d2 * d2 * 1600.0);
+    col += uGold * pulse * (0.9 + 1.6 * fres) * (1.0 + uEnergy);
+
+    float a = 0.006 + fres * 0.16 + pulse * 0.30;
+    gl_FragColor = vec4(col, a);
+  }
+`
+
+// core: solid dark body so the flow has a silhouette; the pulse warms it from inside
+const coreFragmentShader = /* glsl */ `
+  uniform vec3 uBase;
+  uniform vec3 uPaper;
+  uniform vec3 uGold;
+  uniform float uHead;
+  uniform float uEnergy;
+  varying vec3 vN;
+  varying vec3 vV;
+  varying float vNoise;
+  varying vec2 vUv;
+  void main() {
+    vec3 N = normalize(vN);
+    vec3 V = normalize(vV);
+    float fres = pow(1.0 - abs(dot(N, V)), 2.0);
+    vec3 base = mix(uBase, uPaper, smoothstep(-0.1, 1.1, vNoise));
+    vec3 col = base * (0.13 + 0.45 * fres);
+    float d1 = abs(fract(vUv.x - uHead + 0.5) - 0.5);
+    float pulse = exp(-d1 * d1 * 700.0);
+    col += uGold * pulse * (0.5 + 0.9 * fres) * (1.0 + uEnergy);
+    gl_FragColor = vec4(col, 1.0);
+  }
+`
+
+// -- meshes ----------------------------------------------------------------------
+const group = new THREE.Group()
+scene.add(group)
+
+const geometry = new THREE.TubeGeometry(curve, 720, 0.20, 22, true)
+const materials = []
+
+const uniformsFor = extra => Object.assign({
+  uTime: { value: 0 }, uAmp: { value: 0.14 }, uShell: { value: 0 },
+  uBase: { value: BASE }, uPaper: { value: PAPER }, uGold: { value: GOLD },
+  uHead: { value: 0 }, uEnergy: { value: 0 },
+}, extra)
+
+const core = new THREE.ShaderMaterial({
+  vertexShader, fragmentShader: coreFragmentShader,
+  uniforms: uniformsFor({}),
+})
+materials.push(core)
+const coreMesh = new THREE.Mesh(geometry, core)
+coreMesh.renderOrder = 0
+group.add(coreMesh)
+
+const SHELLS = 22, SHELL_STEP = 0.011
+for (let i = 0; i < SHELLS; i++) {
+  const m = new THREE.ShaderMaterial({
+    vertexShader, fragmentShader,
+    uniforms: uniformsFor({
+      uShell: { value: (i + 1) * SHELL_STEP },
+      uShellF: { value: i / (SHELLS - 1) },
+    }),
+    transparent: true, depthWrite: false,
+    side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+  })
+  materials.push(m)
+  const mesh = new THREE.Mesh(geometry, m)
+  mesh.renderOrder = i + 1
+  group.add(mesh)
+}
+
+// the crisp blueprint of the sign under the liquid — raksts precision below, energy above
+const bpGeo = new THREE.BufferGeometry().setFromPoints(rawPts)
+const blueprint = new THREE.LineLoop(bpGeo, new THREE.LineBasicMaterial({ color: 0x2E3B85, transparent: true, opacity: 0.85 }))
+blueprint.position.z = -0.9
+group.add(blueprint)
+
+// four still golden dots at the corners — Māra's four directions
+const cornerGeo = new THREE.BufferGeometry().setFromPoints([
+  new THREE.Vector3(0, R + 0.9, -0.4), new THREE.Vector3(R + 0.9, 0, -0.4),
+  new THREE.Vector3(0, -R - 0.9, -0.4), new THREE.Vector3(-R - 0.9, 0, -0.4),
+])
+const corners = new THREE.Points(cornerGeo, new THREE.PointsMaterial({ color: 0xD8AC3A, size: 5, sizeAttenuation: false, transparent: true, opacity: 0.9 }))
+group.add(corners)
+
+// -- sizing ----------------------------------------------------------------------
+function applySize() {
+  if (window.innerWidth && window.innerHeight) { width = window.innerWidth; height = window.innerHeight }
+  windowHalfX = width / 2; windowHalfY = height / 2
+  camera.aspect = width / height
+  const halfAngle = Math.atan(Math.tan((camera.fov * Math.PI) / 360) * camera.aspect)
+  const halfFit = Math.min(halfAngle, (camera.fov * Math.PI) / 360)
+  camera.position.z = ((R + W + 1.4) / 0.82) / Math.tan(halfFit)
+  camera.updateProjectionMatrix()
+  renderer.setSize(width, height, false)
+}
+applySize()
+window.addEventListener("resize", applySize, false)
+
+// -- interaction: pointer speed feeds the flow ------------------------------------
+canvas.addEventListener("mousemove", onPointerMove, false)
+canvas.addEventListener("touchmove", e => { e.preventDefault(); onPointerMove(e.targetTouches[0]) }, { passive: false })
+function onPointerMove(event) {
+  mouseX = ((event.clientX - windowHalfX) / windowHalfX) * 2.2
+  mouseY = ((event.clientY - windowHalfY) / windowHalfY) * 1.4
+  if (lastX !== null) {
+    const speed = Math.hypot(event.clientX - lastX, event.clientY - lastY) / Math.max(width, height)
+    energy = Math.min(energy + speed * 6, 1.4)
+  }
+  lastX = event.clientX; lastY = event.clientY
+}
+
+// -- loop --------------------------------------------------------------------------
+const clock = new THREE.Clock()
+let morphTime = 0, head = 0
+
+function render() {
+  if (width !== window.innerWidth || height !== window.innerHeight) applySize()
+  const dt = Math.min(clock.getDelta(), 0.05)
+  energy *= Math.pow(0.25, dt)
+  morphTime += dt * (0.55 + energy * 1.3)
+  head = (head + dt * (0.055 + energy * 0.16)) % 1
+
+  const amp = 0.14 + energy * 0.16
+  for (const m of materials) {
+    m.uniforms.uTime.value = morphTime
+    m.uniforms.uAmp.value = amp
+    m.uniforms.uHead.value = head
+    m.uniforms.uEnergy.value = energy
+  }
+  group.rotation.y = Math.sin(morphTime * 0.14) * 0.30 + mouseX * 0.12
+  group.rotation.x = Math.cos(morphTime * 0.11) * 0.16 - mouseY * 0.1
+  camera.position.x += (mouseX - camera.position.x) * 0.05
+  camera.position.y += (-mouseY - camera.position.y) * 0.05
+  camera.lookAt(scene.position)
+  renderer.render(scene, camera)
+}
+function animate() { requestAnimationFrame(animate); render() }
+animate()
+window.__mara = { renderer, scene, camera, group, materials, render }
+</script>
+</body>
+</html>

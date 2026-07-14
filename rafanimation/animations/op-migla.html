@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Migla · Caurspīdība</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1E2B7B;--paper:#F4F2E9;--gold:#C09A2E}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#1E2B7B;color:#F4F2E9}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(88vw,560px)}
+.stage svg{display:block;width:100%;height:auto}
+.f{fill:#F4F2E9}
+.cap{max-width:480px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Migla</h1><p class="en">The Fog · caurspīdība / opacity</p></header>
+<div class="stage"><svg id="g" viewBox="0 0 336 288" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<p class="cap">Visibility drifts across the field — depth built from transparency alone, nothing moves.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var COLS=28,ROWS=24,C=12,B=9.4,NS='http://www.w3.org/2000/svg';
+var svg=document.getElementById('g'),cells=[];
+function hash(x,y){var h=Math.sin(x*127.1+y*311.7)*43758.5453;return h-Math.floor(h)}
+for(var iy=0;iy<ROWS;iy++)for(var ix=0;ix<COLS;ix++){
+ var r=document.createElementNS(NS,'rect');
+ r.setAttribute('x',(ix*C+1.3).toFixed(1));r.setAttribute('y',(iy*C+1.3).toFixed(1));
+ r.setAttribute('width',B);r.setAttribute('height',B);r.setAttribute('class','f');
+ svg.appendChild(r);
+ cells.push({e:r,x:ix,y:iy,h:hash(ix,iy)});
+}
+var T0=performance.now();
+function frame(){
+ var t=(performance.now()-T0)/1000;
+ for(var i=0;i<cells.length;i++){
+  var c=cells[i];
+  var v=0.34
+   +0.30*Math.sin(c.x*0.52+c.y*0.34-t*0.85+c.h*0.9)
+   +0.22*Math.sin(c.x*0.21-c.y*0.47+t*0.55+2.1)
+   +0.16*Math.sin((c.x+c.y)*0.93+t*1.6+c.h*6.28)
+   +(c.h-0.5)*0.14;
+  c.e.style.opacity=(v<0.04?0.04:v>0.95?0.95:v).toFixed(3);
+ }
+ requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);</script>
+</body></html>

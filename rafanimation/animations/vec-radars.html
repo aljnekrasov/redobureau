@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Radars</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#1E2B7B;color:#F4F2E9}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(92vw,680px)}
+.stage svg{display:block;width:100%;height:auto}
+.st{stroke:#F4F2E9;fill:none;stroke-width:2}
+.stg{stroke:#C09A2E;fill:none;stroke-width:2}
+.fl{fill:#F4F2E9}
+.flg{fill:#C09A2E}
+.cap{max-width:500px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Radars</h1><p class="en">The Sweep</p></header>
+<div class="stage"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><circle cx="240" cy="185" r="55" class="st" opacity="0.3"/><circle cx="240" cy="185" r="100" class="st" opacity="0.3"/><circle cx="240" cy="185" r="145" class="st" opacity="0.3"/>
+<line x1="95" y1="185" x2="385" y2="185" class="st" opacity="0.15"/><line x1="240" y1="40" x2="240" y2="330" class="st" opacity="0.15"/>
+<g id="rot"><path d="M240,185 L240,40 A145,145 0 0 1 302,54 Z" class="fl" opacity="0.13"/><line x1="240" y1="185" x2="240" y2="40" class="st" stroke-width="2.5"/></g>
+<g id="b0" transform="translate(297.3,144.8)"><rect x="-6" y="-6" width="12" height="12" class="fl" transform="rotate(45)"/></g><g id="b1" transform="translate(300.0,288.9)"><rect x="-6" y="-6" width="12" height="12" class="fl" transform="rotate(45)"/></g><g id="b2" transform="translate(148.2,209.6)"><rect x="-6" y="-6" width="12" height="12" class="flg" transform="rotate(45)"/></g><g id="b3" transform="translate(170.0,63.8)"><rect x="-6" y="-6" width="12" height="12" class="fl" transform="rotate(45)"/></g><rect x="236" y="181" width="8" height="8" class="fl" transform="rotate(45 240 185)"/></svg></div>
+<p class="cap">Everything on the screen, nothing out of sight — the sweep keeps watch.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var $=function(id){return document.getElementById(id)};
+var BA=[55,150,255,330];
+function f(t){var ang=(t*85)%360;$('rot').setAttribute('transform','rotate('+ang+' 240 185)');
+for(var i=0;i<4;i++){var da=((ang-BA[i])%360+360)%360,o=Math.exp(-da/26);
+var el=$('b'+i);el.style.opacity=0.15+0.85*o;
+el.setAttribute('transform',el.getAttribute('transform').replace(/ scale.*/,'')+' scale('+(1+0.35*o)+')');}}
+var T0=performance.now();
+function _loop(){f((performance.now()-T0)/1000);requestAnimationFrame(_loop)}
+requestAnimationFrame(_loop);
+</script>
+</body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Horizonts</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#1E2B7B;color:#F4F2E9}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(92vw,680px)}
+.stage svg{display:block;width:100%;height:auto}
+.st{stroke:#F4F2E9;fill:none;stroke-width:2}
+.stg{stroke:#C09A2E;fill:none;stroke-width:2}
+.fl{fill:#F4F2E9}
+.flg{fill:#C09A2E}
+.cap{max-width:500px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Horizonts</h1><p class="en">The Climb</p></header>
+<div class="stage"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="322" x2="480" y2="322" class="st" opacity="0.22"/><rect x="60" y="60" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 62 62)"/><rect x="150" y="100" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 152 102)"/><rect x="330" y="40" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 332 42)"/><rect x="420" y="130" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 422 132)"/><rect x="250" y="80" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 252 82)"/><rect x="390" y="210" width="4" height="4" class="fl" opacity="0.3" transform="rotate(45 392 212)"/>
+<path class="st" opacity="0.14" stroke-dasharray="3 8" d="M20,320 C180,318 300,230 466,52"/>
+<path id="tr" class="st" stroke-width="2.5" d="M20,320 C180,318 300,230 466,52"/>
+<g id="pl"><rect x="-7.5" y="-7.5" width="15" height="15" class="fl" transform="rotate(45)"/></g></svg></div>
+<p class="cap">One clean line from the runway to altitude — departure drawn in a single stroke.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var $=function(id){return document.getElementById(id)};
+var p=$('tr'),L=p.getTotalLength(),pl=$('pl');
+function f(t){var u=(t%6)/6,e=u<0.5?2*u*u:1-Math.pow(-2*u+2,2)/2,d=Math.max(0.01,e*L);
+p.setAttribute('stroke-dasharray',d+' '+L);
+var a=p.getPointAtLength(d),b=p.getPointAtLength(Math.max(0,d-5));
+var ang=Math.atan2(a.y-b.y,a.x-b.x)*57.3;
+pl.setAttribute('transform','translate('+a.x+','+a.y+') rotate('+ang+')');
+var fade=u>0.93?(1-u)/0.07:1;p.style.opacity=fade;pl.style.opacity=fade;}
+var T0=performance.now();
+function _loop(){f((performance.now()-T0)/1000);requestAnimationFrame(_loop)}
+requestAnimationFrame(_loop);
+</script>
+</body></html>

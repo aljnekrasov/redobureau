@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Skrejceļš</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1E2B7B;--paper:#F4F2E9;--gold:#C09A2E}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#1E2B7B;color:#F4F2E9}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(88vw,560px)}
+.stage svg{display:block;width:100%;height:auto}
+.f{fill:#F4F2E9}.au{fill:var(--gold)}
+.cap{max-width:480px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Skrejceļš</h1><p class="en">Runway</p></header>
+<div class="stage"><svg viewBox="0 0 300 336" xmlns="http://www.w3.org/2000/svg" ><rect class="f" x="50.4" y="13.2" width="7.2" height="309.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":1.8}'/><rect class="f" x="86.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":3.15}'/><rect class="f" x="86.4" y="121.2" width="7.2" height="33.6"  data-an='{"k":"soft","a":0.55,"b":0.45,"w":2.4,"ph":0}'/><rect class="f" x="98.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":3.6}'/><rect class="f" x="98.4" y="121.2" width="7.2" height="33.6"  data-an='{"k":"soft","a":0.55,"b":0.45,"w":2.4,"ph":0}'/><rect class="f" x="110.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":4.05}'/><rect class="f" x="122.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":4.5}'/><rect class="f" x="146.4" y="109.2" width="7.2" height="21.6"  data-an='{"k":"wave","p":0.32,"T":2.4}'/><rect class="f" x="146.4" y="157.2" width="7.2" height="21.6"  data-an='{"k":"wave","p":0.46,"T":2.4}'/><rect class="f" x="146.4" y="205.2" width="7.2" height="21.6"  data-an='{"k":"wave","p":0.61,"T":2.4}'/><rect class="f" x="146.4" y="253.2" width="7.2" height="21.6"  data-an='{"k":"wave","p":0.75,"T":2.4}'/><rect class="f" x="170.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":6.3}'/><rect class="f" x="182.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":6.75}'/><rect class="f" x="194.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":7.2}'/><rect class="f" x="194.4" y="121.2" width="7.2" height="33.6"  data-an='{"k":"soft","a":0.55,"b":0.45,"w":2.4,"ph":3.14}'/><rect class="f" x="206.4" y="25.2" width="7.2" height="57.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":7.65}'/><rect class="f" x="206.4" y="121.2" width="7.2" height="33.6"  data-an='{"k":"soft","a":0.55,"b":0.45,"w":2.4,"ph":3.14}'/><rect class="f" x="242.4" y="13.2" width="7.2" height="309.6"  data-an='{"k":"soft","a":0.6,"b":0.4,"w":1.6,"ph":9}'/></svg></div>
+<p class="cap">Threshold bars, centerline and touchdown markers — the runway as a woven belt.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var els=[].slice.call(document.querySelectorAll('[data-an]')).map(function(e){return{e:e,d:JSON.parse(e.getAttribute('data-an'))}});
+var T0=performance.now();
+function ez(u){return u<=0?0:u>=1?1:u*u*(3-2*u)}
+function frame(){
+ var t=(performance.now()-T0)/1000;
+ for(var i=0;i<els.length;i++){
+  var d=els[i].d,st=els[i].e.style,o=1,tr='';
+  var cy=d.T?(t%d.T):t;
+  if(d.k==='stitch'){var a=ez((cy-d.at)/0.35),b=ez((cy-(d.T-1.1))/0.6);o=a*(1-b);tr='scale('+(0.25+0.75*o)+')';}
+  else if(d.k==='wave'){var u=(t/d.T)%1,ds=((u-d.p)%1+1)%1;o=ds<0.16?0.3+0.7*(1-ds/0.16):0.3;}
+  else if(d.k==='soft'){o=d.a+d.b*Math.sin(t*d.w+d.ph);}
+  else if(d.k==='grow'){var s=ez((cy-d.at)/0.7),f=1-ez((cy-(d.T-0.9))/0.5);s=s*f;tr='scaleY('+s+')';o=f;if(d.g&&s>0.99){o=0.7+0.3*Math.sin(t*3);}}
+  else if(d.k==='breathe'){tr='scaleY('+(1+d.amp*Math.sin(t*d.w+d.ph))+')';}
+  else if(d.k==='flicker'){o=(Math.sin(t*d.w+d.ph)*Math.sin(t*d.w2+d.ph2)>0.15)?1:0.15;}
+  else if(d.k==='ring'){var ph=((cy-d.at)%d.T+d.T)%d.T;o=0.3+0.7*Math.exp(-1.6*ph);}
+  else if(d.k==='core'){o=0.75+0.25*Math.sin(t*2);tr='scale('+(1+0.12*Math.sin(t*2))+')';}
+  else if(d.k==='fall'){tr='translateY('+((t*d.v)%d.wrap)+'px)';}
+  st.opacity=o;if(tr)st.transform=tr;
+ }
+ requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);</script>
+</body></html>

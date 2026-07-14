@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Spirāle</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#1E2B7B;color:#F4F2E9}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(92vw,680px)}
+.stage svg{display:block;width:100%;height:auto}
+.st{stroke:#F4F2E9;fill:none;stroke-width:2}
+.stg{stroke:#C09A2E;fill:none;stroke-width:2}
+.fl{fill:#F4F2E9}
+.flg{fill:#C09A2E}
+.cap{max-width:500px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Spirāle</h1><p class="en">The Ascent</p></header>
+<div class="stage"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><line x1="240" y1="20" x2="240" y2="345" class="st" opacity="0.12"/><g id="t0" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t1" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t2" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t3" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t4" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t5" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t6" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t7" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t8" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t9" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t10" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t11" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t12" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t13" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t14" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t15" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t16" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t17" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t18" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t19" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t20" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t21" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t22" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t23" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t24" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="t25" opacity="0"><rect x="-4" y="-4" width="8" height="8" class="fl" transform="rotate(45)"/></g><g id="hd"><rect x="-7" y="-7" width="14" height="14" class="fl" transform="rotate(45)"/></g><g id="top" transform="translate(240,26)" opacity="0"><rect x="-8" y="-8" width="16" height="16" class="flg" transform="rotate(45)"/></g></svg></div>
+<p class="cap">Tighter circles, higher altitude — the climb converges on the star.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var $=function(id){return document.getElementById(id)};
+function pos(u){var R=26+96*(1-u);return[240+R*Math.sin(u*14),335-300*u]}
+function f(t){var T=5,u=(t%T)/T,p=pos(u);
+$('hd').setAttribute('transform','translate('+p[0]+','+p[1]+') rotate('+(t*90)+') scale('+(0.6+0.5*u)+')');
+for(var i=0;i<26;i++){var ug=u-(i+1)*0.011,el=$('t'+i);
+if(ug<0){el.style.opacity=0;continue}
+var q=pos(ug);el.setAttribute('transform','translate('+q[0]+','+q[1]+') scale('+(1-i/30)+')');el.style.opacity=(1-i/26)*0.4;}
+$('top').style.opacity=u>0.9?(u-0.9)/0.1:0;}
+var T0=performance.now();
+function _loop(){f((performance.now()-T0)/1000);requestAnimationFrame(_loop)}
+requestAnimationFrame(_loop);
+</script>
+</body></html>

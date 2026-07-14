@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="lv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RAF AVIA — Plūsmas līnijas</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:44px 20px;font-family:'Space Grotesk',Helvetica,Arial,sans-serif;background:#F4F2E9;color:#1E2B7B}
+a{color:inherit;opacity:.55;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+a:hover{opacity:1}
+header{text-align:center}
+.logo{font-size:12px;font-weight:700;letter-spacing:.32em;opacity:.65}
+h1{margin:10px 0 4px;font-size:30px;letter-spacing:.04em;font-weight:700}
+.en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin:0}
+.stage{width:min(92vw,680px)}
+.stage svg{display:block;width:100%;height:auto}
+.st{stroke:#1E2B7B;fill:none;stroke-width:2}
+.stg{stroke:#C09A2E;fill:none;stroke-width:2}
+.fl{fill:#1E2B7B}
+.flg{fill:#C09A2E}
+.cap{max-width:500px;text-align:center;font-size:13px;line-height:1.55;opacity:.62;margin:0}
+</style></head><body>
+<header><div class="logo">RAF AVIA</div><h1>Plūsmas līnijas</h1><p class="en">Laminar Flow</p></header>
+<div class="stage"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><polyline id="w0" class="st" opacity="0.8" points=""/><polyline id="w1" class="st" opacity="0.8" points=""/><polyline id="w2" class="st" opacity="0.8" points=""/><polyline id="w3" class="st" opacity="0.8" points=""/><polyline id="w4" class="st" opacity="0.8" points=""/><polyline id="w5" class="st" opacity="0.8" points=""/><polyline id="w6" class="st" opacity="0.8" points=""/><polyline id="w7" class="st" opacity="0.8" points=""/><g transform="translate(240,180)"><rect x="-34" y="-34" width="68" height="68" class="st" stroke-width="2.5" transform="rotate(45)"/><rect x="-8" y="-8" width="16" height="16" class="fl" transform="rotate(45)"/></g></svg></div>
+<p class="cap">Air parts around the wing and closes again — lift, drawn as calm lines.</p>
+<a href="../index.html">← Raksti / visi 40</a>
+<script>
+var $=function(id){return document.getElementById(id)};
+var B=[50,90,130,165,195,230,270,310];
+function f(t){for(var i=0;i<8;i++){var b=B[i],s=b<180?-1:1,pts='';
+for(var x=0;x<=480;x+=12){var dy=9*Math.sin(0.028*x-2.4*t+i*0.9);
+var dx2=x-240,dy2=b-180,d2=dx2*dx2+dy2*dy2;
+var bulge=s*3200/(d2/30+95);
+pts+=x+','+(b+dy+bulge)+' ';}
+$('w'+i).setAttribute('points',pts);}}
+var T0=performance.now();
+function _loop(){f((performance.now()-T0)/1000);requestAnimationFrame(_loop)}
+requestAnimationFrame(_loop);
+</script>
+</body></html>
