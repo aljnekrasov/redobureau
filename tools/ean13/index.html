@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EAN-13 генератор — Redo Bureau</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--fg:#000;--muted:#999;--bg:#fff;--soft:#f5f5f5;--accent:#5A4FCF;--line:#e6e6e6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:48px 24px 80px}
+a{color:var(--fg)}
+h1{font-size:clamp(28px,5vw,44px);font-weight:400;letter-spacing:-.02em;margin-bottom:6px}
+.lede{color:var(--muted);margin-bottom:40px}
+.grid{display:grid;gap:40px;grid-template-columns:1fr}
+@media(min-width:760px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+.panel label{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+input[type=text]{width:100%;height:52px;padding:0 14px;font:inherit;font-size:20px;letter-spacing:.06em;border:1px solid var(--fg);background:var(--bg);border-radius:0;-webkit-appearance:none}
+input[type=text]:focus{outline:none;border-color:var(--accent)}
+.msg{margin-top:10px;font-size:14px;min-height:20px}
+.msg.ok{color:var(--accent)}
+.msg.err{color:#c0392b}
+.field{margin-bottom:26px}
+.row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--accent)}
+.magval{width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.checks{display:grid;gap:10px;margin-top:6px}
+.checks label{display:flex;align-items:center;gap:9px;text-transform:none;letter-spacing:0;font-size:15px;color:var(--fg)}
+.checks input{accent-color:var(--accent);width:16px;height:16px}
+.preview{border:1px solid var(--line);background:var(--soft);padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px}
+.preview svg{max-width:100%;height:auto}
+.dims{margin-top:14px;color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{height:46px;padding:0 22px;display:inline-flex;align-items:center;font:inherit;font-size:15px;border:1px solid var(--fg);background:var(--bg);color:var(--fg);cursor:pointer;border-radius:0;text-decoration:none;transition:background .2s,color .2s,border-color .2s}
+.btn--primary{background:var(--fg);color:var(--bg)}
+.btn--primary:hover{background:var(--accent);border-color:var(--accent)}
+.btn--ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.foot{margin-top:56px;color:var(--muted);font-size:13px}
+.foot a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Генератор штрихкодов EAN-13</h1>
+  <p class="lede">Векторный SVG для препресса. Цифры — кривые OCR-B, никаких шрифтов и библиотек. Всё считается в браузере.</p>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="field">
+        <label for="code">Код — 12 или 13 цифр</label>
+        <input id="code" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="4670283011268">
+        <div id="msg" class="msg"></div>
+      </div>
+
+      <div class="field">
+        <label for="mag">Масштаб <span id="magLabel">100%</span></label>
+        <div class="row">
+          <input id="mag" type="range" min="80" max="200" step="5" value="100">
+          <span class="magval" id="magval">100%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Опции</label>
+        <div class="checks">
+          <label><input id="opt-gt" type="checkbox" checked> индикатор «&gt;» в правой тихой зоне</label>
+          <label><input id="opt-bg" type="checkbox" checked> белая подложка</label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="preview" id="preview"></div>
+      <div class="dims" id="dims"></div>
+      <div class="actions">
+        <button class="btn btn--primary" id="download">Скачать SVG</button>
+        <button class="btn btn--ghost" id="copy">Скопировать SVG-код</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <a href="/">← Redo Bureau</a>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ── OCR-B glyph contours (inlined ocrb_glyphs.json) ────────────────── */
+const OCRB = {"unitsPerEm":1024,"glyphs":{"0":{"bbox":[120,-10,764,982],"d":"M442 110Q370 110 348 117Q302 130 284 183Q254 278 254 486V498Q254 676 284 789Q296 839 348 855Q369 862 442 862Q515 862 536 855Q588 839 600 789Q630 670 630 486Q630 285 600 183Q586 136 536 117Q518 110 442 110ZM442 -10Q613 -10 673 51Q764 139 764 486Q764 803 673 921Q627 982 442 982Q265 982 211 921Q120 818 120 486Q120 142 211 51Q278 -10 442 -10Z"},"1":{"bbox":[270,0,638,962],"d":"M500 0H638V962H498L270 776V602L500 800Z"},"2":{"bbox":[140,-1,720,977],"d":"M140 -1H705V119H281Q282 184 308 246Q337 312 483 401Q574 456 651 536Q720 606 720 712Q720 836 638 906Q556 977 434 977Q298 976 155 905Q154 888 154 843Q154 791 155 760Q155 761 221 800Q318 857 434 857Q482 857 519 834Q574 802 584 762Q591 735 591 710Q591 672 573 647Q525 576 392 491Q224 383 173 274Q140 216 140 -1Z"},"3":{"bbox":[130,-9,730,967],"d":"M464 596 697 832V967H130V847H547L287 584V485H418Q511 485 563 428Q611 378 611 301V295Q611 235 557 184Q498 126 400 116Q370 114 356 114Q277 114 211 142L130 184V52Q251 -9 374 -9Q388 -9 418 -7Q561 6 656 101Q730 175 730 302V305Q730 431 635 523Q590 570 517 586Z"},"4":{"bbox":[130,-9,742,964],"d":"M265 331 553 964H427L130 337V211H505V-9H625V211H742V331H625V526H505V331Z"},"5":{"bbox":[120,-3,662,965],"d":"M154 965 123 526Q143 528 174 532Q206 535 215 536Q256 539 283 539Q396 539 461 489Q525 440 525 353Q525 239 432 176Q338 114 171 114H140Q136 114 130 114Q123 115 120 116V-3H157Q394 -3 528 90Q662 183 662 345Q662 481 568 568Q474 653 328 653H287Q270 653 262 652L273 850H633V965Z"},"6":{"bbox":[130,-10,768,967],"d":"M451 496Q546 496 599 428Q640 373 645 305V294Q645 230 603 177Q545 104 451 104Q372 104 320 156Q261 217 259 302V305Q259 389 320 449Q367 496 451 496ZM367 605 510 785 679 967H511Q325 787 235 632Q132 446 130 326Q130 156 236 60Q307 -10 453 -10Q590 -10 694 94Q765 167 768 305Q768 422 700 505Q624 596 493 614Q471 617 449 617Q406 617 367 605Z"},"7":{"bbox":[140,1,758,967],"d":"M611 847Q610 840 593 799Q588 787 428 604Q350 517 296 334Q280 276 275 1H398L404 181Q422 338 440 378Q503 523 596 616Q743 763 755 910Q758 949 758 967H140V847Z"},"8":{"bbox":[120,-11,762,982],"d":"M444 606Q370 641 347 664Q308 703 303 751V762Q303 806 331 831Q371 862 444 862Q518 862 553 831Q588 799 588 754V751Q586 710 546 670Q523 647 444 606ZM444 109Q334 110 291 160Q253 204 253 255Q253 263 255 277Q264 338 329 405Q363 441 444 472Q539 436 585 384Q635 328 635 262V259Q634 187 591 154Q532 109 448 109ZM329 543 287 516Q259 509 197 442Q120 363 120 259Q120 137 179 78Q268 -11 444 -11Q622 -11 714 96Q762 152 762 258Q762 354 702 427Q648 493 589 523L558 543L583 562Q678 629 701 688Q716 733 716 773Q716 836 677 889Q605 982 444 982H432Q338 982 276 951Q207 918 180 822Q172 793 172 767Q172 712 204 654Q229 609 289 571Z"},"9":{"bbox":[120,-1,758,976],"d":"M437 470Q342 470 289 538Q248 593 243 661V672Q243 736 285 789Q343 862 437 862Q516 862 568 810Q627 749 629 664V661Q629 577 568 517Q521 470 437 470ZM521 361 378 181 209 -1H377Q563 179 653 334Q756 520 758 640Q758 810 652 906Q581 976 435 976Q298 976 194 872Q123 799 120 661Q120 544 188 461Q264 370 395 352Q418 349 439 349Q482 349 521 361Z"},">":{"bbox":[127,9,759,890],"d":"M577 453 127 159V9L759 431V476L127 890V738Z"}}};
+
+/* ── EAN-13 encoding (GS1) ──────────────────────────────────────────── */
+const L = ["0001101","0011001","0010011","0111101","0100011",
+           "0110001","0101111","0111011","0110111","0001011"];
+const G = ["0100111","0110011","0011011","0100001","0011101",
+           "0111001","0000101","0010001","0001001","0010111"];
+const R = L.map(c => [...c].map(b => b === "0" ? "1" : "0").join(""));
+const PARITY = ["LLLLLL","LLGLGG","LLGGLG","LLGGGL","LGLLGG",
+                "LGGLLG","LGGGLL","LGLGLG","LGLGGL","LGGLGL"];
+
+function checkDigit(code12){
+  let sum = 0;
+  for (let i = 0; i < 12; i++) sum += (+code12[i]) * (i % 2 === 0 ? 1 : 3);
+  return (10 - sum % 10) % 10;
+}
+
+function encode(code13){
+  const first = +code13[0];
+  const par = PARITY[first];
+  let bits = "101";
+  for (let i = 0; i < 6; i++){
+    const d = +code13[1 + i];
+    bits += (par[i] === "L" ? L : G)[d];
+  }
+  bits += "01010";
+  for (let i = 0; i < 6; i++) bits += R[+code13[7 + i]];
+  bits += "101";
+  return bits;
+}
+
+/* ── Geometry (mm at 100%, everything × mag) ────────────────────────── */
+const X0 = 0.330, QUIET_L = 11, TOTAL = 113;
+const H_DATA0 = 22.85, H_GUARD0 = 24.50, H_FULL0 = 25.93, DIGIT_H0 = 2.75;
+const GUARD = new Set([0,1,2,45,46,47,48,49,92,93,94]);
+
+function fmt(n){ return (Math.round(n * 1000) / 1000).toString(); }
+
+function buildSVG(code13, mag, showGt, showBg){
+  const bits = encode(code13);
+  const X = X0 * mag;
+  const Wt = TOTAL * X;
+  const Hdata = H_DATA0 * mag, Hguard = H_GUARD0 * mag, Hfull = H_FULL0 * mag;
+  const digitTop = Hdata + X;
+  const scale = (DIGIT_H0 * mag) / (OCRB.glyphs["0"].bbox[3] - OCRB.glyphs["0"].bbox[1]);
+  const baseline = digitTop + OCRB.glyphs["0"].bbox[3] * scale;
+
+  // Bars — merge consecutive 1-modules, guard height only if every module is guard.
+  let d = "";
+  let i = 0;
+  while (i < 95){
+    if (bits[i] === "1"){
+      let j = i;
+      while (j < 95 && bits[j] === "1") j++;
+      let allGuard = true;
+      for (let k = i; k < j; k++) if (!GUARD.has(k)) { allGuard = false; break; }
+      const x = (QUIET_L + i) * X;
+      const w = (j - i) * X;
+      const h = allGuard ? Hguard : Hdata;
+      d += `M${fmt(x)} 0h${fmt(w)}v${fmt(h)}h-${fmt(w)}Z`;
+      i = j;
+    } else i++;
+  }
+
+  // Digits — first digit left of start, then two groups of six.
+  const glyph = (ch, tx) => {
+    const g = OCRB.glyphs[ch];
+    return `<path d="${g.d}" transform="matrix(${fmt(scale)} 0 0 ${fmt(-scale)} ${fmt(tx)} ${fmt(baseline)})"/>`;
+  };
+  const cx = (ch, centerX) => {
+    const b = OCRB.glyphs[ch].bbox;
+    return centerX - ((b[0] + b[2]) / 2) * scale;
+  };
+  const rightEdge = (ch, edgeX) => edgeX - OCRB.glyphs[ch].bbox[2] * scale;
+
+  let digits = "";
+  digits += glyph(code13[0], rightEdge(code13[0], (QUIET_L - 1) * X));         // first digit
+  for (let k = 0; k < 6; k++)
+    digits += glyph(code13[1 + k], cx(code13[1 + k], (17.5 + 7 * k) * X));     // left group
+  for (let k = 0; k < 6; k++)
+    digits += glyph(code13[7 + k], cx(code13[7 + k], (64.5 + 7 * k) * X));     // right group
+  if (showGt)
+    digits += glyph(">", rightEdge(">", TOTAL * X));                           // quiet-zone indicator
+
+  const bg = showBg ? `<rect id="background" width="${fmt(Wt)}" height="${fmt(Hfull)}" fill="#fff"/>` : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${fmt(Wt)}mm" height="${fmt(Hfull)}mm" viewBox="0 0 ${fmt(Wt)} ${fmt(Hfull)}">${bg}<path id="bars" fill="#000" d="${d}"/><g id="digits" fill="#000">${digits}</g></svg>`;
+}
+
+/* ── UI ─────────────────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const codeEl = $("code"), msgEl = $("msg"), magEl = $("mag"),
+      previewEl = $("preview"), dimsEl = $("dims"),
+      dlBtn = $("download"), copyBtn = $("copy"),
+      optGt = $("opt-gt"), optBg = $("opt-bg");
+let currentSVG = null, currentCode = null;
+
+function render(){
+  const raw = codeEl.value.replace(/[\s-]/g, "");
+  codeEl.value = raw;
+  const mag = (+magEl.value) / 100;
+  $("magLabel").textContent = $("magval").textContent = magEl.value + "%";
+
+  let code13 = null, ok = "", err = "";
+  if (!/^\d+$/.test(raw)){
+    err = "Только цифры. Пробелы и дефисы можно — они вычищаются.";
+  } else if (raw.length === 12){
+    const cd = checkDigit(raw);
+    code13 = raw + cd;
+    ok = "контрольная цифра: " + cd;
+  } else if (raw.length === 13){
+    const cd = checkDigit(raw.slice(0, 12));
+    if (+raw[12] !== cd) err = "контрольная должна быть " + cd;
+    else code13 = raw;
+  } else {
+    err = "Нужно 12 или 13 цифр, сейчас " + raw.length + ".";
+  }
+
+  msgEl.className = "msg " + (err ? "err" : "ok");
+  msgEl.textContent = err || ok;
+
+  if (!code13){
+    previewEl.innerHTML = "";
+    dimsEl.textContent = "";
+    currentSVG = null; currentCode = null;
+    dlBtn.disabled = copyBtn.disabled = true;
+    return;
+  }
+
+  currentSVG = buildSVG(code13, mag, optGt.checked, optBg.checked);
+  currentCode = code13;
+  previewEl.innerHTML = currentSVG;
+  const X = X0 * mag;
+  dimsEl.textContent = `${fmt(TOTAL * X)} × ${fmt(H_FULL0 * mag)} мм, модуль ${fmt(X)} мм`;
+  dlBtn.disabled = copyBtn.disabled = false;
+}
+
+dlBtn.addEventListener("click", () => {
+  if (!currentSVG) return;
+  const blob = new Blob([currentSVG], { type: "image/svg+xml" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ean13_" + currentCode + ".svg";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+copyBtn.addEventListener("click", async () => {
+  if (!currentSVG) return;
+  try { await navigator.clipboard.writeText(currentSVG); copyBtn.textContent = "Скопировано ✓"; }
+  catch (e) { copyBtn.textContent = "Не вышло — выделите вручную"; }
+  setTimeout(() => copyBtn.textContent = "Скопировать SVG-код", 1500);
+});
+[codeEl, magEl, optGt, optBg].forEach(el => {
+  el.addEventListener("input", render);
+  el.addEventListener("change", render);
+});
+
+/* ── Self-tests (spec test vectors) ─────────────────────────────────── */
+(function tests(){
+  const VEC = "10101011110010001000110100100110001001010000101010111001011001101100110110110010100001001000101";
+  const results = [
+    ["checkDigit 467028301126 === 8", checkDigit("467028301126") === 8],
+    ["checkDigit 400638133393 === 1", checkDigit("400638133393") === 1],
+    ["encode 4670283011268 === vector", encode("4670283011268") === VEC],
+    ["width@100% === 37.29", fmt(TOTAL * X0 * 1) === "37.29"],
+    ["height@100% === 25.93", fmt(H_FULL0 * 1) === "25.93"],
+    ["width@150% === 55.935", fmt(TOTAL * X0 * 1.5) === "55.935"],
+    ["height@150% === 38.895", fmt(H_FULL0 * 1.5) === "38.895"],
+  ];
+  results.forEach(([name, pass]) => console.assert(pass, "TEST FAIL: " + name));
+  if (results.every(r => r[1])) console.log("EAN-13 self-tests: all " + results.length + " passed");
+})();
+
+render();
+</script>
+</body>
+</html>

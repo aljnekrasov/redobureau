@@ -1,0 +1,53 @@
+title: Tools
+icon: 🧰
+
+status:
+  draft:
+    label: Draft
+  listed:
+    label: Published
+
+fields:
+  intro:
+    label: Intro
+    type: textarea
+    size: small
+    buttons: false
+  items:
+    label: Tools
+    type: structure
+    columns:
+      name:
+      url:
+    fields:
+      name:
+        label: Name
+        type: text
+      desc:
+        label: Description
+        type: textarea
+        size: small
+        buttons: false
+      url:
+        label: URL
+        type: text
+        placeholder: /tools/ean13/
+      tag:
+        label: Tag
+        type: text
+        width: 1/2
+  main_title:
+    label: Meta title
+    type: text
+  sharetext:
+    label: Meta description
+    type: textarea
+    size: small
+    buttons: false
+  audience:
+    label: Audience
+    type: checkboxes
+    options:
+      intl: International (redobureau.com)
+      ru: Russia (redobureau.ru)
+    default: [intl, ru]

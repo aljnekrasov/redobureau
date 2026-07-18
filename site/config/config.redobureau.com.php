@@ -50,6 +50,7 @@ return [
   // git pull = launch.
   'site.navJournal' => false,
   'site.navShop'    => false,
+  'site.navTools'   => true,
 
   // Stripe secret key — NEVER commit it (public repo). Lives on the
   // server: `echo 'sk_live_…' > /var/www/.stripe-secret` (root:www-data,

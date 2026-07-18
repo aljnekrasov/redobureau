@@ -22,6 +22,7 @@ return [
   // Hidden-section switches (see .com config for semantics).
   'site.navJournal' => false,
   'site.navShop'    => false,
+  'site.navTools'   => true,
 
   // Contact form addresses. SMTP not configured yet — see note in .com config.
   'site.contactFrom' => 'noreply@redobureau.ru',

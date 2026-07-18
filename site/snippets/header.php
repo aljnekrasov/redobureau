@@ -206,6 +206,9 @@
                         <?php if (option('site.navShop', false) && ($shop = page('shop'))) : ?>
                         <a href="<?= url($shop->url()) ?>"><?= $shop->title() ?></a>
                         <?php endif ?>
+                        <?php if (option('site.navTools', false) && ($tools = page('tools'))) : ?>
+                        <a href="<?= url($tools->url()) ?>"><?= $tools->title() ?></a>
+                        <?php endif ?>
                         <a href="<?= $kirby->language()->url() . '' . '/contacts' ?>"><?= t('contacts') ?></a>
                         <?php snippet('language-switcher') ?>
                         <?php if ($globalLink = option('site.globalLink')) : ?>
