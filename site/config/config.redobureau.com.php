@@ -48,9 +48,9 @@ return [
   // Hidden-section switches: flip to true to reveal the nav link, drop
   // the noindex meta and let the section into the sitemap. One line +
   // git pull = launch.
-  'site.navJournal' => false,
+  'site.navJournal' => true,
   'site.navShop'    => false,
-  'site.navTools'   => true,
+
 
   // Stripe secret key — NEVER commit it (public repo). Lives on the
   // server: `echo 'sk_live_…' > /var/www/.stripe-secret` (root:www-data,

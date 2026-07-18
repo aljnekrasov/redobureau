@@ -18,12 +18,29 @@
                 <h2 class="j-title"><?= $page->title() ?></h2>
             </div>
 
-            <!-- Playground: little things to poke at -->
+            <!-- Штуки: functional tools + canvas toys, all in one strip -->
+            <?php $tools = $page->children()->listed()
+                ->filter(fn($p) => $p->intendedTemplate()->name() !== 'story')
+                ->filter(fn($p) => $p->audienceAllows()); ?>
             <div class="j-play">
                 <div class="j-play-head">
-                    <?= t('playground') ?>
-                    <span><?= t('playground_hint') ?></span>
+                    <?= t('things') ?>
+                    <span><?= t('things_hint') ?></span>
                 </div>
+
+                <?php if ($tools->count()) : ?>
+                <div class="j-tools">
+                    <?php foreach ($tools as $tool) : ?>
+                    <a class="j-tool" href="<?= url($tool->url()) ?>">
+                        <div class="j-tool-name"><?= $tool->title() ?> <span>→</span></div>
+                        <?php if ($tool->intro()->isNotEmpty()) : ?>
+                        <div class="j-tool-desc"><?= $tool->intro() ?></div>
+                        <?php endif ?>
+                    </a>
+                    <?php endforeach ?>
+                </div>
+                <?php endif ?>
+
                 <div class="j-play-row">
                     <figure class="j-toy">
                         <canvas data-play="liquid"></canvas>
@@ -43,6 +60,7 @@
             <!-- Article index -->
             <?php
             $articles = $page->children()->listed()
+                ->template('story')
                 ->filter(fn($p) => $p->audienceAllows())
                 ->sortBy('date', 'desc')
                 ->paginate(12);

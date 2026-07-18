@@ -31,6 +31,8 @@ return array(
     'shop_order_mail'  => 'Pedir por correo',
     'shop_paid'        => '¡Gracias! Pago recibido — te contactaremos pronto.',
     'shop_checkout_error' => 'El pago no está disponible ahora — inténtalo de nuevo o escríbenos.',
+    'things'           => 'Cosas',
+    'things_hint'      => 'pequeñas herramientas y juguetes que hicimos — gratis',
     'playground'       => 'Zona de juego',
     'playground_hint'  => 'cosas para tocar mientras lees',
     'playground_follow'=> 'persíguelo',

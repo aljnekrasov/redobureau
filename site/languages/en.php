@@ -31,6 +31,8 @@ return array(
     'shop_order_mail'  => 'Order via email',
     'shop_paid'        => 'Thank you! Payment received — we will be in touch shortly.',
     'shop_checkout_error' => 'Checkout is unavailable right now — try again or write us.',
+    'things'           => 'Things',
+    'things_hint'      => 'small tools and toys we built — free to use',
     'playground'       => 'Playground',
     'playground_hint'  => 'things to poke at while you read',
     'playground_follow'=> 'chase it',

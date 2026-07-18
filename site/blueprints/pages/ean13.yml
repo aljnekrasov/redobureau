@@ -1,4 +1,4 @@
-title: Tools
+title: EAN-13 tool
 icon: 🧰
 
 status:
@@ -9,33 +9,11 @@ status:
 
 fields:
   intro:
-    label: Intro
+    label: Card description
     type: textarea
     size: small
     buttons: false
-  items:
-    label: Tools
-    type: structure
-    columns:
-      name:
-      url:
-    fields:
-      name:
-        label: Name
-        type: text
-      desc:
-        label: Description
-        type: textarea
-        size: small
-        buttons: false
-      url:
-        label: URL
-        type: text
-        placeholder: /tools/ean13/
-      tag:
-        label: Tag
-        type: text
-        width: 1/2
+    help: Short line shown on the "штуки" card in the Journal.
   main_title:
     label: Meta title
     type: text

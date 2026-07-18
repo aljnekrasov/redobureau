@@ -167,3 +167,4 @@
   font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
   color: var(--j-accent); margin-bottom: 18px;
 }
+.j-tools{display:grid;gap:0;border-top:1px solid #111;margin-bottom:22px}.j-tool{display:block;padding:16px 0;border-bottom:1px solid hsl(0 0% 90%);text-decoration:none;color:inherit}.j-tool-name{font-size:clamp(18px,2.4vw,24px);letter-spacing:-.01em}.j-tool-name span{color:#999}.j-tool:hover .j-tool-name,.j-tool:hover .j-tool-name span{color:#00A857}.j-tool-desc{color:#8a8a8a;font-size:14px;margin-top:4px;max-width:60ch}
