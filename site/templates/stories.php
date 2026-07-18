@@ -19,7 +19,9 @@
             </div>
 
             <!-- Штуки: functional tools + canvas toys, all in one strip -->
-            <?php $tools = $page->children()->listed()
+            <?php /* Tools are unlisted (no date-num) — children() includes
+                     them; the story filter keeps articles out of this strip. */ ?>
+            <?php $tools = $page->children()
                 ->filter(fn($p) => $p->intendedTemplate()->name() !== 'story')
                 ->filter(fn($p) => $p->audienceAllows()); ?>
             <div class="j-play">
