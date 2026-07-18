@@ -1,0 +1,30 @@
+/* EAN-13 generator — namespaced under .e13 so it inherits the site's
+   type/container but never leaks into the rest of the site. Accent is the
+   Redo link-hover indigo. Loaded only by the ean13 template (pageCss). */
+
+.e13{--e13-accent:#5A4FCF;--e13-muted:#999;--e13-soft:#f5f5f5;--e13-line:#e6e6e6}
+.e13 .e13-lede{color:var(--e13-muted);max-width:60ch;margin-bottom:40px}
+.e13 .e13-grid{display:grid;gap:40px;grid-template-columns:1fr}
+@media(min-width:760px){.e13 .e13-grid{grid-template-columns:320px 1fr;align-items:start}}
+.e13 .e13-field{margin-bottom:26px}
+.e13 label.e13-lab{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--e13-muted);margin-bottom:8px}
+.e13 input[type=text]{width:100%;height:52px;padding:0 14px;font:inherit;font-size:20px;letter-spacing:.06em;border:1px solid #000;background:#fff;border-radius:0;-webkit-appearance:none}
+.e13 input[type=text]:focus{outline:none;border-color:var(--e13-accent)}
+.e13 .e13-msg{margin-top:10px;font-size:14px;min-height:20px}
+.e13 .e13-msg.ok{color:var(--e13-accent)}
+.e13 .e13-msg.err{color:#c0392b}
+.e13 .e13-row{display:flex;align-items:center;gap:14px}
+.e13 input[type=range]{flex:1;accent-color:var(--e13-accent)}
+.e13 .e13-magval{width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.e13 .e13-checks{display:grid;gap:10px;margin-top:6px}
+.e13 .e13-checks label{display:flex;align-items:center;gap:9px;font-size:15px;color:#000;text-transform:none;letter-spacing:0}
+.e13 .e13-checks input{accent-color:var(--e13-accent);width:16px;height:16px}
+.e13 .e13-preview{border:1px solid var(--e13-line);background:var(--e13-soft);padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px}
+.e13 .e13-preview svg{max-width:100%;height:auto}
+.e13 .e13-dims{margin-top:14px;color:var(--e13-muted);font-size:14px;font-variant-numeric:tabular-nums}
+.e13 .e13-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.e13 .e13-btn{height:46px;padding:0 22px;display:inline-flex;align-items:center;font:inherit;font-size:15px;border:1px solid #000;background:#fff;color:#000;cursor:pointer;border-radius:0;transition:background .2s,color .2s,border-color .2s}
+.e13 .e13-btn--primary{background:#000;color:#fff}
+.e13 .e13-btn--primary:hover{background:var(--e13-accent);border-color:var(--e13-accent)}
+.e13 .e13-btn--ghost:hover{border-color:var(--e13-accent);color:var(--e13-accent)}
+.e13 .e13-btn:disabled{opacity:.4;cursor:not-allowed}
