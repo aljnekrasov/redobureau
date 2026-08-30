@@ -36,12 +36,15 @@
                 </div>
             </div>
         </div>
-        <?php if ($site->contactLat()->isNotEmpty() && $site->contactLong()->isNotEmpty()) : ?>
+        <?php $hasMap = $site->contactLat()->isNotEmpty() && $site->contactLong()->isNotEmpty() && option('site.mapsKey'); ?>
+        <?php if ($hasMap) : ?>
             <div class="map sm:mt-40" data-behavior="contactMap" data-contactMap-lat="<?= $site->contactLat() ?>" data-contactMap-long="<?= $site->contactLong() ?>"></div>
         <?php endif ?>
     </div>
 </div>
 
-<script type="text/javascript" defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBUx0gBpOOvUEcjuPsvfksyhgE6aQII6MM'></script>
+<?php if ($hasMap) : ?>
+<script type="text/javascript" defer src="https://maps.googleapis.com/maps/api/js?key=<?= urlencode(option('site.mapsKey')) ?>"></script>
+<?php endif ?>
 
 <?php snippet('footer') ?>

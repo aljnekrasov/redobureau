@@ -13,6 +13,11 @@ return [
   ],
   'thumbs'    => ['driver' => 'gd', 'quality' => 80],
 
+  // Google Maps JavaScript API key for the contacts map. Client-side key
+  // (visible in the browser by design) — protected by HTTP-referrer
+  // restriction in Google Cloud Console (redobureau.com/*, .ru/*).
+  'site.mapsKey' => 'AIzaSyBUx0gBpOOvUEcjuPsvfksyhgE6aQII6MM',
+
   // NOTE: site.activeLanguages / site.optionalLanguages are defined ONLY in
   // the per-host configs, never here. Kirby merges configs with
   // array_replace_recursive(), which merges lists INDEX-BY-INDEX — a base
