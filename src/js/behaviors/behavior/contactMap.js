@@ -10,7 +10,7 @@ const contactMap = createBehavior(
   {
     init () {
       const options = {
-        zoom: 15,
+        zoom: 13,
         minZoom: 12,
         maxZoom: 18,
         zoomControl: false,
