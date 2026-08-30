@@ -48,7 +48,7 @@ return [
   // Hidden-section switches: flip to true to reveal the nav link, drop
   // the noindex meta and let the section into the sitemap. One line +
   // git pull = launch.
-  'site.navJournal' => true,
+  'site.navJournal' => false,
   'site.navShop'    => false,
 
 

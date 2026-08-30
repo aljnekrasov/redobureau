@@ -20,7 +20,7 @@ return [
   'site.consentBanner' => 'notice',
 
   // Hidden-section switches (see .com config for semantics).
-  'site.navJournal' => true,
+  'site.navJournal' => false,
   'site.navShop'    => false,
 
 
