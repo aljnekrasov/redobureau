@@ -23,11 +23,14 @@
                             <?php foreach ($site->contactsAdditional()->toStructure() as $item) : ?>
                                 <div class="col-6 lg:col-5 mb-40">
                                     <div><?= $item->title() ?></div>
+                                    <?php if ($item->text()->isNotEmpty()) : ?>
+                                        <div class="fg-muted"><?= nl2br(esc($item->text())) ?></div>
+                                    <?php endif ?>
                                     <?php if ($item->mail()->isNotEmpty()) : ?>
                                         <div class="truncate"><a href="mailto:<?= $item->mail() ?>"><?= $item->mail() ?></a></div>
                                     <?php endif ?>
                                     <?php if ($item->phone()->isNotEmpty()) : ?>
-                                        <div class="truncate"><a href="tel:<?= $item->phone() ?>"><?= $item->phone() ?></a></div>
+                                        <div class="truncate"><a href="tel:<?= str_replace(' ', '', $item->phone()) ?>"><?= $item->phone() ?></a></div>
                                     <?php endif ?>
                                 </div>
                             <?php endforeach ?>
