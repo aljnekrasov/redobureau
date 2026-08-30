@@ -22,12 +22,11 @@
                 <?= $page->text_second() ?>
             </p>
         </div>
+        <?php if ($site->currentAudience() !== 'ru') : ?>
         <div style="width:100%">
-            <span class="text-small fg-muted"><?= t('geo_line') ?></span>
-            <?php if ($site->currentAudience() !== 'ru') : ?>
-            <a class="text-small" style="margin-left:14px" href="<?= url('/teardown/') ?>"><?= t('cta_teardown') ?></a>
-            <?php endif ?>
+            <a class="text-small" href="<?= url('/teardown/') ?>"><?= t('cta_teardown') ?></a>
         </div>
+        <?php endif ?>
     </div>
 </div>
 
